@@ -18,7 +18,7 @@ export class MapComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let mymap = L.map('map').setView([51.505, -0.09], 2);
+    let mymap = L.map('map').setView([45, -20], 2.5);
     
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=sk.eyJ1Ijoicm9kb2xwaGVnaGlvIiwiYSI6ImNrZ3IxeHZrMzA5dm8zMG83eWx3bm45cnMifQ.hANaQ5_PG5Y5AExWWIljfQ', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -44,7 +44,10 @@ export class MapComponent implements OnInit {
     function onClick(e) {
       var popup = e.target.getPopup();
       var content = popup.getContent();
-      console.log(content);
+      if (popup.isOpen()){
+        console.log(content);
+      }
+
     }
   }
 
