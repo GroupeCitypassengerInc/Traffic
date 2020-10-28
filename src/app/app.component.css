@@ -18,7 +18,7 @@ p {
 .container {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  min-height: 700px;
+  min-height: 600px;
   min-width: 100%;
   padding: 0;
 }
@@ -35,6 +35,13 @@ p {
   color: white;
   font-weight: 600;
 }
+
 .devices-list{
   margin: 2%;
+}
+
+.grid_1fr_2fr {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  padding: 1%;
 }

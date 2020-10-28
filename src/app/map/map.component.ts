@@ -44,8 +44,12 @@ export class MapComponent implements OnInit {
     function onClick(e) {
       var popup = e.target.getPopup();
       var content = popup.getContent();
+      
       if (popup.isOpen()){
+        //Si ouverture du popup
         console.log(content);
+      }else{
+        
       }
 
     }
