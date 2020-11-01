@@ -34,6 +34,7 @@ p {
   background-color: #39499c;
   color: white;
   font-weight: 600;
+  font-size: 15px;
 }
 
 .devices-list{
@@ -45,3 +46,7 @@ p {
   grid-template-columns: 1fr 2fr;
   padding: 1%;
 }
+.toolbar_branding{
+  margin-left: 01%;
+}
+

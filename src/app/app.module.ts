@@ -4,14 +4,14 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MapComponent } from './map/map.component';
 import { DevicesListComponent } from './devices-list/devices-list.component';
-import { SelectedDeviceComponent } from './selected-device/selected-device.component';
+import { GraphComponent } from './graph/graph.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
     DevicesListComponent,
-    SelectedDeviceComponent,
+    GraphComponent,
   ],
   imports: [
     BrowserModule,

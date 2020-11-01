@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, HostListener  } from '@angular/core';
 import * as groups from './json/map_devices.json';
 
 declare const L:any;
@@ -13,9 +13,11 @@ export class MapComponent implements OnInit {
   
   title = 'Citymap';
   markers: marker[];
-  
+  informations: device_info [];
+
   constructor() {
   }
+  
 
   ngOnInit(): void {
     let mymap = L.map('map').setView([45, -20], 2.5);
@@ -33,7 +35,7 @@ export class MapComponent implements OnInit {
         let lat = sites.datas.mapInfo.latitude;
         let long = sites.datas.mapInfo.longitude;
         let marker = L.marker([lat, long], {title:sites.siteName.toString()}).addTo(mymap);
-        let pop_up_info ='Group: ' + group.displayName.toString() + '<br>'+'Name: ' + sites.siteName.toString() + '<br>' + 'Address: ' + sites.datas.address.toString();
+        let pop_up_info ='Group name: ' + group.groupName.toString() + '<br>'+'Group id: ' + group.groupId.toString() + '<br>'+'Name: ' + sites.siteName.toString() + '<br>' + 'Address: ' + sites.datas.address.toString();
         marker.bindPopup(pop_up_info);
         marker.on('click', onClick);
 
@@ -46,17 +48,13 @@ export class MapComponent implements OnInit {
       var content = popup.getContent();
       
       if (popup.isOpen()){
-        //Si ouverture du popup
+        var regex = /Group name: ([^<]*)<br>Group id: ([^<]*)<br>Name: ([^<]*)<br>Address: ([^<]*)/;
+        
         console.log(content);
       }else{
-        
+
       }
-
     }
-  }
-
-  initialize_map_markers(){
-    console.log(groups.groups);
   }
 }
 
@@ -65,4 +63,11 @@ interface marker {
 	lng: number;
 	label?: string;
 	draggable: boolean;
+}
+
+interface device_info {
+  group_name: string;
+  group_id: number;
+	box_name: string;
+	address: string;
 }

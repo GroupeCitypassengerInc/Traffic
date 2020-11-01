@@ -1,20 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { GraphComponent } from './graph.component';
 
-import { SelectedDeviceComponent } from './selected-device.component';
-
-describe('SelectedDeviceComponent', () => {
-  let component: SelectedDeviceComponent;
-  let fixture: ComponentFixture<SelectedDeviceComponent>;
+describe('GraphComponent', () => {
+  let component: GraphComponent;
+  let fixture: ComponentFixture<GraphComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SelectedDeviceComponent ]
+      declarations: [ GraphComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SelectedDeviceComponent);
+    fixture = TestBed.createComponent(GraphComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
