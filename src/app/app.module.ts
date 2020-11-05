@@ -17,7 +17,8 @@ import { GraphComponent } from './graph/graph.component';
     BrowserModule,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

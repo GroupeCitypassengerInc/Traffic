@@ -1,5 +1,41 @@
-<div class="graph">
-  <canvas id="myChart" width="400" height="400"></canvas>
+<!-- <div class="graph_container">
+  <div class="row">
+  <div class="row">
+    <div class="graph">
+      <canvas id="myChart" width="500" height="400"></canvas>
+    </div>
+  </div>
+</div> -->
+<!-- <div class="graph_container">
+  <div class="row">
+    <div class="graph">
+      <div *ngFor="let query of query_list">
+        <h5>{{query.query}}</h5>
+        <canvas id={{query.query}} width="500" height="400"></canvas>
+      </div>
+    </div>
+  </div>
+</div> -->
+<!-- <div class="app flex-row align-items-center">   
+  <div class="container"> 
+      <div class="card-deck row">
+          <div class="col-md-6" *ngFor="let query of query_list">
+            <div class="graph_container">
+              <h5>{{query.query}}</h5>
+              <canvas id={{query.query}} width="500" height="400"></canvas>
+            </div>
+          </div>
+      </div>
+  </div>
+</div> -->
+
+<div class="app flex-row align-items-center">
+  <div class="card-deck row">
+    <div class="col-md-4" *ngFor="let query of query_list">
+      <div class="graph_container">
+        <h5>{{query.query}}</h5>
+        <canvas id={{query.query}} width="500" height="400"></canvas>
+      </div>
+    </div>
+  </div>
 </div>
-<!-- <h2>Scatter Plot</h2>
-<figure id="scatter"></figure> -->

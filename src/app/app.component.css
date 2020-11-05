@@ -15,14 +15,21 @@ p {
   margin: 0;
  }
 
+.map_container {
+  display: grid;
+  min-height: 700px;
+  min-width: 100%;
+  padding: 0;
+}
+
 .container {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  /* grid-template-columns: 2fr 1fr; */
   min-height: 600px;
   min-width: 100%;
   padding: 0;
 }
-  
+
 .toolbar {
   position: relative;
   top: 0;
@@ -38,7 +45,7 @@ p {
 }
 
 .devices-list{
-  margin: 2%;
+  margin-top: 2%;
 }
 
 .grid_1fr_2fr {
@@ -49,4 +56,3 @@ p {
 .toolbar_branding{
   margin-left: 01%;
 }
-

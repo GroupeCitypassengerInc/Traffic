@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClientModule }    from '@angular/common/http';
-import * as d3 from 'd3';
+import { HttpClientModule, HttpClient, HttpHeaders }    from '@angular/common/http';
 import { Chart } from 'chart.js';
 import * as ChartDatasourcePrometheusPlugin from "chartjs-plugin-datasource-prometheus";
+import { ITS_JUST_ANGULAR } from '@angular/core/src/r3_symbols';
 
 @Component({
   selector: 'app-graph',
@@ -10,91 +10,74 @@ import * as ChartDatasourcePrometheusPlugin from "chartjs-plugin-datasource-prom
   styleUrls: ['./graph.component.css']
 })
 export class GraphComponent implements OnInit {
-  /*private data = [
-    {"Framework": "Vue", "Stars": "166443", "Released": "2014"},
-    {"Framework": "React", "Stars": "150793", "Released": "2013"},
-    {"Framework": "Angular", "Stars": "62342", "Released": "2016"},
-    {"Framework": "Backbone", "Stars": "27647", "Released": "2010"},
-    {"Framework": "Ember", "Stars": "21471", "Released": "2011"},
+  up_chart : Chart;
+  up_start_time : number = -24 * 60 * 60 * 1000; //12 hours from now
+  end_time : number = 0; //now
+  start_date : Date;
+  query_list : any = [
+    {query:'up'},
+    {query:'Devices_on_lan_gauge'},
+    {query:'cpustats_cpu_usage_percent'},
+    {query:'memstats_memory_usage_percent'},
+    {query:'memstats_total_memory_bytes'},
+    {query:'memstats_used_memory_bytes'},
   ];
-  private svg;
-  private margin = 50;
-  private width = 750 - (this.margin * 2);
-  private height = 400 - (this.margin * 2);
-  private createSvg(): void {
-    this.svg = d3.select("figure#scatter")
-    .append("svg")
-    .attr("width", this.width + (this.margin * 2))
-    .attr("height", this.height + (this.margin * 2))
-    .append("g")
-    .attr("transform", "translate(" + this.margin + "," + this.margin + ")");
+
+  constructor() { 
+  }
+  
+  ngOnInit(): void {
   }
 
-  private drawPlot(): void {
-    // Add X axis
-    const x = d3.scaleLinear()
-    .domain([2009, 2017])
-    .range([ 0, this.width ]);
-    this.svg.append("g")
-    .attr("transform", "translate(0," + this.height + ")")
-    .call(d3.axisBottom(x).tickFormat(d3.format("d")));
+  ngAfterViewInit(){
+    this.query_list.forEach(query => this.chart_builder(query.query, "")); //{job=\"CityBox\"}
+  }
 
-    // Add Y axis
-    const y = d3.scaleLinear()
-    .domain([0, 200000])
-    .range([ this.height, 0]);
-    this.svg.append("g")
-    .call(d3.axisLeft(y));
+  range_plus() {
+    this.up_start_time = this.up_start_time -1 * 60 * 60 * 1000;
+    
+  }
 
-    // Add dots
-    const dots = this.svg.append('g');
-    dots.selectAll("dot")
-    .data(this.data)
-    .enter()
-    .append("circle")
-    .attr("cx", d => x(d.Released))
-    .attr("cy", d => y(d.Stars))
-    .attr("r", 7)
-    .style("opacity", .5)
-    .style("fill", "#69b3a2");
+  destroy(chart:Chart){
+    chart.destroy();
+  }
 
-    // Add labels
-    dots.selectAll("text")
-    .data(this.data)
-    .enter()
-    .append("text")
-    .text(d => d.Framework)
-    .attr("x", d => x(d.Released))
-    .attr("y", d => y(d.Stars))
-  }*/
-  constructor() { }
-
-  ngOnInit(): void {
-    /*
-    this.createSvg();
-    this.drawPlot();
-    */
-    var ctx = document.getElementById('myChart');
-    var myChart = new Chart(ctx, {
+  chart_builder(id:string,job:string){
+    console.log(this.up_start_time/60/60/1000);
+    console.log(id);
+    var ctx = document.getElementById(id);
+    console.log(ctx);
+    let query = id + job;
+    console.log(query);
+    this.up_chart = new Chart(ctx, {
       type: 'line',
       plugins: [ChartDatasourcePrometheusPlugin],
       options: {
+        animation: {
+          duration: 0
+        }, 
+        legend: {
+          position: 'bottom',
+          align: 'start'
+        },
+        label: {
+        },
         plugins: {
           'datasource-prometheus': {
             prometheus: {
-              endpoint: "http://192.168.1.138:12333/prometheus/",
+              endpoint: "http://192.168.1.141:12333/prometheus/",
               baseURL: "/api/v1",   // default value
             },
-            query: 'up',
+            query: query,
             timeRange: {
               type: 'relative',
 
               // from 12 hours ago to now
-              start: -12 * 60 * 60 * 1000,
-              end: 0,
+              start: this.up_start_time,
+              end: this.end_time,
           
-              // refresh every 5s
-              msUpdateInterval: 5 * 1000,
+              // refresh every 10s
+              msUpdateInterval: 10 * 1000,
             },
           },
         },
