@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { HttpClientModule, HttpClient, HttpHeaders }    from '@angular/common/http';
 import { Chart } from 'chart.js';
-import * as ChartDatasourcePrometheusPlugin from "chartjs-plugin-datasource-prometheus";
-import { ITS_JUST_ANGULAR } from '@angular/core/src/r3_symbols';
+import * as ChartDatasourcePrometheusPlugin from 'chartjs-plugin-datasource-prometheus';
 
 @Component({
   selector: 'app-graph',
@@ -10,10 +9,10 @@ import { ITS_JUST_ANGULAR } from '@angular/core/src/r3_symbols';
   styleUrls: ['./graph.component.css']
 })
 export class GraphComponent implements OnInit {
-  up_chart : Chart;
-  up_start_time : number = -24 * 60 * 60 * 1000; //12 hours from now
-  end_time : number = 0; //now
-  start_date : Date;
+
+  @Input() job: string;
+
+  endpoint : string = 'http://192.168.1.141:12333/prometheus/';
   query_list : any = [
     {query:'up'},
     {query:'Devices_on_lan_gauge'},
@@ -23,33 +22,80 @@ export class GraphComponent implements OnInit {
     {query:'memstats_used_memory_bytes'},
   ];
 
+  chart_list : Array<any> = [];
+  up_start_time : number = -24 * 60 * 60 * 1000; //12 hours from now
+  end_time : number = 0; //now
+  start_date : Date;
+
   constructor() { 
   }
   
   ngOnInit(): void {
+    //console.log('first : ' + this.query_list[0].query);
+    console.log('init');
+    console.log('changes : ' + this.job);
+
   }
 
   ngAfterViewInit(){
-    this.query_list.forEach(query => this.chart_builder(query.query, "")); //{job=\"CityBox\"}
+    this.generate_all(); //{job=\'CityBox\'}
+    //this.chart_builder(this.query_list[0].query, ''); //{job=\'CityBox\'}
+  }
+  ngOnChanges(changes: any){
+    console.log('changes : ' + this.job);
   }
 
-  range_plus() {
-    this.up_start_time = this.up_start_time -1 * 60 * 60 * 1000;
-    
+  find_chart(id:string){
+    var chart;
+    this.chart_list.forEach(array => {
+      if (array[0] === id){
+        console.log('found : ' + array[0]);
+        chart = array[1];
+      }
+    });
+    return chart;
   }
 
-  destroy(chart:Chart){
+  // Generate all graph
+  generate_all(){
+    this.chart_list=[];
+    this.query_list.forEach(query => this.chart_list.push([query.query,this.chart_builder(query.query)]));
+    console.log(this.query_list);
+    console.log(this.chart_list);
+  }
+
+  // Destroy all graph
+  destroy_all(){
+    this.chart_list.forEach(chart=>{
+      console.log ('destroying ' + chart[0] + ' chart');
+      chart[1].destroy();
+    })
+  }
+
+  // Regenerate all graph
+  regenerate_all(){
+    this.destroy_all();
+    this.generate_all();
+  }
+
+  // Re-generate all graph
+  regenerate(id:string){
+    console.log('regenerating ' + id + ' chart');
+    var chart = this.find_chart(id);
+    console.log ('destroying ' + id + ' chart');
     chart.destroy();
+    console.log ('re-building ' + id + ' chart');
+    this.chart_list.push([id,this.chart_builder(id)]);
   }
-
-  chart_builder(id:string,job:string){
-    console.log(this.up_start_time/60/60/1000);
-    console.log(id);
+  
+  chart_builder(id:string){
+    //console.log(this.up_start_time/60/60/1000);
+    console.log('building ' + id + ' chart');
     var ctx = document.getElementById(id);
-    console.log(ctx);
-    let query = id + job;
-    console.log(query);
-    this.up_chart = new Chart(ctx, {
+    //console.log(ctx);
+    let query = id;// + job;
+    //console.log(query);
+    var chart = new Chart(ctx, {
       type: 'line',
       plugins: [ChartDatasourcePrometheusPlugin],
       options: {
@@ -65,8 +111,8 @@ export class GraphComponent implements OnInit {
         plugins: {
           'datasource-prometheus': {
             prometheus: {
-              endpoint: "http://192.168.1.141:12333/prometheus/",
-              baseURL: "/api/v1",   // default value
+              endpoint: this.endpoint,
+              baseURL: '/api/v1',   // default value
             },
             query: query,
             timeRange: {
@@ -83,5 +129,7 @@ export class GraphComponent implements OnInit {
         },
       },
     });
+    //console.log(this.chart_list);
+    return chart;
   }
 }

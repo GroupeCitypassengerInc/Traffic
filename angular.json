@@ -124,5 +124,10 @@
       }
     }
   },
-  "defaultProject": "bagage"
+  "defaultProject": "bagage",
+  "schematics": {
+    "@schematics/angular:component": {
+      "styleext": "scss"
+    }
+  }
 }

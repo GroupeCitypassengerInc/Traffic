@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { GroupedObservable } from 'rxjs';
 
@@ -9,8 +9,13 @@ import { GroupedObservable } from 'rxjs';
   styleUrls: ['./devices-list.component.css']
 })
 export class DevicesListComponent implements OnInit {
+
+  @Output() seleted_name_event: EventEmitter<string> = new EventEmitter();
+
   groups: any = [];
+
   show_devices:boolean = true;
+
   constructor(private httpClient: HttpClient) { }
   
   ngOnInit(): void {
@@ -19,7 +24,10 @@ export class DevicesListComponent implements OnInit {
       this.groups = data;
     })
   }
-
+  pass_name (str:string){
+    console.log('child : ' + str);
+    this.seleted_name_event.emit(str);
+  }
   toogle_devices(){
     this.show_devices=!this.show_devices;
   }
