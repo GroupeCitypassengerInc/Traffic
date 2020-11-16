@@ -6,37 +6,31 @@
   
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
   
-    <!-- Position Column -->
-    <ng-container matColumnDef="No">
-      <th mat-header-cell *matHeaderCellDef> No. </th>
-      <td mat-cell *matCellDef="let element"> {{element.No}} </td>
-    </ng-container>
-  
-    <!-- Name Column -->
+    <!-- group_id Column -->
     <ng-container matColumnDef="group_id">
       <th mat-header-cell *matHeaderCellDef> group id </th>
       <td mat-cell *matCellDef="let element"> {{element.group_id}} </td>
     </ng-container>
   
-    <!-- Weight Column -->
+    <!-- group_name Column -->
     <ng-container matColumnDef="group_name">
       <th mat-header-cell *matHeaderCellDef> group name </th>
       <td mat-cell *matCellDef="let element"> {{element.group_name}} </td>
     </ng-container>
   
-    <!-- Symbol Column -->
+    <!-- display_name Column -->
     <ng-container matColumnDef="display_name">
       <th mat-header-cell *matHeaderCellDef> display name </th>
       <td mat-cell *matCellDef="let element"> {{element.display_name}} </td>
     </ng-container>
 
-     <!-- Symbol Column -->
+     <!-- box_name Column -->
     <ng-container matColumnDef="box_name">
       <th mat-header-cell *matHeaderCellDef> box name </th>
       <td mat-cell *matCellDef="let element"> {{element.box_name}} </td>
     </ng-container>
   
-    <!-- Symbol Column -->
+    <!-- address Column -->
     <ng-container matColumnDef="address">
       <th mat-header-cell *matHeaderCellDef> address </th>
       <td mat-cell *matCellDef="let element"> {{element.address}} </td>
