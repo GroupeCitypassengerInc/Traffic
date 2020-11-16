@@ -1,6 +1,9 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { GroupedObservable } from 'rxjs';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
 
 
 @Component({
@@ -10,7 +13,7 @@ import { GroupedObservable } from 'rxjs';
 })
 export class DevicesListComponent implements OnInit {
 
-  @Output() seleted_name_event: EventEmitter<string> = new EventEmitter();
+  @Output() seleted_information_event: EventEmitter<Array<string>> = new EventEmitter();
 
   groups: any = [];
 
@@ -24,13 +27,14 @@ export class DevicesListComponent implements OnInit {
       this.groups = data;
     })
   }
-  pass_name (str:string){
-    console.log('child : ' + str);
-    this.seleted_name_event.emit(str);
+  pass_information (group_name:string, box_name:string){
+    console.log('Group name : ' + group_name);
+    console.log('Box name : ' + box_name);
+    this.seleted_information_event.emit([group_name, box_name]);
+
   }
   toogle_devices(){
     this.show_devices=!this.show_devices;
   }
-
 }
 

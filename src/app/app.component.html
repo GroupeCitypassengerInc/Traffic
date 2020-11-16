@@ -1,3 +1,5 @@
+<!-- Vert: #a3c037 | Bleu: #39499c -->
+
 <!-- Toolbar -->
 <div class='toolbar' role='banner'>
   <div class='toolbar_branding'>
@@ -13,20 +15,14 @@
 <!-- Content -->
 
 <body>
-  <div class='row'>
-    <div class='col-8'>
-      <div class='map_container'>
-        <app-map></app-map>
-      </div>
-    </div>
-    <div class='col-4'>
-      <div class='devices-list'>
-        <app-devices-list (seleted_name_event)="catch_name($event)"></app-devices-list>
-      </div>
-    </div>
+  <div class='table'>
+      <!-- <div class='devices-list'>
+        <app-devices-list (seleted_information_event)="catch_information($event)"></app-devices-list>
+      </div> -->
+    <app-devices-table></app-devices-table>
   </div>
   <div class='row' id='main-row'>
-      <app-graph [job] = box_name ></app-graph>
+      <!-- <app-graph [information] = information_dad ></app-graph> -->
       <!-- <app-prometheus-graph></app-prometheus-graph> -->
   </div>
 </body>

@@ -9,10 +9,13 @@ import * as ChartDatasourcePrometheusPlugin from 'chartjs-plugin-datasource-prom
   styleUrls: ['./graph.component.css']
 })
 export class GraphComponent implements OnInit {
+  /*
+    selection information : [[group][box_name]]
+  */
+  @Input() information: Array<string>;
 
-  @Input() job: string;
-
-  endpoint : string = 'http://192.168.1.141:12333/prometheus/';
+  // Request : /prometheus/api/v1/query_range?query=up&start=1604584181.313&end=1604670581.313&step=9250
+  endpoint : string = 'http://192.168.1.117:12333/prometheus/';
   query_list : any = [
     {query:'up'},
     {query:'Devices_on_lan_gauge'},
@@ -22,33 +25,41 @@ export class GraphComponent implements OnInit {
     {query:'memstats_used_memory_bytes'},
   ];
 
+
   chart_list : Array<any> = [];
   up_start_time : number = -24 * 60 * 60 * 1000; //12 hours from now
   end_time : number = 0; //now
   start_date : Date;
 
-  constructor() { 
+  constructor(  ) {
+
   }
   
   ngOnInit(): void {
     //console.log('first : ' + this.query_list[0].query);
     console.log('init');
-    console.log('changes : ' + this.job);
-
+    //console.log('changes : ' + this.information);
   }
 
   ngAfterViewInit(){
     this.generate_all(); //{job=\'CityBox\'}
     //this.chart_builder(this.query_list[0].query, ''); //{job=\'CityBox\'}
   }
+
   ngOnChanges(changes: any){
-    console.log('changes : ' + this.job);
+    if (!changes['information'].isFirstChange()){
+      //console.log('changes catch: ' + this.information);
+    } 
   }
 
+  
+  // Find a chart using the metric name
   find_chart(id:string){
+
     var chart;
-    this.chart_list.forEach(array => {
-      if (array[0] === id){
+    this.query_list.forEach(array => {
+      var regex = new RegExp("^("+ array[0] +".*)$");
+      if ((regex.exec(id)) !== null ){
         console.log('found : ' + array[0]);
         chart = array[1];
       }
@@ -88,11 +99,15 @@ export class GraphComponent implements OnInit {
     this.chart_list.push([id,this.chart_builder(id)]);
   }
   
+  // Build chart
   chart_builder(id:string){
     //console.log(this.up_start_time/60/60/1000);
-    console.log('building ' + id + ' chart');
+    console.log('building : ' + id + ' chart');
     var ctx = document.getElementById(id);
-    //console.log(ctx);
+    if (ctx === null){
+      throw new Error("An error as occured. An get id of : " + id);
+    }
+    console.log(ctx);
     let query = id;// + job;
     //console.log(query);
     var chart = new Chart(ctx, {

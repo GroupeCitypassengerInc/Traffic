@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter, HostListener  } from '@angular/core';
+import { GraphComponent } from './graph/graph.component';
 
 @Component({
   selector: 'app-root',
@@ -6,9 +7,12 @@ import { Component, Output, EventEmitter, HostListener  } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  box_name:string ='debug';
-  catch_name(box_name:string){
-    this.box_name=box_name;
-    console.log('dad : ' + this.box_name);
+  
+  information_dad:Array<string> = [  ];
+
+  catch_information(information:Array<string>){
+    // Information[0] = group_name | Information[1] = box_name (can be "") //
+    this.information_dad=information;
+    console.log(this.information_dad)
   }
 }

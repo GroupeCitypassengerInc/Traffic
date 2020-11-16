@@ -7,13 +7,12 @@
         <li  class='list-group-item' *ngFor='let sites of group.sites'>
           Name: {{sites.siteName}}<br>
           Location: {{sites.datas.address}}<br>
-          <button type="button" class="btn btn-primary" (click)="pass_name( sites.siteName )">Select</button>
+          <button type="button" class="btn btn-primary" (click)="pass_information( sites.siteName, group.groupName )">Select</button>
         </li>
       </ng-container>
     </li>
   </ul>
   <!-- <button id='button' class='btn btn-primary' (click)='toogle_devices()'> Show details</button> -->
-
 </div>
 
 
