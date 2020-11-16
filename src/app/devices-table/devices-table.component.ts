@@ -1,8 +1,10 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { animate, AnimationEvent, state, style, transition, trigger } from '@angular/animations';
 import { HttpClient } from "@angular/common/http";
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
+import {MatCardModule} from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule, MatFormFieldControl} from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,17 +23,40 @@ export interface box_info {
   site_refer: string, 
 }
 
+export type FadeState = 'visible' | 'hidden';
+
 @Component({
   selector: 'app-devices-table',
   templateUrl: './devices-table.component.html',
-  styleUrls: ['./devices-table.component.css']
+  styleUrls: ['./devices-table.component.css'],
+  animations: [
+    trigger('state', [
+      state(
+        'visible',
+        style({
+          opacity: '1'
+        })
+      ),
+      state(
+        'hidden',
+        style({
+          opacity: '0'
+        })
+      ),
+      transition('* => visible', [animate('500ms ease-out')]),
+      transition('visible => hidden', [animate('500ms ease-out')])
+    ])
+  ],
 })
 
 export class DevicesTableComponent implements OnInit {
-  displayedColumns: string[] = ['group_id','display_name','group_name', 'box_name', 'address'];
+  displayedColumns: string[] = ['group_id','display_name', 'box_name', 'address'];
   BOX_DATA: any = [];
   data: any = [];
   dataSource =  new MatTableDataSource(this.BOX_DATA);
+  private _show: boolean = false;
+  selection: box_info;
+  state: FadeState;
 
   constructor(private httpClient: HttpClient) { }
 
@@ -65,8 +90,20 @@ export class DevicesTableComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+
   getRecord(row){
-    console.log(row);
+    //console.log(row);
+    this.selection = row;
+    console.log(this.selection);
+    this._show = true;
+    this.state = 'visible';
+  }
+
+  clearSelection(){
+    this._show = false;
+    this.selection = <box_info>{};
+    this.state = 'hidden';
+    //console.log(this.selection);
   }
 }
 // Can't bind to 'matHeaderRowDef' since it isn't a known property of 'tr'
