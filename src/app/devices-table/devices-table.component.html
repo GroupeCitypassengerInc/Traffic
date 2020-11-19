@@ -1,61 +1,85 @@
+<div *ngIf="loaderService.isLoading | async" class="loader-container">
+  <mat-spinner style="top:50%; left:50%;"></mat-spinner>
+</div>
 <div class='table_container'>
   <mat-form-field>
     <mat-label>Filter</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="" #input>
+    <input matInput (keyup)='applyFilter($event)' placeholder='' #input>
   </mat-form-field>
-  
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-  
+
+  <table mat-table [dataSource]='dataSource' class='mat-elevation-z8'>
+
     <!-- group_id Column -->
-    <ng-container matColumnDef="group_id">
+    <ng-container matColumnDef='group_id'>
       <th mat-header-cell *matHeaderCellDef> Group id </th>
-      <td mat-cell *matCellDef="let element"> {{element.group_id}} </td>
-    </ng-container>
-  
-    <!-- display_name Column -->
-    <ng-container matColumnDef="display_name">
-      <th mat-header-cell *matHeaderCellDef> Group name </th>
-      <td mat-cell *matCellDef="let element"> {{element.display_name}} </td>
+      <td mat-cell *matCellDef='let element'> {{element.group_id}} </td>
     </ng-container>
 
-     <!-- box_name Column -->
-    <ng-container matColumnDef="box_name">
+    <!-- display_name Column -->
+    <ng-container matColumnDef='display_name'>
+      <th mat-header-cell *matHeaderCellDef> Group name </th>
+      <td mat-cell *matCellDef='let element'> {{element.display_name}} </td>
+    </ng-container>
+
+    <!-- box_name Column -->
+    <ng-container matColumnDef='box_name'>
       <th mat-header-cell *matHeaderCellDef> Box name </th>
-      <td mat-cell *matCellDef="let element"> {{element.box_name}} </td>
+      <td mat-cell *matCellDef='let element'> {{element.box_name}} </td>
     </ng-container>
-  
+
     <!-- address Column -->
-    <ng-container matColumnDef="address">
+    <ng-container matColumnDef='address'>
       <th mat-header-cell *matHeaderCellDef> Address </th>
-      <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+      <td mat-cell *matCellDef='let element'> {{element.address}} </td>
     </ng-container>
-  
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"(click)="getRecord(row);"></tr>
-  
+
+    <tr mat-header-row *matHeaderRowDef='displayedColumns'></tr>
+    <tr mat-row *matRowDef='let row; columns: displayedColumns;' (click)='getRecord(row);'></tr>
+
     <!-- Row shown when there is no matching data. -->
-    <tr class="mat-row" *matNoDataRow >
-      <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+    <tr class='mat-row' *matNoDataRow>
+      <td class='mat-cell' colspan='4'>No data matching the filter '{{input.value}}'</td>
     </tr>
   </table>
 
-  <div class="selection" *ngIf="_show;">
+  <div class='selection' *ngIf='_show;'>
     <mat-card>
       <mat-card-content>
-        <h3>Selection :</h3>
-          <ul>
-            <li>
-              Group name: {{selection.display_name}}
-            </li>
-            <li>
-              Box name: {{selection.box_name}}
-            </li>
-            <li>
-              Address: {{selection.address}}
-            </li>
-          </ul>
+        <div class='grid'>
+          <div class='info'>
+            <h3>Selection :</h3>
+            <ul>
+              <li>
+                Group name: {{selection.display_name}}
+              </li>
+              <li>
+                Box name: {{selection.box_name}}
+              </li>
+              <li>
+                Address: {{selection.address}}
+              </li>
+            </ul>
+            <button mat-flat-button color='primary' (click)='clearSelection()'>Clear</button>
+          </div>
+          <div class='graph'>
+            <h3>Graph available :</h3>
+            <section class="example-section">
+              <span class="example-list-section">
+                <ul>
+                  <li *ngFor="let graph of graphs_available_checkbox">
+                    <mat-checkbox [(ngModel)]="graph.completed"
+                                  [color]="graph.color"
+                                  (ngModelChange)="updateAllComplete()">
+                      {{graph.name}}
+                    </mat-checkbox>
+                  </li>
+                </ul>
+              </span>
+            </section>
+            <button mat-flat-button color='primary' (click)='Visualize()' >Visualize</button>
+          </div>
+        </div>
       </mat-card-content>
-      <button mat-flat-button color="primary" (click)="clearSelection()">Clear</button>
     </mat-card>
   </div>
 </div>

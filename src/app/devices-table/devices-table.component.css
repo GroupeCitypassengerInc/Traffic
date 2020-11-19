@@ -9,5 +9,43 @@ table {
 }
 
 .selection {
+  margin-top: 1%;
+  width: 100%;
+}
+
+.grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 50% 50%;
+}
+.graph{
+  /* background-color: aqua; */
+}
+
+.info{
+  /* background-color: red; */
+}
+
+.loader-container{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  /* background: black; */
+  opacity: 1;
+  z-index: 99;
+}
+
+/* ul{ 
+  overflow-x:hidden;
+  white-space:nowrap; 
+  height: 3em;
+  width: 100%;
+}  */
+
+/* li{ 
+  display:inline; 
+} */
+
+.button{
   margin: 1%;
 }
