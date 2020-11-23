@@ -13,7 +13,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { LoaderService } from '../loader/loader.service';
-import { Console } from 'console';
 import { ThemePalette } from '@angular/material/core';
 
 export interface box_info {
@@ -70,7 +69,7 @@ export class DevicesTableComponent implements OnInit {
   state: FadeState;
   prometheus_metrics_available: any;
   graphs_available_checkbox: checkbox[] = [];
-
+  allComplete: boolean = false;
   constructor(private httpClient: HttpClient, public loaderService:LoaderService) { }
 
   ngOnInit(): void {
@@ -116,7 +115,7 @@ export class DevicesTableComponent implements OnInit {
   }
 
   getRecord(row){
-    this.httpClient.get("http://192.168.1.133:12333/prometheus/api/v1/label/__name__/values").subscribe(prometheus_metrics =>{
+    this.httpClient.get("http://192.168.1.138:12333/prometheus/api/v1/label/__name__/values").subscribe(prometheus_metrics =>{
       this.prometheus_metrics_available = prometheus_metrics;
       this.checkbox_creator(this.prometheus_metrics_available.data);
       this.selection = row;
@@ -132,7 +131,34 @@ export class DevicesTableComponent implements OnInit {
   }
 
   Visualize(){
+    let checked = this.graphs_available_checkbox.filter(opt => opt.checked).map(opt => opt.name);
     console.log('visualize');
+    console.log(this.graphs_available_checkbox);
+    console.log(checked);
   }
   
+  updateAllComplete() {
+    this.allComplete = this.graphs_available_checkbox != null && this.graphs_available_checkbox.every(t => t.checked);
+    console.log('update all');
+    console.log(this.graphs_available_checkbox);
+  }
+
+  someComplete(): boolean {
+    if (this.graphs_available_checkbox == null) {
+      console.log(this.graphs_available_checkbox);
+      return false;
+    }
+    console.log('Some complete');
+    return this.graphs_available_checkbox.filter(t => t.checked).length > 0 && !this.allComplete;
+  }
+
+  setAll(completed: boolean) {
+    this.allComplete = completed;
+    console.log('Set all');
+    if (this.graphs_available_checkbox == null) {
+      console.log(this.graphs_available_checkbox);
+      return;
+    }
+    this.graphs_available_checkbox.forEach(t => t.checked = completed);
+  }
 }

@@ -1,0 +1,19 @@
+@import '~angular/material/theming';
+
+@include mat-core();
+
+$city-bagage-theme-primary: mat-palette();
+$city-bagage-theme-secondary: mat-palette();
+$city-bagage-theme-warn: mat-palette();
+$city-bagage-theme-accent: mat-palette();
+
+$city-bagage-theme: mat-light-theme((
+  color: (
+    primary: $city-bagage-theme-primary,
+    accent: $city-bagage-theme-accent,
+    warn: $city-bagage-theme-warn,  
+    secondary: $city-bagage-theme-secondary,
+  )
+));
+
+@include angular-material-theme($city-bagage-theme);

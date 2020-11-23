@@ -35,6 +35,12 @@ table {
   z-index: 99;
 }
 
+.test{
+  overflow-y: scroll;
+  max-height: 100px;
+  background-color: pink;
+}
+
 /* ul{ 
   overflow-x:hidden;
   white-space:nowrap; 
@@ -45,7 +51,9 @@ table {
 /* li{ 
   display:inline; 
 } */
-
+.graph_list{
+  list-style-type: none;
+}
 .button{
   margin: 1%;
 }

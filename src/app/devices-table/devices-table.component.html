@@ -63,20 +63,25 @@
           </div>
           <div class='graph'>
             <h3>Graph available :</h3>
-            <section class="example-section">
-              <span class="example-list-section">
-                <ul>
-                  <li *ngFor="let graph of graphs_available_checkbox">
-                    <mat-checkbox [(ngModel)]="graph.completed"
-                                  [color]="graph.color"
-                                  (ngModelChange)="updateAllComplete()">
-                      {{graph.name}}
-                    </mat-checkbox>
-                  </li>
-                </ul>
+            <section>
+              <span>
+                <mat-checkbox class="example-margin" [checked]="allComplete" [indeterminate]="someComplete()"
+                  (change)="setAll($event.checked)" color="primary">
+                  all
+                </mat-checkbox>
+                <div contenteditable='true' class="test">
+                  <ul style='list-style-type: none;'>
+                    <li *ngFor="let graph of graphs_available_checkbox">
+                      <mat-checkbox [(ngModel)]="graph.checked" [color]="graph.color"
+                        (ngModelChange)="updateAllComplete()">
+                        {{graph.name}}
+                      </mat-checkbox>
+                    </li>
+                  </ul>
+                </div>
               </span>
             </section>
-            <button mat-flat-button color='primary' (click)='Visualize()' >Visualize</button>
+            <button mat-flat-button color='primary' (click)='Visualize()'>Visualize</button>
           </div>
         </div>
       </mat-card-content>
