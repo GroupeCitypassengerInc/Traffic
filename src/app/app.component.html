@@ -1,5 +1,6 @@
 <!-- Vert: #a3c037 | Bleu: #39499c -->
 
+<app-spinner></app-spinner>
 
 <!-- Toolbar -->
 <div class='toolbar' role='banner'>
@@ -20,10 +21,10 @@
       <!-- <div class='devices-list'>
         <app-devices-list (seleted_information_event)="catch_information($event)"></app-devices-list>
       </div> -->
-    <app-devices-table></app-devices-table>
+    <app-devices-table (seleted_information_event)="catch_information($event)"></app-devices-table>
   </div>
   <div class='row' id='main-row'>
-      <!-- <app-graph [information] = information_dad ></app-graph> -->
+      <app-graph *ngIf='_show_graph;' [information] = information_dad ></app-graph>
       <!-- <app-prometheus-graph></app-prometheus-graph> -->
   </div>
 </body>

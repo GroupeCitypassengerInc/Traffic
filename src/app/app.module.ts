@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MapComponent } from './map/map.component';
-import { DevicesListComponent } from './devices-list/devices-list.component';
 import { GraphComponent } from './graph/graph.component';
 import { DevicesTableComponent } from './devices-table/devices-table.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -20,15 +19,16 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { InterceptorService } from './loader/interceptor.service';
+import { SpinnerComponent } from './spinner/spinner.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
-    DevicesListComponent,
     GraphComponent,
-    DevicesTableComponent,    
+    DevicesTableComponent,
+    SpinnerComponent,    
   ],
   imports: [
     BrowserModule,

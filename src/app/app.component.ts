@@ -9,11 +9,11 @@ import { LoaderService } from './loader/loader.service';
 })
 export class AppComponent {
   
-  information_dad:Array<string> = [  ];
-  
-  catch_information(information:Array<string>){
+  information_dad:Array<string> = [];
+  _show_graph: boolean = false;
+  catch_information(information:Array<string>) {
     // Information[0] = group_name | Information[1] = box_name (can be "") //
-    this.information_dad=information;
-    console.log(this.information_dad)
+    this.information_dad = information;
+    this._show_graph = true;
   }
 }

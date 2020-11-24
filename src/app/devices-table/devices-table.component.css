@@ -11,6 +11,7 @@ table {
 .selection {
   margin-top: 1%;
   width: 100%;
+  max-height: 1%;
 }
 
 .grid {
@@ -18,39 +19,11 @@ table {
   width: 100%;
   grid-template-columns: 50% 50%;
 }
-.graph{
-  /* background-color: aqua; */
+
+.btn{
+  margin : 5px;
 }
 
-.info{
-  /* background-color: red; */
-}
-
-.loader-container{
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  /* background: black; */
-  opacity: 1;
-  z-index: 99;
-}
-
-.test{
-  overflow-y: scroll;
-  max-height: 100px;
-  background-color: pink;
-}
-
-/* ul{ 
-  overflow-x:hidden;
-  white-space:nowrap; 
-  height: 3em;
-  width: 100%;
-}  */
-
-/* li{ 
-  display:inline; 
-} */
 .graph_list{
   list-style-type: none;
 }

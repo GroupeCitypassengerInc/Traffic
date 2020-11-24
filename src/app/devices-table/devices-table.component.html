@@ -1,6 +1,8 @@
-<div *ngIf="loaderService.isLoading | async" class="loader-container">
-  <mat-spinner style="top:50%; left:50%;"></mat-spinner>
-</div>
+<!-- <body ng-app="expandCollapseApp">
+  <div ng-controller="expandCollapseCtrl">
+
+  </div>
+</body> -->
 <div class='table_container'>
   <mat-form-field>
     <mat-label>Filter</mat-label>
@@ -59,9 +61,11 @@
                 Address: {{selection.address}}
               </li>
             </ul>
-            <button mat-flat-button color='primary' (click)='clearSelection()'>Clear</button>
+            <button mat-flat-button color='primary' class ='btn' (click)='select_box(selection.box_name, selection.group_name)'>Select box</button>
+            <button mat-flat-button color='primary' class ='btn' (click)='select_group(selection.group_name)'>Select group</button>
+            <button mat-flat-button color='primary' class ='btn' (click)='clearSelection()'>Clear</button>
           </div>
-          <div class='graph'>
+          <div class='graph' *ngIf='_show_graph_available;'>
             <h3>Graph available :</h3>
             <section>
               <span>
@@ -69,16 +73,14 @@
                   (change)="setAll($event.checked)" color="primary">
                   all
                 </mat-checkbox>
-                <div contenteditable='true' class="test">
-                  <ul style='list-style-type: none;'>
-                    <li *ngFor="let graph of graphs_available_checkbox">
-                      <mat-checkbox [(ngModel)]="graph.checked" [color]="graph.color"
-                        (ngModelChange)="updateAllComplete()">
-                        {{graph.name}}
-                      </mat-checkbox>
-                    </li>
-                  </ul>
-                </div>
+                <ul style='list-style-type: none;'>
+                  <li *ngFor="let graph of graphs_available_checkbox">
+                    <mat-checkbox [(ngModel)]="graph.checked" [color]="graph.color"
+                      (ngModelChange)="updateAllComplete()">
+                      {{graph.name}}
+                    </mat-checkbox>
+                  </li>
+                </ul>
               </span>
             </section>
             <button mat-flat-button color='primary' (click)='Visualize()'>Visualize</button>

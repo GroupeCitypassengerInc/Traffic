@@ -59,8 +59,10 @@ export type FadeState = 'visible' | 'hidden';
 })
 
 export class DevicesTableComponent implements OnInit {
+  constructor(private httpClient: HttpClient) { }
+  @Output() seleted_information_event: EventEmitter<Array<string>> = new EventEmitter();
   _show: boolean = false;
-
+  _show_graph_available:boolean = false;
   displayedColumns: string[] = ['group_id','display_name', 'box_name', 'address'];
   BOX_DATA: any = [];
   JSON_data: any = [];
@@ -70,7 +72,6 @@ export class DevicesTableComponent implements OnInit {
   prometheus_metrics_available: any;
   graphs_available_checkbox: checkbox[] = [];
   allComplete: boolean = false;
-  constructor(private httpClient: HttpClient, public loaderService:LoaderService) { }
 
   ngOnInit(): void {
     this.httpClient.get("assets/json/map_devices.json").subscribe(json_data =>{
@@ -120,12 +121,26 @@ export class DevicesTableComponent implements OnInit {
       this.checkbox_creator(this.prometheus_metrics_available.data);
       this.selection = row;
       this._show = true;
+      this._show_graph_available = false;
       this.state = 'visible';
     });
   }
 
+  select_box(selected_box:string, selected_group:string){
+    this._show_graph_available = true;
+    console.log (selected_box);
+    console.log (selected_group);
+
+  }
+
+  select_group(selected_group:string){
+    this._show_graph_available = true;
+    console.log (selected_group);
+  }
+
   clearSelection(){
     this._show = false;
+    this._show_graph_available = false;
     this.selection = <box_info>{};
     this.state = 'hidden';
   }
@@ -135,6 +150,8 @@ export class DevicesTableComponent implements OnInit {
     console.log('visualize');
     console.log(this.graphs_available_checkbox);
     console.log(checked);
+    this.seleted_information_event.emit(checked);
+
   }
   
   updateAllComplete() {

@@ -1,11 +1,77 @@
-@import '~angular/material/theming';
+@import '~@angular/material/theming';
 
 @include mat-core();
 
-$city-bagage-theme-primary: mat-palette();
-$city-bagage-theme-secondary: mat-palette();
-$city-bagage-theme-warn: mat-palette();
-$city-bagage-theme-accent: mat-palette();
+$md-cityblue: (
+  50 : #e7e9f3,
+  100 : #c4c8e1,
+  200 : #9ca4ce,
+  300 : #7480ba,
+  400 : #5764ab,
+  500 : #39499c, //right color
+  600 : #334294,
+  700 : #2c398a,
+  800 : #243180,
+  900 : #17216e,
+  A100 : #a7b0ff,
+  A200 : #7482ff,
+  A400 : #4154ff,
+  A700 : #283dff,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #ffffff,
+    A700 : #ffffff,
+  )
+);
+
+$md-citygreen: (
+  50 : #f4f7e7,
+  100 : #e3ecc3,
+  200 : #d1e09b,
+  300 : #bfd373,
+  400 : #b1c955,
+  500 : #a3c037, //right color
+  600 : #9bba31,
+  700 : #91b22a,
+  800 : #88aa23,
+  900 : #779c16,
+  A100 : #f1ffd0,
+  A200 : #e2ff9d,
+  A400 : #d2ff6a,
+  A700 : #cbff51,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #000000,
+    600 : #000000,
+    700 : #000000,
+    800 : #000000,
+    900 : #000000,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+$city-bagage-theme-primary: mat-palette($md-cityblue, 500);
+$city-bagage-theme-secondary: mat-palette($md-citygreen, 500);
+$city-bagage-theme-warn: mat-palette($md-cityblue, A500);
+$city-bagage-theme-accent: mat-palette($md-cityblue, A500);
 
 $city-bagage-theme: mat-light-theme((
   color: (
