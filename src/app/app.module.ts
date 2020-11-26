@@ -8,7 +8,6 @@ import { DevicesTableComponent } from './devices-table/devices-table.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
-
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule, MatFormFieldControl} from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,7 +19,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { InterceptorService } from './loader/interceptor.service';
 import { SpinnerComponent } from './spinner/spinner.component';
-
+import { MatRadioModule } from '@angular/material/radio';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { SpinnerComponent } from './spinner/spinner.component';
     MapComponent,
     GraphComponent,
     DevicesTableComponent,
-    SpinnerComponent,    
+    SpinnerComponent,  
+      
   ],
   imports: [
     BrowserModule,
@@ -45,6 +47,9 @@ import { SpinnerComponent } from './spinner/spinner.component';
     MatCheckboxModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    MatRadioModule,
+    MatGridListModule,
+    MatPaginatorModule,
   ],
   exports:[
 

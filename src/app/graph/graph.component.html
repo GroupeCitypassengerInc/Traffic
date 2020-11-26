@@ -1,28 +1,13 @@
-<!-- Working (display only one graph) -->
-<!-- <div class='graph_container'>
-  <div class='row'>
-    <div class='graph'>
-        <h5>{{query_list[0].query}}</h5>
-        <canvas id={{query_list[0].query}} width='500' height='400'></canvas>
-    </div>
-  </div>
-</div> -->
-
-<div class='row'>
-  <button type='button' class='btn btn-primary btn-lg' (click)='destroy_all()'>Destroy all</button>
-  <button type='button' class='btn btn-primary btn-lg' (click)='regenerate_all()'>Regenerate all</button>
-</div>
-
 <!-- Working (display multiple graph) -->
 <div class='app flex-row align-items-center'>
   <div class='card-deck row'>
     <div class='col-md-4' *ngFor='let query of query_list'>
       <div class='graph_container'>
-        <h5>{{query.query}}</h5>
+        <h5>{{query}}</h5>
         <div class='row'>
-          <button type='button' class='btn btn-primary btn-sm' (click)='regenerate(query.query)'>Regenerate</button>
+          <button type='button' class='btn btn-primary btn-sm' (click)='regenerate(query)'>Reload</button>
         </div>
-        <canvas id={{query.query}} width='500' height='400'></canvas>
+        <canvas id={{query}} width='500' height='400'></canvas>
       </div>
     </div>
   </div>

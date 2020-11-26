@@ -9,41 +9,28 @@ import * as ChartDatasourcePrometheusPlugin from 'chartjs-plugin-datasource-prom
   styleUrls: ['./graph.component.css']
 })
 export class GraphComponent implements OnInit {
-  /*
-    selection information : [[group][box_name]]
-  */
+
   @Input() information: Array<string>;
 
   // Request : /prometheus/api/v1/query_range?query=up&start=1604584181.313&end=1604670581.313&step=9250
-  endpoint : string = 'http://192.168.1.117:12333/prometheus/';
-  query_list : any = [
-    {query:'up'},
-    {query:'Devices_on_lan_gauge'},
-    {query:'cpustats_cpu_usage_percent'},
-    {query:'memstats_memory_usage_percent'},
-    {query:'memstats_total_memory_bytes'},
-    {query:'memstats_used_memory_bytes'},
-  ];
-
-
+  endpoint : string = 'http://192.168.1.138:12333/prometheus/';
+  query_list : any = [];
   chart_list : Array<any> = [];
   up_start_time : number = -24 * 60 * 60 * 1000; //12 hours from now
   end_time : number = 0; //now
   start_date : Date;
 
-  constructor(  ) {
-
+  constructor() {
   }
   
   ngOnInit(): void {
-    //console.log('first : ' + this.query_list[0].query);
     console.log('init');
-    //console.log('changes : ' + this.information);
+    console.log (this.information);
+    this.query_list = this.information;
   }
 
   ngAfterViewInit(){
-    this.generate_all(); //{job=\'CityBox\'}
-    //this.chart_builder(this.query_list[0].query, ''); //{job=\'CityBox\'}
+    this.generate_all();
   }
 
   ngOnChanges(changes: any){
@@ -52,16 +39,15 @@ export class GraphComponent implements OnInit {
     } 
   }
 
-  
   // Find a chart using the metric name
   find_chart(id:string){
 
     var chart;
-    this.query_list.forEach(array => {
-      var regex = new RegExp("^("+ array[0] +".*)$");
+    this.query_list.forEach(query => {
+      var regex = new RegExp("^("+ query +".*)$");
       if ((regex.exec(id)) !== null ){
-        console.log('found : ' + array[0]);
-        chart = array[1];
+        console.log('found : ' + query);
+        chart = query;
       }
     });
     return chart;
@@ -70,7 +56,7 @@ export class GraphComponent implements OnInit {
   // Generate all graph
   generate_all(){
     this.chart_list=[];
-    this.query_list.forEach(query => this.chart_list.push([query.query,this.chart_builder(query.query)]));
+    this.query_list.forEach(query => this.chart_list.push([query,this.chart_builder(query)]));
     console.log(this.query_list);
     console.log(this.chart_list);
   }
@@ -101,15 +87,13 @@ export class GraphComponent implements OnInit {
   
   // Build chart
   chart_builder(id:string){
-    //console.log(this.up_start_time/60/60/1000);
     console.log('building : ' + id + ' chart');
     var ctx = document.getElementById(id);
     if (ctx === null){
       throw new Error("An error as occured. An get id of : " + id);
     }
     console.log(ctx);
-    let query = id;// + job;
-    //console.log(query);
+    let query = id;
     var chart = new Chart(ctx, {
       type: 'line',
       plugins: [ChartDatasourcePrometheusPlugin],
@@ -144,7 +128,6 @@ export class GraphComponent implements OnInit {
         },
       },
     });
-    //console.log(this.chart_list);
     return chart;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ViewChild} from '@angular/core';
 import { animate, AnimationEvent, state, style, transition, trigger } from '@angular/animations';
 import { HttpClient } from "@angular/common/http";
 import { SelectionModel } from '@angular/cdk/collections';
@@ -14,6 +14,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { LoaderService } from '../loader/loader.service';
 import { ThemePalette } from '@angular/material/core';
+import { CdkTableModule} from '@angular/cdk/table';
+import { DataSource } from '@angular/cdk/table';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { FormControl } from '@angular/forms';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 export interface box_info {
   No: number, 
@@ -25,62 +31,53 @@ export interface box_info {
   site_refer: string, 
 }
 export interface checkbox {
-  name: string,
-  checked: boolean,
-  color: ThemePalette,
+  name: string;
+  checked: boolean;
+  color: ThemePalette;
 }
-export interface metric {
-  data: string, 
-}
-export type FadeState = 'visible' | 'hidden';
 
 @Component({
   selector: 'app-devices-table',
   templateUrl: './devices-table.component.html',
   styleUrls: ['./devices-table.component.css'],
   animations: [
-    trigger('state', [
-      state(
-        'visible',
-        style({
-          opacity: '1'
-        })
-      ),
-      state(
-        'hidden',
-        style({
-          opacity: '0'
-        })
-      ),
-      transition('* => visible', [animate('500ms ease-out')]),
-      transition('visible => hidden', [animate('500ms ease-out')])
-    ])
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
   ],
 })
 
 export class DevicesTableComponent implements OnInit {
   constructor(private httpClient: HttpClient) { }
   @Output() seleted_information_event: EventEmitter<Array<string>> = new EventEmitter();
-  _show: boolean = false;
-  _show_graph_available:boolean = false;
-  displayedColumns: string[] = ['group_id','display_name', 'box_name', 'address'];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  columnsToDisplay: string[] = ['group_id','display_name', 'box_name', 'address'];
   BOX_DATA: any = [];
   JSON_data: any = [];
   dataSource =  new MatTableDataSource(this.BOX_DATA);
   selection: box_info;
-  state: FadeState;
   prometheus_metrics_available: any;
   graphs_available_checkbox: checkbox[] = [];
+  graphs_available_list: string[] = [];
   allComplete: boolean = false;
+  expandedElement: box_info | null;
+  graphs_form = new FormControl();
 
   ngOnInit(): void {
     this.httpClient.get("assets/json/map_devices.json").subscribe(json_data =>{
       this.JSON_data = json_data;
       this.data_formating();
     });
-    console.log(this.BOX_DATA);
   }
  
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
   data_formating(){
     let index = 0;
     for (let group of this.JSON_data.groups){
@@ -102,78 +99,47 @@ export class DevicesTableComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
-  checkbox_creator(metrics_available){
-    this.graphs_available_checkbox = [];
+  graph_avialable_catcher(metrics_available){
+    this.graphs_available_list = [];
+    console.log(metrics_available);
     metrics_available.forEach(metric_name => {
-      let checkbox_properties = {} as checkbox ;
-      checkbox_properties.name = metric_name;
-      checkbox_properties.checked = false;
-      checkbox_properties.color = "primary";
-      this.graphs_available_checkbox.push(checkbox_properties);
+      this.graphs_available_list.push(metric_name);
     });
   }
 
   getRecord(row){
     this.httpClient.get("http://192.168.1.138:12333/prometheus/api/v1/label/__name__/values").subscribe(prometheus_metrics =>{
       this.prometheus_metrics_available = prometheus_metrics;
-      this.checkbox_creator(this.prometheus_metrics_available.data);
+      this.graph_avialable_catcher(this.prometheus_metrics_available.data);
       this.selection = row;
-      this._show = true;
-      this._show_graph_available = false;
-      this.state = 'visible';
     });
-  }
-
-  select_box(selected_box:string, selected_group:string){
-    this._show_graph_available = true;
-    console.log (selected_box);
-    console.log (selected_group);
-
-  }
-
-  select_group(selected_group:string){
-    this._show_graph_available = true;
-    console.log (selected_group);
-  }
-
-  clearSelection(){
-    this._show = false;
-    this._show_graph_available = false;
-    this.selection = <box_info>{};
-    this.state = 'hidden';
+    row.highlighted = !row.highlighted;
   }
 
   Visualize(){
     let checked = this.graphs_available_checkbox.filter(opt => opt.checked).map(opt => opt.name);
-    console.log('visualize');
-    console.log(this.graphs_available_checkbox);
-    console.log(checked);
     this.seleted_information_event.emit(checked);
-
   }
   
   updateAllComplete() {
     this.allComplete = this.graphs_available_checkbox != null && this.graphs_available_checkbox.every(t => t.checked);
-    console.log('update all');
-    console.log(this.graphs_available_checkbox);
   }
 
   someComplete(): boolean {
     if (this.graphs_available_checkbox == null) {
-      console.log(this.graphs_available_checkbox);
       return false;
     }
-    console.log('Some complete');
     return this.graphs_available_checkbox.filter(t => t.checked).length > 0 && !this.allComplete;
   }
 
   setAll(completed: boolean) {
     this.allComplete = completed;
-    console.log('Set all');
     if (this.graphs_available_checkbox == null) {
-      console.log(this.graphs_available_checkbox);
       return;
     }
     this.graphs_available_checkbox.forEach(t => t.checked = completed);
