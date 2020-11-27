@@ -20,6 +20,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { FormControl } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { throwError, TimeoutError } from 'rxjs';
+import { catchError, timeout, map } from 'rxjs/operators';
 
 export interface box_info {
   No: number, 
@@ -50,7 +52,9 @@ export interface checkbox {
 })
 
 export class DevicesTableComponent implements OnInit {
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {
+    this._disabled_visualize = true;
+   }
   @Output() seleted_information_event: EventEmitter<Array<string>> = new EventEmitter();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -65,7 +69,8 @@ export class DevicesTableComponent implements OnInit {
   allComplete: boolean = false;
   expandedElement: box_info | null;
   graphs_form = new FormControl();
-
+  _disabled_visualize : boolean = true;
+  
   ngOnInit(): void {
     this.httpClient.get("assets/json/map_devices.json").subscribe(json_data =>{
       this.JSON_data = json_data;
@@ -113,10 +118,25 @@ export class DevicesTableComponent implements OnInit {
   }
 
   getRecord(row){
-    this.httpClient.get("http://192.168.1.138:12333/prometheus/api/v1/label/__name__/values").subscribe(prometheus_metrics =>{
+    console.log(row);
+    this.httpClient.get("http://192.168.1.117:12333/prometheus/api/v1/label/__name__/values").pipe(
+      timeout(5000), 
+      map(res => {
+        return res;
+      }
+    ),
+    catchError(
+      err => {
+        throw err;
+      }
+    )).subscribe(prometheus_metrics =>{
       this.prometheus_metrics_available = prometheus_metrics;
       this.graph_avialable_catcher(this.prometheus_metrics_available.data);
       this.selection = row;
+      this._disabled_visualize = false;
+    },err => {
+      this._disabled_visualize = true; // disable visualize button on http error
+      console.log(err);
     });
     row.highlighted = !row.highlighted;
   }

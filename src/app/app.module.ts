@@ -22,6 +22,9 @@ import { SpinnerComponent } from './spinner/spinner.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { throwError, TimeoutError } from 'rxjs';
+import { catchError, timeout, map } from 'rxjs/operators';
+
 
 @NgModule({
   declarations: [
@@ -50,6 +53,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatRadioModule,
     MatGridListModule,
     MatPaginatorModule,
+    
   ],
   exports:[
 

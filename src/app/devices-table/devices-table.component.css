@@ -65,14 +65,23 @@ tr.element-row:not(.expanded-row):active {
   padding: 5px;
   min-width: 100%;
 }
+
 .radio {
   /* margin: 1%; */
   text-align: left;
   align-content: left;
   padding: 1%;
 }
+
 .additional-selection {
   opacity: 0.75;
   font-size: 0.75em;
 }
 
+.row {
+  text-align: center;
+}
+
+.visualize_btn {
+  margin: 1% 1% 2%;
+}
