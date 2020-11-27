@@ -119,7 +119,7 @@ export class DevicesTableComponent implements OnInit {
 
   getRecord(row){
     console.log(row);
-    this.httpClient.get("http://192.168.1.117:12333/prometheus/api/v1/label/__name__/values").pipe(
+    this.httpClient.get("http://192.168.10.117:12333/prometheus/api/v1/label/__name__/values").pipe(
       timeout(5000), 
       map(res => {
         return res;
@@ -133,7 +133,7 @@ export class DevicesTableComponent implements OnInit {
       this.prometheus_metrics_available = prometheus_metrics;
       this.graph_avialable_catcher(this.prometheus_metrics_available.data);
       this.selection = row;
-      this._disabled_visualize = false;
+      this._disabled_visualize = false; // enable visualize button if any error has been catched
     },err => {
       this._disabled_visualize = true; // disable visualize button on http error
       console.log(err);
