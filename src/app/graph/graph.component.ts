@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { HttpClientModule, HttpClient, HttpHeaders }    from '@angular/common/http';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { Chart } from 'chart.js';
 import * as ChartDatasourcePrometheusPlugin from 'chartjs-plugin-datasource-prometheus';
 
@@ -13,10 +14,10 @@ export class GraphComponent implements OnInit {
   @Input() information: Array<string>;
 
   // Request : /prometheus/api/v1/query_range?query=up&start=1604584181.313&end=1604670581.313&step=9250
-  endpoint : string = 'http://192.168.1.138:12333/prometheus/';
+  endpoint : string = 'http://10.0.0.68:12333/prometheus/';
   query_list : any = [];
   chart_list : Array<any> = [];
-  up_start_time : number = -24 * 60 * 60 * 1000; //12 hours from now
+  up_start_time : number = -1 * 60 * 60 * 1000; //12 hours from now
   end_time : number = 0; //now
   start_date : Date;
 
@@ -30,7 +31,7 @@ export class GraphComponent implements OnInit {
   }
 
   ngAfterViewInit(){
-    this.generate_all();
+    this.generate_all_graph();
   }
 
   ngOnChanges(changes: any){
@@ -41,7 +42,6 @@ export class GraphComponent implements OnInit {
 
   // Find a chart using the metric name
   find_chart(id:string){
-
     var chart;
     this.query_list.forEach(query => {
       var regex = new RegExp("^("+ query +".*)$");
@@ -54,7 +54,7 @@ export class GraphComponent implements OnInit {
   }
 
   // Generate all graph
-  generate_all(){
+  generate_all_graph(){
     this.chart_list=[];
     this.query_list.forEach(query => this.chart_list.push([query,this.chart_builder(query)]));
     console.log(this.query_list);
@@ -70,9 +70,9 @@ export class GraphComponent implements OnInit {
   }
 
   // Regenerate all graph
-  regenerate_all(){
+  regenerate_all_graph(){
     this.destroy_all();
-    this.generate_all();
+    this.generate_all_graph();
   }
 
   // Re-generate all graph
@@ -111,15 +111,19 @@ export class GraphComponent implements OnInit {
           'datasource-prometheus': {
             prometheus: {
               endpoint: this.endpoint,
-              baseURL: '/api/v1',   // default value
             },
+            cubicInterpolationMode: 'monotone',
             query: query,
+            stepped:true,
+            tension : 0,
             timeRange: {
               type: 'relative',
 
               // from 12 hours ago to now
               start: this.up_start_time,
               end: this.end_time,
+              step:1,
+              minSte:1,
           
               // refresh every 10s
               msUpdateInterval: 10 * 1000,

@@ -20,7 +20,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { FormControl } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { throwError, TimeoutError } from 'rxjs';
+import { EMPTY, throwError, TimeoutError } from 'rxjs';
 import { catchError, timeout, map } from 'rxjs/operators';
 
 export interface box_info {
@@ -58,18 +58,20 @@ export class DevicesTableComponent implements OnInit {
   @Output() seleted_information_event: EventEmitter<Array<string>> = new EventEmitter();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  
   columnsToDisplay: string[] = ['group_id','display_name', 'box_name', 'address'];
   BOX_DATA: any = [];
   JSON_data: any = [];
   dataSource =  new MatTableDataSource(this.BOX_DATA);
   selection: box_info;
   prometheus_metrics_available: any;
-  graphs_available_checkbox: checkbox[] = [];
   graphs_available_list: string[] = [];
   allComplete: boolean = false;
   expandedElement: box_info | null;
   graphs_form = new FormControl();
   _disabled_visualize : boolean = true;
+  http_request_ok : boolean = false
+  option : string = "group";
   
   ngOnInit(): void {
     this.httpClient.get("assets/json/map_devices.json").subscribe(json_data =>{
@@ -101,6 +103,14 @@ export class DevicesTableComponent implements OnInit {
     }
   }
 
+  onChange (event : Event){
+    if (this.graphs_form.value.length > 0 && this.http_request_ok == true){
+      this._disabled_visualize = false;
+    } else {
+      this._disabled_visualize = true;
+    }
+  }
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -111,15 +121,13 @@ export class DevicesTableComponent implements OnInit {
 
   graph_avialable_catcher(metrics_available){
     this.graphs_available_list = [];
-    console.log(metrics_available);
     metrics_available.forEach(metric_name => {
       this.graphs_available_list.push(metric_name);
     });
   }
 
   getRecord(row){
-    console.log(row);
-    this.httpClient.get("http://192.168.10.117:12333/prometheus/api/v1/label/__name__/values").pipe(
+    this.httpClient.get("http://10.0.0.68:12333/prometheus/api/v1/label/__name__/values").pipe(
       timeout(5000), 
       map(res => {
         return res;
@@ -130,38 +138,32 @@ export class DevicesTableComponent implements OnInit {
         throw err;
       }
     )).subscribe(prometheus_metrics =>{
+
       this.prometheus_metrics_available = prometheus_metrics;
       this.graph_avialable_catcher(this.prometheus_metrics_available.data);
       this.selection = row;
-      this._disabled_visualize = false; // enable visualize button if any error has been catched
+      this.http_request_ok = true;
+      this._disabled_visualize = true; // enable visualize button if any error has been catched
     },err => {
       this._disabled_visualize = true; // disable visualize button on http error
+      this.http_request_ok = false;
       console.log(err);
     });
     row.highlighted = !row.highlighted;
   }
 
   Visualize(){
-    let checked = this.graphs_available_checkbox.filter(opt => opt.checked).map(opt => opt.name);
+    let checked = this.graphs_form.value;
+    let selected = this.selection;
+    console.log(checked);
+    console.log(selected);
+    console.log(this.option);
+    console.log('-------------------------------------------');
     this.seleted_information_event.emit(checked);
   }
-  
-  updateAllComplete() {
-    this.allComplete = this.graphs_available_checkbox != null && this.graphs_available_checkbox.every(t => t.checked);
-  }
 
-  someComplete(): boolean {
-    if (this.graphs_available_checkbox == null) {
-      return false;
-    }
-    return this.graphs_available_checkbox.filter(t => t.checked).length > 0 && !this.allComplete;
-  }
-
-  setAll(completed: boolean) {
-    this.allComplete = completed;
-    if (this.graphs_available_checkbox == null) {
-      return;
-    }
-    this.graphs_available_checkbox.forEach(t => t.checked = completed);
+  radioChange(event:any){
+    this.option = event.value;
+    console.log(this.option);
   }
 }

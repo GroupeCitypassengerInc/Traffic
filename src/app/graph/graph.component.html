@@ -1,14 +1,27 @@
 <!-- Working (display multiple graph) -->
-<div class='app flex-row align-items-center'>
-  <div class='card-deck row'>
-    <div class='col-md-4' *ngFor='let query of query_list'>
-      <div class='graph_container'>
-        <h5>{{query}}</h5>
-        <div class='row'>
-          <button type='button' class='btn btn-primary btn-sm' (click)='regenerate(query)'>Reload</button>
+<h2>Graphs</h2>
+<mat-grid-list cols="3">
+  <div class='graph_container'>
+    <div *ngFor='let query of query_list'>
+      <mat-grid-tile class="graph" gutterSize='5px' colspan='1' rowspan='1'>
+        <div>
+          <h4>{{query}}</h4>
         </div>
-        <canvas id={{query}} width='500' height='400'></canvas>
-      </div>
+        <div>
+          <canvas class="graph" id={{query}} width='500' height='400'></canvas>
+        </div>
+      </mat-grid-tile>
     </div>
   </div>
-</div>
+</mat-grid-list>
+
+<!-- colspan='1' -->
+<!-- <h2>Graphs</h2>
+<mat-grid-list cols="3">
+  <div class='graph_container'>
+    <mat-grid-tile *ngFor='let query of query_list' gutterSize='5px'>
+      <h4>{{query}}</h4><br>
+      <canvas class ="graph" id={{query}} width='500' height='400'></canvas>
+    </mat-grid-tile>
+  </div>
+</mat-grid-list> -->

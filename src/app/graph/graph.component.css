@@ -1,11 +1,6 @@
-.graph{
-  min-width: 500px;
-  min-height: 500px;
-}
 .graph_container{
-  margin-left: 6%;
-  margin-right: 6%;
-  margin-top: 4%;
-  margin-bottom: 4%; 
-  align-content: center;
+  margin: 1%;
+}
+.graph >::ng-deep .mat-figure{
+  display: block; 
 }

@@ -58,9 +58,9 @@ p {
   margin-left: 1%;
 }
 
-.table{
+.component{
   margin: 2%;
-  display: block;
+  /* display: block; */
   justify-content:center;
   align-items: center;
   max-width: 100%;
