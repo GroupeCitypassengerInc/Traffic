@@ -36,7 +36,8 @@ export class GraphComponent implements OnInit {
 
   ngOnChanges(changes: any){
     if (!changes['information'].isFirstChange()){
-      //console.log('changes catch: ' + this.information);
+      console.log('changes catch: ' + this.information);
+      this.ngOnInit();
     } 
   }
 
@@ -112,19 +113,14 @@ export class GraphComponent implements OnInit {
             prometheus: {
               endpoint: this.endpoint,
             },
-            cubicInterpolationMode: 'monotone',
             query: query,
             stepped:true,
-            tension : 0,
             timeRange: {
               type: 'relative',
-
               // from 12 hours ago to now
               start: this.up_start_time,
               end: this.end_time,
-              step:1,
-              minSte:1,
-          
+              step:10,
               // refresh every 10s
               msUpdateInterval: 10 * 1000,
             },

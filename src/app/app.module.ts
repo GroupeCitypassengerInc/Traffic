@@ -8,6 +8,14 @@ import { DevicesTableComponent } from './devices-table/devices-table.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
+import { throwError, TimeoutError } from 'rxjs';
+import { catchError, timeout, map } from 'rxjs/operators';
+import { InterceptorService } from './loader/interceptor.service';
+import { SpinnerComponent } from './spinner/spinner.component';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule, MatFormFieldControl} from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,14 +25,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { InterceptorService } from './loader/interceptor.service';
-import { SpinnerComponent } from './spinner/spinner.component';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { throwError, TimeoutError } from 'rxjs';
-import { catchError, timeout, map } from 'rxjs/operators';
-
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,6 @@ import { catchError, timeout, map } from 'rxjs/operators';
     GraphComponent,
     DevicesTableComponent,
     SpinnerComponent,  
-      
   ],
   imports: [
     BrowserModule,
@@ -53,7 +53,8 @@ import { catchError, timeout, map } from 'rxjs/operators';
     MatRadioModule,
     MatGridListModule,
     MatPaginatorModule,
-    
+    MatToolbarModule,
+    MatIconModule,
   ],
   exports:[
 

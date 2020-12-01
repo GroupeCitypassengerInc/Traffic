@@ -3,12 +3,12 @@
 <mat-grid-list cols="3">
   <div class='graph_container'>
     <div *ngFor='let query of query_list'>
-      <mat-grid-tile class="graph" gutterSize='5px' colspan='1' rowspan='1'>
+      <mat-grid-tile class="graph" gutterSize='5px' colspan='3' rowspan='1'>
         <div>
           <h4>{{query}}</h4>
         </div>
         <div>
-          <canvas class="graph" id={{query}} width='500' height='400'></canvas>
+          <canvas class="graph" id={{query}} width='1500' height='400'></canvas>
         </div>
       </mat-grid-tile>
     </div>

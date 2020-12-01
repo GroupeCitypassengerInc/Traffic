@@ -68,7 +68,7 @@ export class DevicesTableComponent implements OnInit {
   graphs_available_list: string[] = [];
   allComplete: boolean = false;
   expandedElement: box_info | null;
-  graphs_form = new FormControl();
+  graphs_form: FormControl;
   _disabled_visualize : boolean = true;
   http_request_ok : boolean = false
   option : string = "group";
@@ -127,6 +127,7 @@ export class DevicesTableComponent implements OnInit {
   }
 
   getRecord(row){
+    this.graphs_form = new FormControl();
     this.httpClient.get("http://10.0.0.68:12333/prometheus/api/v1/label/__name__/values").pipe(
       timeout(5000), 
       map(res => {
