@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoaderService } from '../loader/loader.service';
 import { ThemePalette } from '@angular/material/core';
 import { CdkTableModule} from '@angular/cdk/table';
@@ -22,6 +23,7 @@ import { FormControl } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { EMPTY, throwError, TimeoutError } from 'rxjs';
 import { catchError, timeout, map } from 'rxjs/operators';
+
 
 export interface box_info {
   No: number, 
@@ -52,7 +54,7 @@ export interface checkbox {
 })
 
 export class DevicesTableComponent implements OnInit {
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private _snackBar: MatSnackBar) {
     this._disabled_visualize = true;
    }
   @Output() seleted_information_event: EventEmitter<Array<string>> = new EventEmitter();
@@ -149,6 +151,7 @@ export class DevicesTableComponent implements OnInit {
       this._disabled_visualize = true; // disable visualize button on http error
       this.http_request_ok = false;
       console.log(err);
+      this.openSnackBar(err);
     });
     row.highlighted = !row.highlighted;
   }
@@ -166,5 +169,11 @@ export class DevicesTableComponent implements OnInit {
   radioChange(event:any){
     this.option = event.value;
     console.log(this.option);
+  }
+
+  openSnackBar(message: string) {
+    this._snackBar.open(message,'ok',{
+      duration: 10000,
+    });
   }
 }

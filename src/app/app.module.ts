@@ -26,6 +26,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatPaginatorModule,
     MatToolbarModule,
     MatIconModule,
+    MatSnackBarModule,
   ],
   exports:[
 

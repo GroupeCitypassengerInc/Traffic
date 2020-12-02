@@ -1,8 +1,9 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, ChangeDetectorRef, ApplicationRef } from '@angular/core';
 import { HttpClientModule, HttpClient, HttpHeaders }    from '@angular/common/http';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { Chart } from 'chart.js';
 import * as ChartDatasourcePrometheusPlugin from 'chartjs-plugin-datasource-prometheus';
+
 
 @Component({
   selector: 'app-graph',
@@ -17,11 +18,11 @@ export class GraphComponent implements OnInit {
   endpoint : string = 'http://10.0.0.68:12333/prometheus/';
   query_list : any = [];
   chart_list : Array<any> = [];
-  up_start_time : number = -1 * 60 * 60 * 1000; //12 hours from now
+  up_start_time : number = -1 * 60 * 60 * 1000; //1 hours from now
   end_time : number = 0; //now
   start_date : Date;
 
-  constructor() {
+  constructor(private appRef: ChangeDetectorRef) {
   }
   
   ngOnInit(): void {
@@ -37,7 +38,9 @@ export class GraphComponent implements OnInit {
   ngOnChanges(changes: any){
     if (!changes['information'].isFirstChange()){
       console.log('changes catch: ' + this.information);
-      this.ngOnInit();
+      this.query_list = this.information;
+      this.appRef.detectChanges();
+      this.regenerate_all_graph();
     } 
   }
 
@@ -58,8 +61,6 @@ export class GraphComponent implements OnInit {
   generate_all_graph(){
     this.chart_list=[];
     this.query_list.forEach(query => this.chart_list.push([query,this.chart_builder(query)]));
-    console.log(this.query_list);
-    console.log(this.chart_list);
   }
 
   // Destroy all graph
