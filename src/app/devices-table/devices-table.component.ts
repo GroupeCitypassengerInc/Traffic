@@ -157,6 +157,7 @@ export class DevicesTableComponent implements OnInit {
   }
 
   Visualize(){
+    let informations: Array<string>;
     let checked = this.graphs_form.value;
     let selected = this.selection;
     console.log(checked);

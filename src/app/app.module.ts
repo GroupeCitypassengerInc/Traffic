@@ -27,6 +27,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { LoginComponent } from './login/login.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -34,7 +37,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MapComponent,
     GraphComponent,
     DevicesTableComponent,
-    SpinnerComponent,  
+    SpinnerComponent,
+    LoginComponent,  
   ],
   imports: [
     BrowserModule,
@@ -57,6 +61,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatToolbarModule,
     MatIconModule,
     MatSnackBarModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
   ],
   exports:[
 

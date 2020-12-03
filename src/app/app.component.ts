@@ -1,8 +1,7 @@
 import { Component, Output, EventEmitter, HostListener  } from '@angular/core';
 import { GraphComponent } from './graph/graph.component';
 import { LoaderService } from './loader/loader.service';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
+
 
 
 @Component({

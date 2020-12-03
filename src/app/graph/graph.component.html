@@ -6,6 +6,16 @@
       <mat-grid-tile class="graph" gutterSize='5px' colspan='3' rowspan='1'>
         <div>
           <h4>{{query}}</h4>
+          <!-- <button mat-flat-button color='primary' (click)='select(query)' class='visualize_btn'>Select</button> -->
+          <mat-form-field appearance="fill">
+            <mat-label>Enter a date range</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input matStartDate placeholder="Start date">
+              <input matEndDate placeholder="End date">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
         </div>
         <div>
           <canvas class="graph" id={{query}} width='1500' height='400'></canvas>
@@ -14,14 +24,3 @@
     </div>
   </div>
 </mat-grid-list>
-
-<!-- colspan='1' -->
-<!-- <h2>Graphs</h2>
-<mat-grid-list cols="3">
-  <div class='graph_container'>
-    <mat-grid-tile *ngFor='let query of query_list' gutterSize='5px'>
-      <h4>{{query}}</h4><br>
-      <canvas class ="graph" id={{query}} width='500' height='400'></canvas>
-    </mat-grid-tile>
-  </div>
-</mat-grid-list> -->
