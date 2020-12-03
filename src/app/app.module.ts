@@ -5,7 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MapComponent } from './map/map.component';
 import { GraphComponent } from './graph/graph.component';
 import { DevicesTableComponent } from './devices-table/devices-table.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 import { throwError, TimeoutError } from 'rxjs';
@@ -17,7 +17,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTableModule } from '@angular/material/table';
-import { MatFormFieldModule, MatFormFieldControl} from '@angular/material/form-field';
+import { MatFormFieldModule, MatFormFieldControl } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -30,6 +30,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LoginComponent } from './login/login.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDatetimepickerModule, MatNativeDatetimeModule } from "@mat-datetimepicker/core";
 
 @NgModule({
   declarations: [
@@ -63,6 +65,9 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatSnackBarModule,
     MatNativeDateModule,
     MatDatepickerModule,
+    MatDialogModule,
+    MatDatetimepickerModule,
+    MatNativeDatetimeModule,
   ],
   exports:[
 

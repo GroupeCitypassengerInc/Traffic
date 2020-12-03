@@ -1,6 +1,12 @@
+p {
+  font-family: Lato;
+}
 .graph_container{
   margin: 1%;
 }
 .graph >::ng-deep .mat-figure{
   display: block; 
+}
+::ng-deep.mat-datetimepicker-calendar-header {
+  background-color: #39499c !important;
 }

@@ -7,9 +7,13 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgModule, LOCALE_ID } from '@angular/core';
+import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDatetimepickerModule, MatNativeDatetimeModule } from "@mat-datetimepicker/core";
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Chart } from 'chart.js';
 import * as ChartDatasourcePrometheusPlugin from 'chartjs-plugin-datasource-prometheus';
-
 
 @Component({
   selector: 'app-graph',
@@ -27,12 +31,18 @@ export class GraphComponent implements OnInit {
   up_start_time : number = -1 * 60 * 60 * 1000; //1 hours from now
   end_time : number = 0; //now
   start_date : Date;
+  form: FormGroup;
 
-  constructor(private appRef: ChangeDetectorRef) {
+  constructor(private appRef: ChangeDetectorRef,  private _formBuilder: FormBuilder) {
+    this.form = this._formBuilder.group({
+      startDate: [{ value: '', disabled: true }, Validators.required]
+    });
   }
   
   ngOnInit(): void {
     console.log('init');
+    this.form.get('startDate').setValue(new Date()),
+    this.form.get('startDate').enable();
     console.log (this.information);
     this.query_list = this.information;
   }
