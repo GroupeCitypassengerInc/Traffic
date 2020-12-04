@@ -3,6 +3,7 @@
 <mat-grid-list cols="3">
   <div class='graph_container'>
     <div *ngFor='let query of query_list'>
+      <!-- <div *ngFor='let query of graphs_records | keyvalue'> -->
       <mat-grid-tile class="graph" gutterSize='5px' colspan='3' rowspan='1'>
         <div>
           <h4>{{query}}</h4>
@@ -15,7 +16,7 @@
                 (click)="incrementValue(-_step)" [disabled]="shouldDisableDecrement(_value)">
                 <mat-icon>remove</mat-icon>
               </button>
-              <input matInput type="number" class='counter' [(ngModel)]="_value" (focus)="setColor('primary')"
+              <input matInput type="number" class='counter' [(ngModel)]="default_value" (focus)="setColor('primary')"
                 (blur)="setColor('default')" />
               <button mat-button mat-icon-button matSuffix aria-label="Add" [color]="primary"
                 (click)="incrementValue(_step)" [disabled]="shouldDisableIncrement(_value)">
@@ -26,7 +27,7 @@
             <!-- Unit section -->
             <mat-form-field appearance="legacy" class="form">
               <mat-label>Unit option</mat-label>
-              <mat-select [(value)]="unit" placeholder="Unit" [disabled]="unit_select.value">
+              <mat-select [(value)]="default_unit" placeholder="Unit" [disabled]="unit_select.value">
                 <mat-option value="minute">minute</mat-option>
                 <mat-option value="hour">hour</mat-option>
                 <mat-option value="day">day</mat-option>
@@ -45,7 +46,7 @@
             </form>
           </div>
         </div>
-        <div>
+        <div class='graph'>
           <canvas class="graph" id={{query}} width='1500' height='400'></canvas>
         </div>
       </mat-grid-tile>

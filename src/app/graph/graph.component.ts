@@ -15,11 +15,20 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { Chart } from 'chart.js';
 import * as ChartDatasourcePrometheusPlugin from 'chartjs-plugin-datasource-prometheus';
 
+export interface Graph_records {
+  [ metric_name : string ] : {
+    t_value : number,
+    t_unit : 'minute' | 'hour' | 'day',
+    t_date : any, // Have to change this
+  }
+}
+
 @Component({
   selector: 'app-graph',
   templateUrl: './graph.component.html',
   styleUrls: ['./graph.component.css']
 })
+
 export class GraphComponent implements OnInit {
 
   @Input() information: Array<string>;
@@ -33,14 +42,16 @@ export class GraphComponent implements OnInit {
   start_date : Date;
   form: FormGroup;
 
-  _value: number = 1;
+  graphs_records : any = {};
+
+  default_value: number = 1;
   _step: number = 1;
   _min: number = 0;
   _max: number = Infinity;
   _wrap: boolean = false;
   color: string = 'primary';
 
-  unit: string = 'hour';
+  default_unit: 'minute' | 'hour' | 'day' = 'hour';
   unit_select = new FormControl(false);
 
   constructor(private appRef: ChangeDetectorRef,  private _formBuilder: FormBuilder) {
@@ -56,6 +67,7 @@ export class GraphComponent implements OnInit {
     this.form.get('startDate').enable();
     console.log (this.information);
     this.query_list = this.information;
+    this.get_graph_record();
   }
 
   ngAfterViewInit(){
@@ -66,6 +78,7 @@ export class GraphComponent implements OnInit {
     if (!changes['information'].isFirstChange()){
       console.log('changes catch: ' + this.information);
       this.query_list = this.information;
+      this.get_graph_record();
       this.appRef.detectChanges();
       this.regenerate_all_graph();
     } 
@@ -84,10 +97,29 @@ export class GraphComponent implements OnInit {
     return chart;
   }
 
+  get_graph_record (){
+    this.graphs_records = {};
+    this.query_list.forEach(
+      query => {
+        this.graphs_records[query] = {
+          t_value : this.default_value,
+          t_unit : this.default_unit,
+          t_date :'test',
+        }
+      }
+    );
+    console.log(this.graphs_records);
+  }
+
   // Generate all graph
   generate_all_graph(){
     this.chart_list=[];
-    this.query_list.forEach(query => this.chart_list.push([query,this.chart_builder(query)]));
+    this.get_graph_record();
+    this.query_list.forEach(
+      query => {
+        this.chart_list.push([query,this.chart_builder(query)])
+      }
+    );
   }
 
   // Destroy all graph
@@ -127,6 +159,8 @@ export class GraphComponent implements OnInit {
       type: 'line',
       plugins: [ChartDatasourcePrometheusPlugin],
       options: {
+        responsive : true,
+        devicePixelRatio:1,
         animation: {
           duration: 0
         }, 
@@ -164,11 +198,11 @@ export class GraphComponent implements OnInit {
   }
 
   incrementValue(step: number = 1): void {
-    let inputValue = this._value + step;
+    let inputValue = this.default_value + step;
     if (this._wrap) {
       inputValue = this.wrappedValue(inputValue);
     }
-    this._value = inputValue;
+    this.default_value = inputValue;
   }
 
   setColor(color: string): void {
