@@ -11,7 +11,7 @@ import { NgModule, LOCALE_ID } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatetimepickerModule, MatNativeDatetimeModule } from "@mat-datetimepicker/core";
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Chart } from 'chart.js';
 import * as ChartDatasourcePrometheusPlugin from 'chartjs-plugin-datasource-prometheus';
 
@@ -33,10 +33,21 @@ export class GraphComponent implements OnInit {
   start_date : Date;
   form: FormGroup;
 
+  _value: number = 1;
+  _step: number = 1;
+  _min: number = 0;
+  _max: number = Infinity;
+  _wrap: boolean = false;
+  color: string = 'primary';
+
+  unit: string = 'hour';
+  unit_select = new FormControl(false);
+
   constructor(private appRef: ChangeDetectorRef,  private _formBuilder: FormBuilder) {
     this.form = this._formBuilder.group({
       startDate: [{ value: '', disabled: true }, Validators.required]
     });
+    //this.unit_select.setValue('hour');
   }
   
   ngOnInit(): void {
@@ -151,4 +162,39 @@ export class GraphComponent implements OnInit {
   select(id:any) {
     console.log(id);  
   }
+
+  incrementValue(step: number = 1): void {
+    let inputValue = this._value + step;
+    if (this._wrap) {
+      inputValue = this.wrappedValue(inputValue);
+    }
+    this._value = inputValue;
+  }
+
+  setColor(color: string): void {
+    this.color = color;
+  }
+
+  private wrappedValue(inputValue): number {
+    if (inputValue > this._max) {
+      return this._min + inputValue - this._max;
+    }
+
+    if (inputValue < this._min) {
+      if (this._max === Infinity) {
+        return 0;
+      }
+      return this._max + inputValue;
+    }
+    return inputValue;
+  }
+
+  shouldDisableDecrement(inputValue: number): boolean {
+    return !this._wrap && inputValue <= this._min;
+  }
+
+  shouldDisableIncrement(inputValue: number): boolean {
+    return !this._wrap && inputValue >= this._max;
+  }
+
 }

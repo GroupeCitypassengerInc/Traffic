@@ -1,12 +1,45 @@
-p {
-  font-family: Lato;
-}
-.graph_container{
+.graph_container {
   margin: 1%;
 }
-.graph >::ng-deep .mat-figure{
+
+.graph >::ng-deep .mat-figure {
   display: block; 
 }
+
 ::ng-deep.mat-datetimepicker-calendar-header {
   background-color: #39499c !important;
+}
+.counter {
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+}
+.form {
+  display: block;
+  width: 95px;
+  margin: 2%;
+}
+
+.time_opt {
+  display: inline-flex;
+}
+::ng-deep.mat-form-field-infix{
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+  text-align: center;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  text-align: center;
+}
+.form-text{
+  align-self: center;
+  margin-left: 1%;
+  margin-right: 1%;
 }

@@ -7,14 +7,43 @@
         <div>
           <h4>{{query}}</h4>
           <!-- <button mat-flat-button color='primary' (click)='select(query)' class='visualize_btn'>Select</button> -->
-          <form novalidate [formGroup]="form">
-            <mat-form-field>
-              <mat-placeholder>Start DateTime</mat-placeholder>
-              <input matInput formControlName="startDate" [matDatetimepicker]="dts" required autocomplete="false">
-              <mat-datetimepicker-toggle [for]="dts" matSuffix></mat-datetimepicker-toggle>
-              <mat-datetimepicker #dts type="datetime" openOnFocus="true" timeInterval="5"></mat-datetimepicker>
+          <div id='increment' class="time_opt">
+
+            <!-- increment section -->
+            <mat-form-field class="form">
+              <button mat-button mat-icon-button matPrefix aria-label="Remove" [color]="primary"
+                (click)="incrementValue(-_step)" [disabled]="shouldDisableDecrement(_value)">
+                <mat-icon>remove</mat-icon>
+              </button>
+              <input matInput type="number" class='counter' [(ngModel)]="_value" (focus)="setColor('primary')"
+                (blur)="setColor('default')" />
+              <button mat-button mat-icon-button matSuffix aria-label="Add" [color]="primary"
+                (click)="incrementValue(_step)" [disabled]="shouldDisableIncrement(_value)">
+                <mat-icon>add</mat-icon>
+              </button>
             </mat-form-field>
-          </form>
+
+            <!-- Unit section -->
+            <mat-form-field appearance="legacy" class="form">
+              <mat-label>Unit option</mat-label>
+              <mat-select [(value)]="unit" placeholder="Unit" [disabled]="unit_select.value">
+                <mat-option value="minute">minute</mat-option>
+                <mat-option value="hour">hour</mat-option>
+                <mat-option value="day">day</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p class="form-text"> Until </p>
+
+            <!-- Date time section -->
+            <form novalidate [formGroup]="form" class="form">
+              <mat-form-field>
+                <mat-placeholder>Until</mat-placeholder>
+                <input matInput formControlName="startDate" [matDatetimepicker]="dts" required autocomplete="false">
+                <mat-datetimepicker-toggle [for]="dts" matSuffix></mat-datetimepicker-toggle>
+                <mat-datetimepicker #dts type="datetime" openOnFocus="true" timeInterval="5"></mat-datetimepicker>
+              </mat-form-field>
+            </form>
+          </div>
         </div>
         <div>
           <canvas class="graph" id={{query}} width='1500' height='400'></canvas>

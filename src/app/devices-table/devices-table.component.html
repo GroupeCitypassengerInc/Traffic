@@ -29,7 +29,7 @@
               </mat-grid-tile>
               <!-- Graph selection -->
               <mat-grid-tile colspan='2' [style.background]='blue'>
-                <mat-form-field appearance='fill' style='width:35%;'>
+                <mat-form-field appearance="legacy" style='width:35%;'>
                   <mat-label>Graph available</mat-label>
                   <mat-select [formControl]='graphs_form' (selectionChange)='onChange($event)' multiple>
                     <mat-option *ngFor='let graph_available of graphs_available_list' [value]='graph_available' >
