@@ -61,7 +61,7 @@ export class DevicesTableComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   
-  columnsToDisplay: string[] = ['group_id','display_name', 'box_name', 'address'];
+  columnsToDisplay: string[] = ['address','group_name', 'box_name'];
   BOX_DATA: any = [];
   JSON_data: any = [];
   dataSource = new MatTableDataSource(this.BOX_DATA);

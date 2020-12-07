@@ -32,7 +32,7 @@ export interface Graph_records {
 export class GraphComponent implements OnInit {
 
   @Input() information: Array<string>;
-
+  Object = Object;
   // Request : /prometheus/api/v1/query_range?query=up&start=1604584181.313&end=1604670581.313&step=9250
   endpoint : string = 'http://10.0.0.68:12333/prometheus/';
   query_list : any = [];
@@ -45,10 +45,11 @@ export class GraphComponent implements OnInit {
   graphs_records : any = {};
 
   default_value: number = 1;
+  default_date: Date = new Date();
   _step: number = 1;
   _min: number = 0;
   _max: number = Infinity;
-  _wrap: boolean = false;
+  _wrap: boolean = true;
   color: string = 'primary';
 
   default_unit: 'minute' | 'hour' | 'day' = 'hour';
@@ -63,8 +64,11 @@ export class GraphComponent implements OnInit {
   
   ngOnInit(): void {
     console.log('init');
-    this.form.get('startDate').setValue(new Date()),
+    this.default_date.setHours(this.default_date.getHours() - this.default_value);
+    this.form.get('startDate').setValue(this.default_date),
     this.form.get('startDate').enable();
+    console.log(this.form);
+    console.log(this.default_date);
     console.log (this.information);
     this.query_list = this.information;
     this.get_graph_record();
@@ -104,7 +108,7 @@ export class GraphComponent implements OnInit {
         this.graphs_records[query] = {
           t_value : this.default_value,
           t_unit : this.default_unit,
-          t_date :'test',
+          t_date : this.default_date,
         }
       }
     );
@@ -190,6 +194,7 @@ export class GraphComponent implements OnInit {
         },
       },
     });
+    console.log(chart);
     return chart;
   }
 
@@ -197,12 +202,13 @@ export class GraphComponent implements OnInit {
     console.log(id);  
   }
 
-  incrementValue(step: number = 1): void {
-    let inputValue = this.default_value + step;
+  incrementValue(step: number = 1, metric : string): void {
+    let inputValue = this.graphs_records[metric]['t_value'] + step;
     if (this._wrap) {
       inputValue = this.wrappedValue(inputValue);
     }
-    this.default_value = inputValue;
+    this.graphs_records[metric]['t_value'] = inputValue;
+    console.log(this.graphs_records);
   }
 
   setColor(color: string): void {
@@ -216,8 +222,10 @@ export class GraphComponent implements OnInit {
 
     if (inputValue < this._min) {
       if (this._max === Infinity) {
+        console.log('ho')
         return 0;
       }
+      
       return this._max + inputValue;
     }
     return inputValue;
@@ -230,5 +238,4 @@ export class GraphComponent implements OnInit {
   shouldDisableIncrement(inputValue: number): boolean {
     return !this._wrap && inputValue >= this._max;
   }
-
 }
