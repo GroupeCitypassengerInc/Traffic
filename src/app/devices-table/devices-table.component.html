@@ -2,7 +2,7 @@
 <div class='table_container'>
   <mat-form-field>
     <mat-label>Filter</mat-label>
-    <input matInput (keyup)='applyFilter($event)' placeholder='' #input>
+    <input matInput (keyup)='applyFilter($event)' placeholder='Ex. Citybox' #input>
   </mat-form-field>
 
   <table mat-table [dataSource]='dataSource' multiTemplateDataRows class='mat-elevation-z8' matSort>
@@ -22,17 +22,17 @@
               </mat-grid-tile>
               <!-- Selection groups / box -->
               <mat-grid-tile colspan='1'>
-                <mat-radio-group  [(ngModel)]="option" aria-label='Select an option'>
-                  <mat-radio-button class='radio' color='primary' value='group' [checked]='true' (change)="radioChange($event)">Group</mat-radio-button>
-                  <mat-radio-button class='radio' color='primary' value='box' [checked]='false' (change)="radioChange($event)">Box</mat-radio-button>
+                <mat-radio-group  [(ngModel)]='option' aria-label='Select an option'>
+                  <mat-radio-button class='radio' color='primary' value='group' [checked]='true' (change)='radioChange($event)'>Group</mat-radio-button>
+                  <mat-radio-button class='radio' color='primary' value='box' [checked]='false' (change)='radioChange($event)'>Box</mat-radio-button>
                 </mat-radio-group>
               </mat-grid-tile>
               <!-- Graph selection -->
               <mat-grid-tile colspan='2' [style.background]='blue'>
-                <mat-form-field appearance="legacy" style='width:35%;'>
+                <mat-form-field appearance='legacy' style='width:35%;'>
                   <mat-label>Graph available</mat-label>
                   <mat-select [formControl]='graphs_form' (selectionChange)='onChange($event)' multiple>
-                    <mat-option *ngFor='let graph_available of graphs_available_list' [value]='graph_available' >
+                    <mat-option *ngFor='let graph_available of graphs_available_list' value='{{graph_available}}' >
                       {{graph_available}}</mat-option>
                   </mat-select>
                 </mat-form-field>

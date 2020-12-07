@@ -64,13 +64,14 @@ export class DevicesTableComponent implements OnInit {
   columnsToDisplay: string[] = ['group_id','display_name', 'box_name', 'address'];
   BOX_DATA: any = [];
   JSON_data: any = [];
-  dataSource =  new MatTableDataSource(this.BOX_DATA);
+  dataSource = new MatTableDataSource(this.BOX_DATA);
+  graphs_form = new FormControl();
   selection: box_info;
   prometheus_metrics_available: any;
   graphs_available_list: string[] = [];
   allComplete: boolean = false;
   expandedElement: box_info | null;
-  graphs_form: FormControl;
+  
   _disabled_visualize : boolean = true;
   http_request_ok : boolean = false
   option : string = "group";
@@ -106,6 +107,7 @@ export class DevicesTableComponent implements OnInit {
   }
 
   onChange (event : Event){
+    console.log (event);
     if (this.graphs_form.value.length > 0 && this.http_request_ok == true){
       this._disabled_visualize = false;
     } else {
@@ -160,6 +162,7 @@ export class DevicesTableComponent implements OnInit {
     let informations: Array<string>;
     let checked = this.graphs_form.value;
     let selected = this.selection;
+    console.log(this.graphs_form);
     console.log(checked);
     console.log(selected);
     console.log(this.option);
