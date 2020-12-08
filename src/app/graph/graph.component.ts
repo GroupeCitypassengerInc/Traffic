@@ -40,7 +40,7 @@ export class GraphComponent implements OnInit {
   up_start_time : number = -1 * 60 * 60 * 1000; //1 hours from now
   end_time : number = 0; //now
   start_date : Date;
-  form: FormGroup;
+  form_group: FormGroup;
 
   graphs_records : any = {};
 
@@ -56,18 +56,20 @@ export class GraphComponent implements OnInit {
   unit_select = new FormControl(false);
 
   constructor(private appRef: ChangeDetectorRef,  private _formBuilder: FormBuilder) {
-    this.form = this._formBuilder.group({
-      startDate: [{ value: '', disabled: true }, Validators.required]
+    this.form_group = this._formBuilder.group({
+      date: [{ value: '', disabled: true }, Validators.required]
     });
-    //this.unit_select.setValue('hour');
+    this.form_group.valueChanges.subscribe(console.log);
+    console.log(this.information);
+    console.log('-----------------------');
   }
   
   ngOnInit(): void {
     console.log('init');
     this.default_date.setHours(this.default_date.getHours() - this.default_value);
-    this.form.get('startDate').setValue(this.default_date),
-    this.form.get('startDate').enable();
-    console.log(this.form);
+    this.form_group.get('date').setValue(this.default_date),
+    this.form_group.get('date').enable();
+    console.log(this.form_group);
     console.log(this.default_date);
     console.log (this.information);
     this.query_list = this.information;
@@ -108,8 +110,13 @@ export class GraphComponent implements OnInit {
         this.graphs_records[query] = {
           t_value : this.default_value,
           t_unit : this.default_unit,
-          t_date : this.default_date,
+          t_date : this._formBuilder.control({
+            value: this.default_date, disabled: false
+          }),
         }
+        console.log( this.graphs_records[query] );
+        this.form_group.addControl(query, this.graphs_records[query]['t_date']);
+        console.log(this.form_group);
       }
     );
     console.log(this.graphs_records);

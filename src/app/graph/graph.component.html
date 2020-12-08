@@ -36,10 +36,10 @@
             <p class="form-text"> Until </p>
 
             <!-- Date time section -->
-            <form novalidate [formGroup]="form" class="form">
+            <form novalidate [formGroup]="form_group" class="form">
               <mat-form-field>
                 <mat-placeholder>Until</mat-placeholder>
-                <input matInput formControlName="query" [matDatetimepicker]="dts" required autocomplete="false">
+                <input matInput formControlName={{query}} [matDatetimepicker]="dts" required autocomplete="false">
                 <mat-datetimepicker-toggle [for]="dts" matSuffix></mat-datetimepicker-toggle>
                 <mat-datetimepicker #dts type="datetime" openOnFocus="true" timeInterval="5"></mat-datetimepicker>
               </mat-form-field>
