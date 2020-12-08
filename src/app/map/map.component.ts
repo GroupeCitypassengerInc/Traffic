@@ -30,8 +30,8 @@ export class MapComponent implements OnInit {
       zoomOffset: -1,
     }).addTo(mymap);
 
-    for (let group of groups.groups){
-      for (let sites of group.sites){
+    for ( let group of groups.groups ) {
+      for ( let sites of group.sites ) {
         let lat = sites.datas.mapInfo.latitude;
         let long = sites.datas.mapInfo.longitude;
         let marker = L.marker([lat, long], {title:sites.siteName.toString()}).addTo(mymap);
@@ -47,11 +47,11 @@ export class MapComponent implements OnInit {
       var popup = e.target.getPopup();
       var content = popup.getContent();
       
-      if (popup.isOpen()){
+      if ( popup.isOpen() ) {
         var regex = /Group name: ([^<]*)<br>Group id: ([^<]*)<br>Name: ([^<]*)<br>Address: ([^<]*)/;
         
         console.log(content);
-      }else{
+      } else {
 
       }
     }

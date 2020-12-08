@@ -56,25 +56,24 @@ export interface checkbox {
 export class DevicesTableComponent implements OnInit {
   constructor(private httpClient: HttpClient, private _snackBar: MatSnackBar) {
     this._disabled_visualize = true;
-   }
+  }
+  
   @Output() seleted_information_event: EventEmitter<Array<string>> = new EventEmitter();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   
   columnsToDisplay: string[] = ['address','group_name', 'box_name'];
-  BOX_DATA: any = [];
+  BOX_DATA: box_info[] = [];
   JSON_data: any = [];
   dataSource = new MatTableDataSource(this.BOX_DATA);
   graphs_form = new FormControl();
   selection: box_info;
   prometheus_metrics_available: any;
   graphs_available_list: string[] = [];
-  allComplete: boolean = false;
   expandedElement: box_info | null;
-  
   _disabled_visualize : boolean = true;
   http_request_ok : boolean = false
-  option : string = "group";
+  option : 'group'|'box' = "group";
   
   ngOnInit(): void {
     this.httpClient.get("assets/json/map_devices.json").subscribe(json_data =>{
@@ -83,15 +82,15 @@ export class DevicesTableComponent implements OnInit {
     });
   }
  
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
-  data_formating(){
+  data_formating(): void {
     let index = 0;
-    for (let group of this.JSON_data.groups){
-      for (let sites of group.sites){
+    for ( let group of this.JSON_data.groups ) {
+      for ( let sites of group.sites ) {
         this.BOX_DATA.push({
           No: index, 
           group_id: group.groupId, 
@@ -106,31 +105,31 @@ export class DevicesTableComponent implements OnInit {
     }
   }
 
-  onChange (event : Event){
+  onChange (event : Event): void {
     console.log (event);
-    if (this.graphs_form.value.length > 0 && this.http_request_ok == true){
+    if ( this.graphs_form.value.length > 0 && this.http_request_ok == true ) {
       this._disabled_visualize = false;
     } else {
       this._disabled_visualize = true;
     }
   }
 
-  applyFilter(event: Event) {
+  applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
+    if ( this.dataSource.paginator ) {
       this.dataSource.paginator.firstPage();
     }
   }
 
-  graph_avialable_catcher(metrics_available){
+  graph_avialable_catcher(metrics_available): void {
     this.graphs_available_list = [];
     metrics_available.forEach(metric_name => {
       this.graphs_available_list.push(metric_name);
     });
   }
 
-  getRecord(row){
+  getRecord(row): void {
     this.graphs_form = new FormControl();
     this.httpClient.get("http://10.0.0.68:12333/prometheus/api/v1/label/__name__/values").pipe(
       timeout(5000), 
@@ -143,7 +142,6 @@ export class DevicesTableComponent implements OnInit {
         throw err;
       }
     )).subscribe(prometheus_metrics =>{
-
       this.prometheus_metrics_available = prometheus_metrics;
       this.graph_avialable_catcher(this.prometheus_metrics_available.data);
       this.selection = row;
@@ -158,7 +156,7 @@ export class DevicesTableComponent implements OnInit {
     row.highlighted = !row.highlighted;
   }
 
-  Visualize(){
+  Visualize(): void {
     let informations: Array<string>;
     let checked = this.graphs_form.value;
     let selected = this.selection;
@@ -170,12 +168,11 @@ export class DevicesTableComponent implements OnInit {
     this.seleted_information_event.emit(checked);
   }
 
-  radioChange(event:any){
+  radioChange(event:any): void {
     this.option = event.value;
-    console.log(this.option);
   }
 
-  openSnackBar(message: string) {
+  openSnackBar(message: string): void {
     this._snackBar.open(message,'ok',{
       duration: 10000,
     });

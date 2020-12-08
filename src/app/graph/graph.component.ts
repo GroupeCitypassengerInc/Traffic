@@ -10,13 +10,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatDatetimepickerModule, MatNativeDatetimeModule } from "@mat-datetimepicker/core";
+import { MatDatetimepickerModule, MatNativeDatetimeModule } from '@mat-datetimepicker/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Chart } from 'chart.js';
 import * as ChartDatasourcePrometheusPlugin from 'chartjs-plugin-datasource-prometheus';
 
 export interface Graph_records {
   [ metric_name : string ] : {
+    chart : Chart,
     t_value : number,
     t_unit : 'minute' | 'hour' | 'day',
     t_date : any, // Have to change this
@@ -33,17 +34,15 @@ export class GraphComponent implements OnInit {
 
   @Input() information: Array<string>;
   Object = Object;
+
   // Request : /prometheus/api/v1/query_range?query=up&start=1604584181.313&end=1604670581.313&step=9250
   endpoint : string = 'http://10.0.0.68:12333/prometheus/';
   query_list : any = [];
-  chart_list : Array<any> = [];
-  up_start_time : number = -1 * 60 * 60 * 1000; //1 hours from now
-  end_time : number = 0; //now
+  up_start_time : number = -1 * 60 * 60 * 1000; //1 hours from now (numbre of ms)
+  end_time : number = 0; //(numbre of ms) now
   start_date : Date;
   form_group: FormGroup;
-
   graphs_records : any = {};
-
   default_value: number = 1;
   default_date: Date = new Date();
   _step: number = 1;
@@ -57,114 +56,102 @@ export class GraphComponent implements OnInit {
 
   constructor(private appRef: ChangeDetectorRef,  private _formBuilder: FormBuilder) {
     this.form_group = this._formBuilder.group({
-      date: [{ value: '', disabled: true }, Validators.required]
+      default_date: [{ value: '', disabled: true }, Validators.required]
     });
-    this.form_group.valueChanges.subscribe(console.log);
-    console.log(this.information);
-    console.log('-----------------------');
+    this.form_group.valueChanges.subscribe(x => {
+      console.log(x)
+      this.date_changes(x.keys);
+    });
   }
   
   ngOnInit(): void {
     console.log('init');
-    this.default_date.setHours(this.default_date.getHours() - this.default_value);
-    this.form_group.get('date').setValue(this.default_date),
-    this.form_group.get('date').enable();
-    console.log(this.form_group);
-    console.log(this.default_date);
-    console.log (this.information);
+    this.default_date.setHours(this.default_date.getHours());
     this.query_list = this.information;
-    this.get_graph_record();
+    this.get_records();
   }
 
-  ngAfterViewInit(){
-    this.generate_all_graph();
+  ngAfterViewInit(): void {
+    this.set_charts();
   }
 
-  ngOnChanges(changes: any){
-    if (!changes['information'].isFirstChange()){
+  ngOnChanges(changes: any): void {
+    if ( !changes['information'].isFirstChange() ) {
       console.log('changes catch: ' + this.information);
       this.query_list = this.information;
-      this.get_graph_record();
+      this.destroy_all()
+      this.ngOnInit();
+      this.get_records();
       this.appRef.detectChanges();
-      this.regenerate_all_graph();
+      this.generate_all_graph();
     } 
   }
 
-  // Find a chart using the metric name
-  find_chart(id:string){
-    var chart;
-    this.query_list.forEach(query => {
-      var regex = new RegExp("^("+ query +".*)$");
-      if ((regex.exec(id)) !== null ){
-        console.log('found : ' + query);
-        chart = query;
-      }
-    });
-    return chart;
-  }
-
-  get_graph_record (){
+  get_records (): void {
     this.graphs_records = {};
     this.query_list.forEach(
       query => {
         this.graphs_records[query] = {
+          m_chart : "chart",
           t_value : this.default_value,
           t_unit : this.default_unit,
           t_date : this._formBuilder.control({
             value: this.default_date, disabled: false
           }),
         }
-        console.log( this.graphs_records[query] );
         this.form_group.addControl(query, this.graphs_records[query]['t_date']);
-        console.log(this.form_group);
       }
     );
-    console.log(this.graphs_records);
+  }
+
+  set_charts (): void {
+    this.query_list.forEach(
+      query => {
+        let chart = this.chart_builder(query);
+        this.graphs_records[query]['m_chart'] = chart;
+      }
+    );
   }
 
   // Generate all graph
-  generate_all_graph(){
-    this.chart_list=[];
-    this.get_graph_record();
-    this.query_list.forEach(
-      query => {
-        this.chart_list.push([query,this.chart_builder(query)])
-      }
-    );
+  generate_all_graph(): void {
+    this.get_records (); 
+    this.set_charts ();
   }
 
   // Destroy all graph
-  destroy_all(){
-    this.chart_list.forEach(chart=>{
-      console.log ('destroying ' + chart[0] + ' chart');
-      chart[1].destroy();
-    })
+  destroy_all(): void {
+    Object.keys(this.graphs_records).forEach(graph => {
+      let chart = this.graphs_records[graph]['m_chart'];
+      chart.destroy();
+    } );
   }
 
   // Regenerate all graph
-  regenerate_all_graph(){
+  regenerate_all_graph(): void {
     this.destroy_all();
     this.generate_all_graph();
   }
 
   // Re-generate all graph
-  regenerate(id:string){
+  regenerate(id:string): void {
     console.log('regenerating ' + id + ' chart');
-    var chart = this.find_chart(id);
+    let chart = this.graphs_records[id]['m_chart'];
+
     console.log ('destroying ' + id + ' chart');
     chart.destroy();
+
     console.log ('re-building ' + id + ' chart');
-    this.chart_list.push([id,this.chart_builder(id)]);
+    this.graphs_records[id]['m_chart'] = chart;
   }
   
   // Build chart
-  chart_builder(id:string){
+  chart_builder(id:string) {
     console.log('building : ' + id + ' chart');
     var ctx = document.getElementById(id);
-    if (ctx === null){
-      throw new Error("An error as occured. An get id of : " + id);
+    if ( ctx === null ) {
+      throw new Error('An error as occured. An get id of : ' + id);
     }
-    console.log(ctx);
     let query = id;
     var chart = new Chart(ctx, {
       type: 'line',
@@ -201,21 +188,16 @@ export class GraphComponent implements OnInit {
         },
       },
     });
-    console.log(chart);
     return chart;
-  }
-
-  select(id:any) {
-    console.log(id);  
   }
 
   incrementValue(step: number = 1, metric : string): void {
     let inputValue = this.graphs_records[metric]['t_value'] + step;
-    if (this._wrap) {
+    if ( this._wrap ) {
       inputValue = this.wrappedValue(inputValue);
     }
     this.graphs_records[metric]['t_value'] = inputValue;
-    console.log(this.graphs_records);
+    console.log(this.graphs_records[metric]);
   }
 
   setColor(color: string): void {
@@ -223,26 +205,42 @@ export class GraphComponent implements OnInit {
   }
 
   private wrappedValue(inputValue): number {
-    if (inputValue > this._max) {
+    if ( inputValue > this._max ) {
       return this._min + inputValue - this._max;
     }
-
-    if (inputValue < this._min) {
-      if (this._max === Infinity) {
-        console.log('ho')
+    if ( inputValue < this._min ) {
+      if ( this._max === Infinity ) {
         return 0;
       }
-      
       return this._max + inputValue;
     }
     return inputValue;
   }
 
+  // not implemented yet
   shouldDisableDecrement(inputValue: number): boolean {
     return !this._wrap && inputValue <= this._min;
   }
 
+  // not implemented yet
   shouldDisableIncrement(inputValue: number): boolean {
     return !this._wrap && inputValue >= this._max;
+  }
+
+  unit_selection_changes(query: string){
+    console.log (this.graphs_records[query]['t_unit']+' '+query);
+  }
+
+  time_value_changes(query: string){
+    console.log (this.graphs_records[query]['t_value']+' '+query);
+  }
+
+  date_changes(date){
+    console.log(date);
+  }
+
+  change_chart_timerange(){
+    this.end_time;
+    this.up_start_time;
   }
 }

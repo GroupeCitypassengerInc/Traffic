@@ -38,12 +38,19 @@ input::-webkit-inner-spin-button {
   margin: 0;
   text-align: center;
 }
-.form-text {
+
+.form_text {
   align-self: center;
   margin-left: 1%;
   margin-right: 1%;
 }
+
 .graph {
   width: max;
   max-height: 400;
+}
+
+
+#datetime{
+  width: 100%;
 }
