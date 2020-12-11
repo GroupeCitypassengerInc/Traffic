@@ -85,10 +85,9 @@ export class GraphComponent implements OnInit {
   }
   
   ngOnInit(): void {
-    console.log('init graph');
+    console.log('init graph component');
     this.default_date.setHours(this.default_date.getHours());
     this.options = this.information.shift();
-    console.log(this.options);
     if ( this.options.length == 1 ) {
       this.base_url = '/' + this.options[0] + '/api/v1';
       this.box_selected = '';
@@ -98,8 +97,7 @@ export class GraphComponent implements OnInit {
     }
     
     this.query_list = this.information;
-    console.log('*********************');
-    console.log( this.query_list);
+
     this.get_records();
     this.form_group.valueChanges.subscribe(date => {
       this.date_changes(date);
@@ -114,7 +112,6 @@ export class GraphComponent implements OnInit {
     if ( !changes['information'].isFirstChange() ) {
       console.log('changes catch: ');
       console.log(this.information);
-      //this.query_list = this.information;
       this.destroy_all()
       this.ngOnInit();
       this.get_records();
@@ -182,7 +179,6 @@ export class GraphComponent implements OnInit {
   // Build chart
   chart_builder(id:string) {
     console.log('building : ' + id + ' chart');
-    //id = id.toString();
     var ctx = document.getElementById(id);
     if ( ctx === null ) {
       throw new Error('An error as occured. An get id of : ' + id);

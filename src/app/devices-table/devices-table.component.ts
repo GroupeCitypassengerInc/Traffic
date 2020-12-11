@@ -160,7 +160,7 @@ export class DevicesTableComponent implements OnInit {
     let informations: Array<any> = [];
     let checked = this.graphs_form.value;
     let selected = this.selection;
-    console.log('---------- visualize -----------');
+
     if ( this.option == 'group' ) {
       informations.push([selected.group_name]);
       console.log(informations);
@@ -168,19 +168,11 @@ export class DevicesTableComponent implements OnInit {
       informations.push([selected.group_name, selected.box_name]);
       console.log(informations);
     }
+
     checked.forEach(metric => {
       informations.push(metric);
     });
-
-    // console.log('option');
-    // console.log(this.option);
-    // console.log('selected');
-    // console.log(selected);
-    // console.log('checked');
-    // console.log(checked);
-    // console.log('informations');
-    // console.log(informations);
-    console.log('-------------------------------------------');
+    
     this.seleted_information_event.emit(informations);
   }
 
