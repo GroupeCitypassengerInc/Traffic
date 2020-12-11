@@ -48,12 +48,15 @@ export class GraphComponent implements OnInit {
 
   // Request : /prometheus/api/v1/query_range?query=up&start=1604584181.313&end=1604670581.313&step=9250
   endpoint : string = 'http://10.0.0.68:12333/prometheus/';
+  base_url : string = '';
+  box_selected : string = '';
 
   default_up_start_time : number = -12 * 60 * 60 * 1000;
   default_end_time : any = 0;
   up_start_time : number = this.default_up_start_time;
   end_time : number = this.default_end_time;
   start_date : Date;
+  options : any;
 
   form_group: FormGroup;
   graphs_records : any = {};
@@ -82,9 +85,21 @@ export class GraphComponent implements OnInit {
   }
   
   ngOnInit(): void {
-    console.log('init');
+    console.log('init graph');
     this.default_date.setHours(this.default_date.getHours());
+    this.options = this.information.shift();
+    console.log(this.options);
+    if ( this.options.length == 1 ) {
+      this.base_url = '/' + this.options[0] + '/api/v1';
+      this.box_selected = '';
+    } else {
+      this.base_url = '/' + this.options[0] + '/api/v1';
+      this.box_selected = this.options[1]
+    }
+    
     this.query_list = this.information;
+    console.log('*********************');
+    console.log( this.query_list);
     this.get_records();
     this.form_group.valueChanges.subscribe(date => {
       this.date_changes(date);
@@ -97,8 +112,9 @@ export class GraphComponent implements OnInit {
 
   ngOnChanges(changes: any): void {
     if ( !changes['information'].isFirstChange() ) {
-      console.log('changes catch: ' + this.information);
-      this.query_list = this.information;
+      console.log('changes catch: ');
+      console.log(this.information);
+      //this.query_list = this.information;
       this.destroy_all()
       this.ngOnInit();
       this.get_records();
@@ -121,6 +137,7 @@ export class GraphComponent implements OnInit {
           t_now : this._now,
         }
         this.form_group.addControl(query, this.graphs_records[query]['t_date']);
+        console.log(this.graphs_records);
       }
     );
   }
@@ -165,6 +182,7 @@ export class GraphComponent implements OnInit {
   // Build chart
   chart_builder(id:string) {
     console.log('building : ' + id + ' chart');
+    //id = id.toString();
     var ctx = document.getElementById(id);
     if ( ctx === null ) {
       throw new Error('An error as occured. An get id of : ' + id);
@@ -189,6 +207,7 @@ export class GraphComponent implements OnInit {
           'datasource-prometheus': {
             prometheus: {
               endpoint: this.endpoint,
+              //baseURL: "/api/v1",
             },
             query: query,
             stepped:true,

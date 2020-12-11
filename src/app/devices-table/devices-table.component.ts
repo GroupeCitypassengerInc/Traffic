@@ -157,15 +157,31 @@ export class DevicesTableComponent implements OnInit {
   }
 
   Visualize(): void {
-    let informations: Array<string>;
+    let informations: Array<any> = [];
     let checked = this.graphs_form.value;
     let selected = this.selection;
-    console.log(this.graphs_form);
-    console.log(checked);
-    console.log(selected);
-    console.log(this.option);
+    console.log('---------- visualize -----------');
+    if ( this.option == 'group' ) {
+      informations.push([selected.group_name]);
+      console.log(informations);
+    } else {
+      informations.push([selected.group_name, selected.box_name]);
+      console.log(informations);
+    }
+    checked.forEach(metric => {
+      informations.push(metric);
+    });
+
+    // console.log('option');
+    // console.log(this.option);
+    // console.log('selected');
+    // console.log(selected);
+    // console.log('checked');
+    // console.log(checked);
+    // console.log('informations');
+    // console.log(informations);
     console.log('-------------------------------------------');
-    this.seleted_information_event.emit(checked);
+    this.seleted_information_event.emit(informations);
   }
 
   radioChange(event:any): void {
