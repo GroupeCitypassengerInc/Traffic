@@ -13,7 +13,8 @@
                 <mat-icon>remove</mat-icon>
               </button>
               <input matInput type='number' class='counter' [(ngModel)]='graphs_records[query]["t_value"]'
-                (ngModelChange)='time_value_changes(query)' (focus)='setColor("primary")' (blur)='setColor("default")' />
+                (ngModelChange)='time_value_changes(query)' (focus)='setColor("primary")'
+                (blur)='setColor("default")' />
               <button mat-button mat-icon-button matSuffix aria-label='Add' [color]='primary'
                 (click)='incrementValue(_step, query)' [disabled]='shouldDisableIncrement(_value)'>
                 <mat-icon>add</mat-icon>
@@ -36,14 +37,19 @@
             <form novalidate [formGroup]='form_group' class='form' id='datetime'>
               <mat-form-field>
                 <mat-placeholder>Until</mat-placeholder>
-                <input matInput formControlName={{query}} [matDatetimepicker]='dts' required autocomplete='false'>
+                <input matInput formControlName={{query}} [matDatetimepicker]='dts' required autocomplete='false' [disabled]='graphs_records[query]["t_now"]'>
                 <mat-datetimepicker-toggle [for]='dts' matSuffix></mat-datetimepicker-toggle>
                 <mat-datetimepicker #dts type='datetime' openOnFocus='true' timeInterval='5'></mat-datetimepicker>
               </mat-form-field>
             </form>
+            
+            <!-- Now checkbox -->
+            <!-- The value is updating correctly BUT w/o visual changes (still unchecked) -->
+            <mat-checkbox [(ngModel)]='graphs_records[query]["t_now"]' (change)='on_checkbox_change($event, query)' class='form_text'
+              [color]="primary">Now</mat-checkbox>
 
             <!-- Reset -->
-            <button mat-button matTooltip='Restore default values' class='icon_button'>
+            <button mat-button matTooltip='Restore default values' class='icon_button' (click)='set_default_settings(query)'>
               <mat-icon>cached</mat-icon>
             </button>
           </div>
