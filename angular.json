@@ -13,6 +13,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies":[
+              "chart.js",
+              "chartjs-plugin-datasource-prometheus"
+            ],
             "outputPath": "dist/bagage",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -25,7 +29,8 @@
             ],
             "styles": [
               {
-                "input":"src/city-theme.scss"
+                "input": "src/city-theme.scss",
+                "inject": true
               },
               "src/styles.css"
             ],
@@ -42,7 +47,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
