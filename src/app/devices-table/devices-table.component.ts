@@ -62,6 +62,7 @@ export class DevicesTableComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   
+  promethues_ip : string = 'http://10.0.0.77:12333/prometheus/api/v1/label/__name__/values'
   columnsToDisplay: string[] = ['address','group_name', 'box_name'];
   BOX_DATA: box_info[] = [];
   JSON_data: any = [];
@@ -131,7 +132,7 @@ export class DevicesTableComponent implements OnInit {
 
   getRecord(row): void {
     this.graphs_form = new FormControl();
-    this.httpClient.get("http://10.0.0.68:12333/prometheus/api/v1/label/__name__/values").pipe(
+    this.httpClient.get(this.promethues_ip).pipe(
       timeout(5000), 
       map(res => {
         return res;
