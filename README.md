@@ -11,7 +11,7 @@ Run `npm install` in the project folder.
 
 Change Prometheus's address in `/src/app/graph/graph.component.ts:50` and `/src/app/devices-table/devices-table.compponent.ts:65`.
 
-Run `ng serve --base-href '/bagage/'` for development mode. If you would like to change the base href you can modify it in `/src/index.html:6`.
+Run `ng serve --base-href '/baggage/'` for development mode. If you would like to change the base href you can modify it in `/src/index.html:6`.
 See [ng serve options](https://angular.io/cli/serve).
 
 #### Install in production
