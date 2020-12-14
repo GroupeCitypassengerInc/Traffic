@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { MapComponent } from './map/map.component';
 import { GraphComponent } from './graph/graph.component';
 import { DevicesTableComponent } from './devices-table/devices-table.component';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -36,7 +35,6 @@ import { MatDatetimepickerModule, MatNativeDatetimeModule } from "@mat-datetimep
 @NgModule({
   declarations: [
     AppComponent,
-    MapComponent,
     GraphComponent,
     DevicesTableComponent,
     SpinnerComponent,

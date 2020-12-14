@@ -51,7 +51,7 @@ export class GraphComponent implements OnInit {
   base_url : string = '';
   box_selected : string = '';
 
-  default_up_start_time : number = -12 * 60 * 60 * 1000;
+  default_up_start_time : number = -1 * 60 * 60 * 1000;
   default_end_time : any = 0;
   up_start_time : number = this.default_up_start_time;
   end_time : number = this.default_end_time;
@@ -189,7 +189,8 @@ export class GraphComponent implements OnInit {
       plugins: [ChartDatasourcePrometheusPlugin],
       options: {
         responsive : true,
-        devicePixelRatio:1,
+        //devicePixelRatio : 1,
+        tension : 0,
         animation: {
           duration: 0
         }, 
@@ -206,13 +207,13 @@ export class GraphComponent implements OnInit {
               //baseURL: "/api/v1",
             },
             query: query,
-            stepped:true,
+            stepped: true,
             timeRange: {
               type: 'relative',
               // from 12 hours ago to now
               start: this.up_start_time,
               end: this.end_time,
-              step:10,
+              step: 10,
               // refresh every 10s
               msUpdateInterval: 10 * 1000,
             },
