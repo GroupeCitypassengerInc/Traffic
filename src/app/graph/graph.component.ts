@@ -16,6 +16,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { Chart } from 'chart.js';
 import * as ChartDatasourcePrometheusPlugin from 'chartjs-plugin-datasource-prometheus';
 import { throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Graph_records {
   [ metric_name : string ] : {
@@ -47,7 +48,7 @@ export class GraphComponent implements OnInit {
   query_list : any = [];
 
   // Request : /prometheus/api/v1/query_range?query=up&start=1604584181.313&end=1604670581.313&step=9250
-  endpoint : string = 'http://10.0.0.77:12333/prometheus/';
+  endpoint : string = environment.base_url;
   base_url : string = '';
   box_selected : string = '';
 

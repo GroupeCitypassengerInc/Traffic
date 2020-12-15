@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  base_url:'http://10.0.0.77:12333/prometheus',
+  city_url_api: 'https://preprod.citypassenger.com/ws/'
 };
 
 /*

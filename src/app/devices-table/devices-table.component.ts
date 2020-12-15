@@ -23,7 +23,7 @@ import { FormControl } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { EMPTY, throwError, TimeoutError } from 'rxjs';
 import { catchError, timeout, map } from 'rxjs/operators';
-
+import { environment } from '../../environments/environment';
 
 export interface box_info {
   No: number, 
@@ -62,7 +62,7 @@ export class DevicesTableComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   
-  promethues_ip : string = 'http://10.0.0.77:12333/prometheus/api/v1/label/__name__/values'
+  prometheus_query : string = environment.base_url + '/api/v1/label/__name__/values';
   columnsToDisplay: string[] = ['address','group_name', 'box_name'];
   BOX_DATA: box_info[] = [];
   JSON_data: any = [];
@@ -132,7 +132,7 @@ export class DevicesTableComponent implements OnInit {
 
   getRecord(row): void {
     this.graphs_form = new FormControl();
-    this.httpClient.get(this.promethues_ip).pipe(
+    this.httpClient.get(this.prometheus_query).pipe(
       timeout(5000), 
       map(res => {
         return res;
