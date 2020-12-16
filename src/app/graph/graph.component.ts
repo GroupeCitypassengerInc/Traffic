@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChanges, ChangeDetectorRef, ApplicationRef } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, ChangeDetectorRef, ApplicationRef, isDevMode } from '@angular/core';
 import { HttpClientModule, HttpClient, HttpHeaders }    from '@angular/common/http';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { BrowserModule } from '@angular/platform-browser';
@@ -96,9 +96,13 @@ export class GraphComponent implements OnInit {
       this.base_url = '/' + this.options[0] + '/api/v1';
       this.box_selected = this.options[1]
     }
-    
+    if ( !isDevMode() ) {
+      console.log ('prod mode detected')
+      this.endpoint = this.endpoint + this.base_url;
+    } else {
+      console.log ('dev mode detected')
+    }
     this.query_list = this.information;
-
     this.get_records();
     this.form_group.valueChanges.subscribe(date => {
       this.date_changes(date);
@@ -141,6 +145,8 @@ export class GraphComponent implements OnInit {
   }
 
   set_charts (): void {
+    console.log('set charts')
+    console.log(this.query_list)
     this.query_list.forEach(
       query => {
         let chart = this.chart_builder(query);
