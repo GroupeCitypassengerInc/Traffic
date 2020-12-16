@@ -13,8 +13,9 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<app-login *ngIf="false"></app-login>
+<app-login *ngIf="true"></app-login>
 
+<!-- false -->
 <!-- Content -->
 <body *ngIf="true">
   <div class='component'>
@@ -24,3 +25,6 @@
     <app-graph *ngIf='_show_graph;' [information]=information_dad></app-graph>
   </div>
 </body>
+<footer>
+  {{currentApplicationVersion}}
+</footer>

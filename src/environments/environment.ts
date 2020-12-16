@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  appVersion: require('../../package.json').version + '-dev',
   base_url:'http://10.0.0.77:12333/prometheus',
   city_url_api: 'https://preprod.citypassenger.com'
 };
