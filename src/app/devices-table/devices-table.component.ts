@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild} from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ViewChild, isDevMode} from '@angular/core';
 import { animate, AnimationEvent, state, style, transition, trigger } from '@angular/animations';
 import { HttpClient } from "@angular/common/http";
 import { SelectionModel } from '@angular/cdk/collections';
@@ -62,7 +62,7 @@ export class DevicesTableComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   
-  prometheus_query : string = environment.base_url + '/api/v1/label/__name__/values';
+  prometheus_query : string = environment.base_url ;
   columnsToDisplay: string[] = ['address','group_name', 'box_name'];
   BOX_DATA: box_info[] = [];
   JSON_data: any = [];
@@ -131,6 +131,16 @@ export class DevicesTableComponent implements OnInit {
   }
 
   getRecord(row): void {
+    this.selection = row;
+    let selected = this.selection;
+    console.log(selected)
+    if ( !isDevMode() ) {
+      console.log ('prod mode detected')
+      this.prometheus_query = this.prometheus_query + selected.group_name +'/api/v1/label/__name__/values';
+    } else {
+      this.prometheus_query = this.prometheus_query + '/api/v1/label/__name__/values';
+      console.log ('dev mode detected')
+    }
     this.graphs_form = new FormControl();
     this.httpClient.get(this.prometheus_query).pipe(
       timeout(5000), 
