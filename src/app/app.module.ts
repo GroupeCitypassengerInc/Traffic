@@ -31,14 +31,16 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatetimepickerModule, MatNativeDatetimeModule } from "@mat-datetimepicker/core";
+import { AppRoutingModule, routingComponents } from './app-routing/app-routing.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     GraphComponent,
-    DevicesTableComponent,
+    //DevicesTableComponent,
     SpinnerComponent,
-    LoginComponent,  
+    //LoginComponent,
+    routingComponents,
   ],
   imports: [
     BrowserModule,
@@ -66,6 +68,7 @@ import { MatDatetimepickerModule, MatNativeDatetimeModule } from "@mat-datetimep
     MatDialogModule,
     MatDatetimepickerModule,
     MatNativeDatetimeModule,
+    AppRoutingModule,
   ],
   exports:[
 

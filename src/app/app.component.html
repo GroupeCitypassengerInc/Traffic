@@ -5,17 +5,21 @@
 <!-- Toolbar -->
 <mat-toolbar color="primary">
   <mat-toolbar-row>
-    <span>Baggage</span>
+    <span>Baggage </span>
     <span class="spacer"></span>
+    {{currentApplicationVersion}}
     <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
       <mat-icon i18n>menu</mat-icon>
     </button>
   </mat-toolbar-row>
 </mat-toolbar>
 
+<!-- <router-outlet>
+  routing
+</router-outlet> -->
+
 <app-login *ngIf="true"></app-login>
 
-<!-- false -->
 <!-- Content -->
 <body *ngIf="true">
   <div class='component'>
@@ -25,6 +29,6 @@
     <app-graph *ngIf='_show_graph;' [information]=information_dad></app-graph>
   </div>
 </body>
+
 <footer>
-  {{currentApplicationVersion}}
 </footer>

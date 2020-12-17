@@ -24,6 +24,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { EMPTY, throwError, TimeoutError } from 'rxjs';
 import { catchError, timeout, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { GraphComponent } from '../graph/graph.component';
+
 
 export interface box_info {
   No: number, 
@@ -62,6 +64,9 @@ export class DevicesTableComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   
+  information_dad:Array<string> = [];
+  _show_graph: boolean = false;
+
   prometheus_query : string = environment.base_url ;
   columnsToDisplay: string[] = ['address','group_name', 'box_name'];
   BOX_DATA: box_info[] = [];
@@ -185,6 +190,7 @@ export class DevicesTableComponent implements OnInit {
     });
     
     this.seleted_information_event.emit(informations);
+    this._show_graph = true;
   }
 
   radioChange(event:any): void {

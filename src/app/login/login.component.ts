@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface user_informations {
   id : number,
@@ -28,16 +29,17 @@ export class LoginComponent implements OnInit {
     username: ['', Validators.required],
     password: ['', Validators.required]
   });
-  isLoggedIn : boolean = false;
+  is_logged_in : boolean = false;
   base_api_url : string = environment.city_url_api;
   user_info : any;
 
-  constructor(private form_builder: FormBuilder, private httpClient: HttpClient) { }
+  constructor(private form_builder: FormBuilder, private httpClient: HttpClient, private _snackBar: MatSnackBar) { }
   
   ngOnInit(): void {
+    this.is_logged_in = this.is_logged()
   }
 
-  getError(field_name) {
+  getError(field_name): string {
     switch (field_name) {
       case 'user':
         if ( this.login_form_group.get('username').hasError('required') ) {
@@ -63,9 +65,12 @@ export class LoginComponent implements OnInit {
     this.login(url_login);
   }
 
-  login(url:string) { 
+  login(url:string): void { 
     this.is_login_enable = false;
-    this.httpClient.request('GET', url).pipe(
+
+    let headers = new HttpHeaders();
+    headers = headers.set('accept', 'application/json');
+    this.httpClient.request('GET', url, {headers}).pipe(
       timeout(10000), 
       map(res => {
         
@@ -75,13 +80,84 @@ export class LoginComponent implements OnInit {
       err => {
         console.error(err.error.message);
         this.is_login_enable = true;
+        this.openSnackBar(err.error.message);
         throw err;
       }
     )).subscribe(response  =>{
       console.log('Login -> ok');
-      this.is_login_enable = true;
       console.log(response);
+
       this.user_info = response;
+      this.is_login_enable = true;
+      this.is_logged_in = true;
+      this.openSnackBar('Welcome back !')
+    });
+  }
+
+  logout(): boolean{
+    let is_logged : boolean = this.is_logged_in;
+
+    if ( is_logged == false) {
+      this.openSnackBar('Already logout');
+      return false;
+    }
+    
+    let logged_api_url = this.base_api_url + '/ws/User/Logout';
+    let headers = new HttpHeaders();
+    
+    headers = headers.set('accept', 'application/json');
+    this.httpClient.request('GET', logged_api_url, {headers}).pipe(
+      timeout(10000), 
+      map(res => {
+        return res;
+      }
+    ),catchError(
+      err => {
+        console.log('an errer occured please try again');
+        throw err;
+      }
+    )).subscribe(response  =>{
+      console.log('Successfully logged out');
+      is_logged = false;
+      this.openSnackBar('Successfully logged out')
+    });
+    return is_logged;
+  }
+
+  is_logged(): boolean {
+    let is_logged : boolean = false;
+    let logged_api_url = this.base_api_url + '/ws/User/Logged';
+    let headers = new HttpHeaders();
+
+    headers = headers.set('accept', 'application/json');
+    this.httpClient.request('GET', logged_api_url, {headers}).pipe(
+      timeout(10000), 
+      map(res => {
+        return res;
+      }
+    ),catchError(
+      err => {
+        console.log('user not logged');
+        throw err;
+      }
+    )).subscribe(response  =>{
+      console.log(response);
+      if ( response == null ) {
+        is_logged = false;
+        return is_logged;
+      }
+      console.log('Logged ? -> yes');
+      
+      is_logged = true;
+      this.is_login_enable = false;
+      this.openSnackBar('Welcome back !');
+    });
+    return is_logged;
+  }
+
+  openSnackBar(message: string): void {
+    this._snackBar.open(message,'ok',{
+      duration: 10000,
     });
   }
 }
