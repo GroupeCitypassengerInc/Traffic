@@ -8,17 +8,10 @@ import { LoginComponent } from '../login/login.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'graph', children: [
-    {
-      path: '',
-      component: DevicesTableComponent
-    },
-    {
-      path: '',
-      component: GraphComponent
-    },
-  ]},
-  //{ path: 'graph', component: GraphComponent, outlet:'secondary' },
+  { path: 'graph', component: DevicesTableComponent },
+  { path: '', component: LoginComponent },  // Wildcard route for a 404 page
+  { path: '**', component: LoginComponent },  // Wildcard route for a 404 page
+
 ]; // sets up routes constant where you define your routes
 
 @NgModule({

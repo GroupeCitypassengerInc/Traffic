@@ -8,26 +8,14 @@
     <span>Baggage </span>
     <span class="spacer"></span>
     {{currentApplicationVersion}}
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-      <mat-icon i18n>menu</mat-icon>
-    </button>
   </mat-toolbar-row>
 </mat-toolbar>
 
-<!-- <router-outlet>
-  routing
-</router-outlet> -->
-
-<app-login *ngIf="true"></app-login>
-
 <!-- Content -->
 <body *ngIf="true">
-  <div class='component'>
-    <app-devices-table (seleted_information_event)="catch_information($event)"></app-devices-table>
-  </div>
-  <div class='component' id='main-row'>
-    <app-graph *ngIf='_show_graph;' [information]=information_dad></app-graph>
-  </div>
+  <router-outlet>
+    
+  </router-outlet>
 </body>
 
 <footer>

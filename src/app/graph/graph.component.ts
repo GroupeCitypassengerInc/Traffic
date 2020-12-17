@@ -89,6 +89,7 @@ export class GraphComponent implements OnInit {
     console.log('init graph component');
     this.default_date.setHours(this.default_date.getHours());
     this.options = this.information.shift();
+    console.log(this.options);
     if ( this.options.length == 1 ) {
       this.base_url = '/' + this.options[0] + '/api/v1';
       this.box_selected = '';

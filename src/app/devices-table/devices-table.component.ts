@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, ViewChild, isDevMode} from '@angular/core';
 import { animate, AnimationEvent, state, style, transition, trigger } from '@angular/animations';
-import { HttpClient } from "@angular/common/http";
+import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -41,6 +41,11 @@ export interface checkbox {
   checked: boolean;
   color: ThemePalette;
 }
+export interface user_informations {
+  id : number,
+  role : string,
+  username : string,
+}
 
 @Component({
   selector: 'app-devices-table',
@@ -60,13 +65,15 @@ export class DevicesTableComponent implements OnInit {
     this._disabled_visualize = true;
   }
   
-  @Output() seleted_information_event: EventEmitter<Array<string>> = new EventEmitter();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   
+  login_information : user_informations;
+
   information_dad:Array<string> = [];
   _show_graph: boolean = false;
 
+  base_api_url : string = environment.city_url_api;
   prometheus_query : string = environment.base_url ;
   columnsToDisplay: string[] = ['address','group_name', 'box_name'];
   BOX_DATA: box_info[] = [];
@@ -82,10 +89,14 @@ export class DevicesTableComponent implements OnInit {
   option : 'group'|'box' = "group";
   
   ngOnInit(): void {
+    console.log(history.state);
+    this.login_information = history.state;
+    console.log(this.login_information);
     this.httpClient.get("assets/json/map_devices.json").subscribe(json_data =>{
       this.JSON_data = json_data;
       this.data_formating();
     });
+
   }
  
   ngAfterViewInit(): void {
@@ -138,16 +149,17 @@ export class DevicesTableComponent implements OnInit {
   getRecord(row): void {
     this.selection = row;
     let selected = this.selection;
+    let api_prometheus : string = '';
     console.log(selected)
     if ( !isDevMode() ) {
       console.log ('prod mode detected')
-      this.prometheus_query = this.prometheus_query + selected.group_name +'/api/v1/label/__name__/values';
+      api_prometheus = this.prometheus_query + selected.group_name +'/api/v1/label/__name__/values';
     } else {
-      this.prometheus_query = this.prometheus_query + '/api/v1/label/__name__/values';
+      api_prometheus = this.prometheus_query + '/api/v1/label/__name__/values';
       console.log ('dev mode detected')
     }
     this.graphs_form = new FormControl();
-    this.httpClient.get(this.prometheus_query).pipe(
+    this.httpClient.get(api_prometheus).pipe(
       timeout(5000), 
       map(res => {
         return res;
@@ -189,8 +201,8 @@ export class DevicesTableComponent implements OnInit {
       informations.push(metric);
     });
     
-    this.seleted_information_event.emit(informations);
     this._show_graph = true;
+    this.information_dad = informations;
   }
 
   radioChange(event:any): void {

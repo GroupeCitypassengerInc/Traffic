@@ -12,12 +12,6 @@ import { environment } from '../environments/environment';
 
 export class AppComponent {
   isLogged: boolean = false;
-  information_dad:Array<string> = [];
   _show_graph: boolean = false;
   currentApplicationVersion = environment.appVersion;
-  
-  catch_information(information:Array<string>) {
-    this.information_dad = information;
-    this._show_graph = true;
-  }
 }

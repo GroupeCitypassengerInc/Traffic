@@ -53,3 +53,5 @@
   </table>
   <mat-paginator [pageSizeOptions]='[5, 25, 50, 75, 100]'></mat-paginator>
 </div>
+
+<app-graph *ngIf='_show_graph;' [information]=information_dad></app-graph>

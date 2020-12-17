@@ -9,6 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 export interface user_informations {
   id : number,
@@ -31,12 +32,12 @@ export class LoginComponent implements OnInit {
   });
   is_logged_in : boolean = false;
   base_api_url : string = environment.city_url_api;
-  user_info : any;
+  user_info : user_informations;
 
-  constructor(private form_builder: FormBuilder, private httpClient: HttpClient, private _snackBar: MatSnackBar) { }
+  constructor(private form_builder: FormBuilder, private httpClient: HttpClient, private _snackBar: MatSnackBar, private router: Router) { }
   
   ngOnInit(): void {
-    this.is_logged_in = this.is_logged()
+    this.is_logged()
   }
 
   getError(field_name): string {
@@ -66,31 +67,31 @@ export class LoginComponent implements OnInit {
   }
 
   login(url:string): void { 
-    this.is_login_enable = false;
-
     let headers = new HttpHeaders();
+
     headers = headers.set('accept', 'application/json');
     this.httpClient.request('GET', url, {headers}).pipe(
       timeout(10000), 
       map(res => {
-        
         return res;
       }
     ),catchError(
       err => {
         console.error(err.error.message);
-        this.is_login_enable = true;
         this.openSnackBar(err.error.message);
         throw err;
       }
     )).subscribe(response  =>{
       console.log('Login -> ok');
-      console.log(response);
-
-      this.user_info = response;
-      this.is_login_enable = true;
-      this.is_logged_in = true;
-      this.openSnackBar('Welcome back !')
+      this.user_info = {
+        id : response['id'],
+        role : response['role'],
+        username : response['username']
+      };
+      console.log(this.user_info);
+      console.log('not secure at all');
+      this.openSnackBar('Welcome back !');
+      this.redirect();
     });
   }
 
@@ -151,6 +152,7 @@ export class LoginComponent implements OnInit {
       is_logged = true;
       this.is_login_enable = false;
       this.openSnackBar('Welcome back !');
+      
     });
     return is_logged;
   }
@@ -159,5 +161,10 @@ export class LoginComponent implements OnInit {
     this._snackBar.open(message,'ok',{
       duration: 10000,
     });
+  }
+
+  redirect() {
+    //this.router.navigate(['/graph']);
+    this.router.navigateByUrl('/graph', { state: this.user_info});
   }
 }

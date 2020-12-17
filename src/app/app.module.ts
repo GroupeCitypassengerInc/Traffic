@@ -37,9 +37,9 @@ import { AppRoutingModule, routingComponents } from './app-routing/app-routing.m
   declarations: [
     AppComponent,
     GraphComponent,
-    //DevicesTableComponent,
+    DevicesTableComponent,
     SpinnerComponent,
-    //LoginComponent,
+    LoginComponent,
     routingComponents,
   ],
   imports: [
