@@ -74,7 +74,7 @@ import { AppRoutingModule, routingComponents } from './app-routing/app-routing.m
 
   ],
   providers: [
-    {provide:HTTP_INTERCEPTORS,useClass:InterceptorService,multi:true}
+    { provide:HTTP_INTERCEPTORS, useClass:InterceptorService, multi:true }
   ],
   bootstrap: [AppComponent]
 })

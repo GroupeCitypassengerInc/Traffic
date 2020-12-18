@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, SimpleChanges, ChangeDetectorRef, ApplicationRef, isDevMode } from '@angular/core';
 import { HttpClientModule, HttpClient, HttpHeaders }    from '@angular/common/http';
+import { catchError, timeout, map } from 'rxjs/operators';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, _countGroupLabelsBeforeOption } from '@angular/material/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
@@ -14,7 +15,6 @@ import { MatDatetimepickerModule, MatNativeDatetimeModule } from '@mat-datetimep
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Chart } from 'chart.js';
-import * as ChartDatasourcePrometheusPlugin from 'chartjs-plugin-datasource-prometheus';
 import { throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -78,7 +78,7 @@ export class GraphComponent implements OnInit {
   }
   unit_select = new FormControl(false);
 
-  constructor(private appRef: ChangeDetectorRef,  private _formBuilder: FormBuilder) {
+  constructor(private appRef: ChangeDetectorRef,  private _formBuilder: FormBuilder, private httpClient: HttpClient) {
     this.form_group = this._formBuilder.group({
       default_date: [{ value: '', disabled: true }, Validators.required]
     });
@@ -99,8 +99,9 @@ export class GraphComponent implements OnInit {
     }
     if ( !isDevMode() ) {
       console.log ('prod mode detected')
-      this.endpoint = this.endpoint + this.base_url;
+      //this.endpoint = this.endpoint + this.base_url;
     } else {
+      this.base_url = '/api/v1'
       console.log ('dev mode detected')
     }
     this.query_list = this.information;
@@ -150,8 +151,7 @@ export class GraphComponent implements OnInit {
     console.log(this.query_list)
     this.query_list.forEach(
       query => {
-        let chart = this.chart_builder(query);
-        this.graphs_records[query]['m_chart'] = chart;
+        this.get_metric_from_prometheus(query);
       }
     );
   }
@@ -178,26 +178,78 @@ export class GraphComponent implements OnInit {
 
   // Re-generate graph
   regenerate(id:string): void {
-    //console.log ('destroying ' + id + ' chart');
+    console.log ('destroying ' + id + ' chart');
     this.graphs_records[id]['m_chart'].destroy();
-    //console.log ('re-building ' + id + ' chart');
-    this.graphs_records[id]['m_chart'] = this.chart_builder(id);
+    console.log(this.graphs_records);
+    console.log ('re-building ' + id + ' chart');
+    this.graphs_records[id]['m_chart'] = this.get_metric_from_prometheus(id);
+    console.log(this.graphs_records[id]['m_chart'])
   }
   
-  // Build chart
-  chart_builder(id:string) {
-    console.log('building : ' + id + ' chart');
-    var ctx = document.getElementById(id);
-    if ( ctx === null ) {
-      throw new Error('An error as occured. An get id of : ' + id);
+  get_metric_from_prometheus( metric:string ) {
+    const currentDate = new Date();
+    const timestamp = currentDate.getTime();
+    let start_time = ( timestamp + this.up_start_time ) / 1000;
+    let end_time = ( timestamp +  this.end_time ) / 1000;
+    let step = 10; //max 11 000
+    let query = '/query_range?query=' + metric + '&start=' + start_time + '&end=' + end_time + '&step=' + step;
+    let url = this.endpoint + this.base_url + query;
+    console.log (url);
+    let headers = new HttpHeaders();
+    headers = headers.set('accept', 'application/json');
+    this.httpClient.request('GET', url, {headers})
+      .toPromise()
+      .then(response => {
+        console.log(response);
+        if ( response['status'] != 'success' ) {
+          throw new Error ('Request to prom : not successful');
+        }
+        let parsed_data = this.parse_response(response['data']['result']);
+        console.log('1');
+        this.graphs_records[metric]['m_chart'] = this.chart_builder(metric, parsed_data);
+      });
+  }
+
+  parse_response(data_to_parse : any): Object {
+    console.log(data_to_parse);
+    let datasets = [];
+    let metric_timestamp_list = [];
+
+    for ( const key in data_to_parse ) {
+      let instance = data_to_parse[key]['metric']['instance'];
+
+      let metric_value_list = [];
+      data_to_parse[key]['values'].forEach(value=>{
+        metric_timestamp_list.push(value[0]);
+        metric_value_list.push(value[1]);
+      });
+      let dataset = {
+        label: instance,
+        data: metric_value_list,
+        borderColor : '#a3c037'
+      };
+      datasets.push(dataset);
     }
-    let query = id;
+    let parsed_data = {
+      labels: metric_timestamp_list,
+      datasets: datasets
+    };
+    return parsed_data;
+  }
+
+  // Build chart
+  chart_builder(metric:string, data) {
+    console.log('building : ' + metric + ' chart');
+    let ctx = document.getElementById(metric);
+    if ( ctx === null ) {
+      throw new Error('An error as occured. Can\'t get id ok : ' + metric);
+    }
+    console.log(data);
     var chart = new Chart(ctx, {
       type: 'line',
-      plugins: [ChartDatasourcePrometheusPlugin],
+      data: data,
       options: {
         responsive : true,
-        //devicePixelRatio : 1,
         tension : 0,
         animation: {
           duration: 0
@@ -206,28 +258,15 @@ export class GraphComponent implements OnInit {
           position: 'bottom',
           align: 'start'
         },
-        label: {
-        },
-        plugins: {
-          'datasource-prometheus': {
-            prometheus: {
-              endpoint: this.endpoint,
-              //baseURL: "/api/v1",
-            },
-            query: query,
-            stepped: true,
-            timeRange: {
-              type: 'relative',
-              // from 12 hours ago to now
-              start: this.up_start_time,
-              end: this.end_time,
-              step: 10,
-              // refresh every 10s
-              msUpdateInterval: 10 * 1000,
-            },
-          },
-        },
-      },
+        /*scales: {
+          xAxes: [{
+            type: 'time',
+            time: {
+              unit: this._unit
+            }
+          }]
+        }*/
+      }
     });
     return chart;
   }

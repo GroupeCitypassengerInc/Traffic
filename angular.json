@@ -14,8 +14,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies":[
-              "chart.js",
-              "chartjs-plugin-datasource-prometheus"
+              "chart.js"
             ],
             "outputPath": "dist/bagage",
             "index": "src/index.html",

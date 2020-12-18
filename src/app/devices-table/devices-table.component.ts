@@ -159,28 +159,29 @@ export class DevicesTableComponent implements OnInit {
       console.log ('dev mode detected')
     }
     this.graphs_form = new FormControl();
-    this.httpClient.get(api_prometheus).pipe(
-      timeout(5000), 
+    let headers = new HttpHeaders();
+    headers = headers.set('accept', 'application/json');
+    this.httpClient.request('GET', api_prometheus, {headers}).pipe(
+      timeout(10000), 
       map(res => {
         return res;
       }
-    ),
-    catchError(
+    ),catchError(
       err => {
         throw err;
       }
-    )).subscribe(prometheus_metrics =>{
-      this.prometheus_metrics_available = prometheus_metrics;
-      this.graph_avialable_catcher(this.prometheus_metrics_available.data);
-      this.selection = row;
-      this.http_request_ok = true;
-      this._disabled_visualize = true; // enable visualize button if any error has been catched
-    },err => {
-      this._disabled_visualize = true; // disable visualize button on http error
-      this.http_request_ok = false;
-      console.log(err);
-      this.openSnackBar(err);
-    });
+      )).subscribe(prometheus_metrics =>{
+        this.prometheus_metrics_available = prometheus_metrics;
+        this.graph_avialable_catcher(this.prometheus_metrics_available.data);
+        this.selection = row;
+        this.http_request_ok = true;
+        this._disabled_visualize = true; // enable visualize button if any error has been catched
+      },err => {
+        this._disabled_visualize = true; // disable visualize button on http error
+        this.http_request_ok = false;
+        console.log(err);
+        this.openSnackBar(err);
+      });
     row.highlighted = !row.highlighted;
   }
 
@@ -212,6 +213,36 @@ export class DevicesTableComponent implements OnInit {
   openSnackBar(message: string): void {
     this._snackBar.open(message,'ok',{
       duration: 10000,
+    });
+  }
+
+  Map(){
+    let url = this.base_api_url + '/ws/Map/Devices';
+    let headers = new HttpHeaders();
+    headers = headers.set('Accept-Encoding:', 'application/json');
+    /*
+    headers = headers.set('withCredentials', 'true');
+    headers = headers.set('accept', 'application/json');
+    headers = headers.set('Host', 'preprod.citypassenger.com');
+    headers = headers.set('Origin', 'http://app.citypassenger.com:4200');
+    headers = headers.set('Referer', 'http://app.citypassenger.com:4200/');
+    headers = headers.set('Sec-Fetch-Mode', 'cors');
+    headers = headers.set('Sec-Fetch-Site', 'cross-site');
+    */
+    this.httpClient.request('GET', url, {headers}).pipe(
+      timeout(10000), 
+      map(res => {
+        return res;
+      }
+    ),catchError(
+      err => {
+        console.error(err);
+        this.openSnackBar(err);
+        throw err;
+      }
+    )).subscribe(response  =>{
+      console.log('map -> ok');
+      console.log(response);
     });
   }
 }

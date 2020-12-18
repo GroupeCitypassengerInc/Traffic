@@ -37,7 +37,6 @@ export class LoginComponent implements OnInit {
   constructor(private form_builder: FormBuilder, private httpClient: HttpClient, private _snackBar: MatSnackBar, private router: Router) { }
   
   ngOnInit(): void {
-    this.is_logged()
   }
 
   getError(field_name): string {
@@ -68,7 +67,6 @@ export class LoginComponent implements OnInit {
 
   login(url:string): void { 
     let headers = new HttpHeaders();
-
     headers = headers.set('accept', 'application/json');
     this.httpClient.request('GET', url, {headers}).pipe(
       timeout(10000), 
@@ -83,6 +81,7 @@ export class LoginComponent implements OnInit {
       }
     )).subscribe(response  =>{
       console.log('Login -> ok');
+      console.log(response);
       this.user_info = {
         id : response['id'],
         role : response['role'],
