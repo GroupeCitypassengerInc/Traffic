@@ -152,6 +152,11 @@ export class LoginComponent implements OnInit {
         is_logged = false;
         return is_logged;
       }
+      this.user_info = {
+        id : response['id'],
+        role : response['role'],
+        username : response['username']
+      };
       console.log('Logged ? -> yes');
       
       is_logged = true;
