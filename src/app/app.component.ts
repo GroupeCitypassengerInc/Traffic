@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Output, EventEmitter, HostListener  } from '@angular/core';
+import { Component, Output, EventEmitter, HostListener, OnInit  } from '@angular/core';
 import { GraphComponent } from './graph/graph.component';
 import { LoaderService } from './loader/loader.service';
 import { environment } from '../environments/environment';
+import { AuthService } from './auth_services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -10,8 +11,14 @@ import { environment } from '../environments/environment';
   styleUrls: ['./app.component.css']
 })
 
-export class AppComponent {
-  isLogged: boolean = false;
+export class AppComponent implements OnInit {
   _show_graph: boolean = false;
+  is_logged: boolean = false;
   currentApplicationVersion = environment.appVersion;
+
+  constructor(private auth: AuthService) {}
+
+  ngOnInit(){
+    this.is_logged = this.auth.islogged;
+  }
 }

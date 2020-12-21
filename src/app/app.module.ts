@@ -9,7 +9,6 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 import { throwError, TimeoutError } from 'rxjs';
 import { catchError, timeout, map } from 'rxjs/operators';
-import { InterceptorService } from './loader/interceptor.service';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -32,6 +31,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatetimepickerModule, MatNativeDatetimeModule } from "@mat-datetimepicker/core";
 import { AppRoutingModule, routingComponents } from './app-routing/app-routing.module';
+
+import { InterceptorService } from './loader/interceptor.service';
+import { AuthService } from './auth_services/auth.service';
 
 @NgModule({
   declarations: [
@@ -74,8 +76,10 @@ import { AppRoutingModule, routingComponents } from './app-routing/app-routing.m
 
   ],
   providers: [
-    { provide:HTTP_INTERCEPTORS, useClass:InterceptorService, multi:true }
+    { provide:HTTP_INTERCEPTORS, useClass:InterceptorService, multi:true },
+    AuthService
   ],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

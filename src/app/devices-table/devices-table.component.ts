@@ -91,12 +91,14 @@ export class DevicesTableComponent implements OnInit {
   ngOnInit(): void {
     console.log(history.state);
     this.login_information = history.state;
-    console.log(this.login_information);
-    this.httpClient.get("assets/json/map_devices.json").subscribe(json_data =>{
-      this.JSON_data = json_data;
-      this.data_formating();
-    });
-
+    if ( false ) { //not tested yet
+      this.get_devices();
+    } else {
+      this.httpClient.get("assets/json/map_devices.json").subscribe(json_data =>{
+        this.JSON_data = json_data;
+        this.data_formating();
+      });
+    }
   }
  
   ngAfterViewInit(): void {
@@ -216,19 +218,10 @@ export class DevicesTableComponent implements OnInit {
     });
   }
 
-  Map(){
+  get_devices(){
     let url = this.base_api_url + '/ws/Map/Devices';
     let headers = new HttpHeaders();
     headers = headers.set('Accept-Encoding:', 'application/json');
-    /*
-    headers = headers.set('withCredentials', 'true');
-    headers = headers.set('accept', 'application/json');
-    headers = headers.set('Host', 'preprod.citypassenger.com');
-    headers = headers.set('Origin', 'http://app.citypassenger.com:4200');
-    headers = headers.set('Referer', 'http://app.citypassenger.com:4200/');
-    headers = headers.set('Sec-Fetch-Mode', 'cors');
-    headers = headers.set('Sec-Fetch-Site', 'cross-site');
-    */
     this.httpClient.request('GET', url, {headers}).pipe(
       timeout(10000), 
       map(res => {
@@ -243,6 +236,8 @@ export class DevicesTableComponent implements OnInit {
     )).subscribe(response  =>{
       console.log('map -> ok');
       console.log(response);
+      this.JSON_data = response;
+      this.data_formating();
     });
   }
 }

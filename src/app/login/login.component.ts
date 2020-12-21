@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, SimpleChanges, ChangeDetectorRef, ApplicationRef, isDevMode } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators  } from '@angular/forms';
-import { HttpClientModule, HttpClient, HttpHeaders }    from '@angular/common/http';
+import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, timeout, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -9,7 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { AuthService } from '../auth_services/auth.service';
 
 export interface user_informations {
   id : number,
@@ -20,7 +20,7 @@ export interface user_informations {
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 
 export class LoginComponent implements OnInit {
@@ -34,10 +34,10 @@ export class LoginComponent implements OnInit {
   base_api_url : string = environment.city_url_api;
   user_info : user_informations;
 
-  constructor(private form_builder: FormBuilder, private httpClient: HttpClient, private _snackBar: MatSnackBar, private router: Router) { }
+  constructor(private form_builder: FormBuilder, private _snackBar: MatSnackBar, private auth: AuthService ) { }
   
   ngOnInit(): void {
-    this.is_logged();
+    this.auth.is_logged();
   }
 
   getError(field_name): string {
@@ -63,108 +63,7 @@ export class LoginComponent implements OnInit {
     let username = encodeURIComponent(form.controls['username'].value);
     let password = encodeURIComponent(form.controls['password'].value);
     let url_login = this.base_api_url + '/ws/User/Login?login=' + username + '&password=' + password;
-    this.login(url_login);
-  }
-
-  login(url:string): void { 
-    let headers = new HttpHeaders();
-    headers = headers.set('accept', 'application/json');
-    this.httpClient.request('GET', url, {headers}).pipe(
-      timeout(10000), 
-      map(res => {
-        return res;
-      }
-    ),catchError(
-      err => {
-        
-        if ( err.error.message == 'alreadyLogged' ) {
-          this.redirect();
-        } else {
-          console.error(err.error.message);
-          this.openSnackBar(err.error.message);
-        }
-        throw err;
-      }
-    )).subscribe(response  =>{
-      console.log('Login -> ok');
-      console.log(response);
-      this.user_info = {
-        id : response['id'],
-        role : response['role'],
-        username : response['username']
-      };
-      console.log(this.user_info);
-      console.log('not secure at all');
-      this.openSnackBar('Welcome back !');
-      this.redirect();
-    });
-  }
-
-  logout(): boolean{
-    let is_logged : boolean = this.is_logged_in;
-
-    if ( is_logged == false) {
-      this.openSnackBar('Already logout');
-      return false;
-    }
-    
-    let logged_api_url = this.base_api_url + '/ws/User/Logout';
-    let headers = new HttpHeaders();
-    
-    headers = headers.set('accept', 'application/json');
-    this.httpClient.request('GET', logged_api_url, {headers}).pipe(
-      timeout(10000), 
-      map(res => {
-        return res;
-      }
-    ),catchError(
-      err => {
-        console.log('an errer occured please try again');
-        throw err;
-      }
-    )).subscribe(response  =>{
-      console.log('Successfully logged out');
-      is_logged = false;
-      this.openSnackBar('Successfully logged out')
-    });
-    return is_logged;
-  }
-
-  is_logged(): boolean {
-    let is_logged : boolean = false;
-    let logged_api_url = this.base_api_url + '/ws/User/Logged';
-    let headers = new HttpHeaders();
-
-    headers = headers.set('accept', 'application/json');
-    this.httpClient.request('GET', logged_api_url, {headers}).pipe(
-      timeout(10000), 
-      map(res => {
-        return res;
-      }
-    ),catchError(
-      err => {
-        console.log('user not logged');
-        throw err;
-      }
-    )).subscribe(response  =>{
-      console.log(response);
-      if ( response == null ) {
-        is_logged = false;
-        return is_logged;
-      }
-      this.user_info = {
-        id : response['id'],
-        role : response['role'],
-        username : response['username']
-      };
-      console.log('Logged ? -> yes');
-      
-      is_logged = true;
-      this.is_login_enable = false;
-      this.openSnackBar('Welcome back !');
-      this.redirect();
-    });
-    return is_logged;
+    this.auth.login(url_login);
   }
 
   openSnackBar(message: string): void {
@@ -173,8 +72,4 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  redirect() {
-    //this.router.navigate(['/graph']);
-    this.router.navigateByUrl('/graph', { state: this.user_info});
-  }
 }
