@@ -37,6 +37,7 @@ export class LoginComponent implements OnInit {
   constructor(private form_builder: FormBuilder, private httpClient: HttpClient, private _snackBar: MatSnackBar, private router: Router) { }
   
   ngOnInit(): void {
+    this.is_logged();
   }
 
   getError(field_name): string {
@@ -75,8 +76,13 @@ export class LoginComponent implements OnInit {
       }
     ),catchError(
       err => {
-        console.error(err.error.message);
-        this.openSnackBar(err.error.message);
+        
+        if ( err.error.message == 'alreadyLogged' ) {
+          this.redirect();
+        } else {
+          console.error(err.error.message);
+          this.openSnackBar(err.error.message);
+        }
         throw err;
       }
     )).subscribe(response  =>{
@@ -151,7 +157,7 @@ export class LoginComponent implements OnInit {
       is_logged = true;
       this.is_login_enable = false;
       this.openSnackBar('Welcome back !');
-      
+      this.redirect();
     });
     return is_logged;
   }
