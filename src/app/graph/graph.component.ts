@@ -90,16 +90,16 @@ export class GraphComponent implements OnInit {
     this.default_date.setHours(this.default_date.getHours());
     this.options = this.information.shift();
     console.log(this.options);
-    if ( this.options.length == 1 ) {
-      this.base_url = '/' + this.options[0] + '/api/v1';
+    if ( this.options.length == 2 ) {
+      this.base_url = '/' + this.options[0] + '/'+ this.options[1] + '/api/v1';
       this.box_selected = '';
     } else {
-      this.base_url = '/' + this.options[0] + '/api/v1';
-      this.box_selected = this.options[1]
+      this.base_url = '/' + this.options[0] + '/'+ this.options[1] + '/api/v1';
+      this.box_selected = this.options[2]
     }
     if ( !isDevMode() ) {
       console.log ('prod mode detected')
-      //this.endpoint = this.endpoint + this.base_url;
+      this.endpoint = this.endpoint + this.base_url;
     } else {
       this.base_url = '/api/v1'
       console.log ('dev mode detected')

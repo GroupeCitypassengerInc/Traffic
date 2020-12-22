@@ -34,6 +34,7 @@ export interface box_info {
   box_name: string,  
   address: string, 
   site_refer: string, 
+  password: string ,
 }
 export interface checkbox {
   name: string;
@@ -86,6 +87,7 @@ export class DevicesTableComponent implements OnInit {
   _disabled_visualize : boolean = true;
   http_request_ok : boolean = false
   option : 'group'|'box' = "group";
+  password:string = '';
   
   ngOnInit(): void {
     console.log(history.state);
@@ -190,12 +192,13 @@ export class DevicesTableComponent implements OnInit {
     let informations: Array<any> = [];
     let checked = this.graphs_form.value;
     let selected = this.selection;
-
+    selected.password = this.password;
+    
     if ( this.option == 'group' ) {
-      informations.push([selected.group_name]);
+      informations.push([selected.group_name, selected.password]);
       console.log(informations);
     } else {
-      informations.push([selected.group_name, selected.box_name]);
+      informations.push([selected.group_name, selected.password, selected.box_name]);
       console.log(informations);
     }
 
@@ -243,7 +246,6 @@ export class DevicesTableComponent implements OnInit {
     let url = this.base_api_url + '/ws/Group/Info/' + group_id;
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json');
-    headers = headers.set('Content-Type', 'application/json');
     /*this.httpClient.request('GET', url, {headers}).pipe(
       timeout(10000), 
       map(res => {
@@ -260,13 +262,10 @@ export class DevicesTableComponent implements OnInit {
       .toPromise()
       .then(response => {
         console.log(response);
-        if ( response['status'] != 'success' ) {
-          throw new Error ('Request to prom : not successful');
-        } else {
-          let password = response['group'][selection.group_name]['localinterface_passwords']['user'];
-          console.log(password);
-          this.getRecord( selection, password )
-        }
-    });
+        let password = response['group'][selection.group_name]['localinterface_passwords']['user'];
+        console.log(password);
+        this.password = password;
+        this.getRecord(selection, password)
+      });
   }
 }
