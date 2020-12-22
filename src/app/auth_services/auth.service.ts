@@ -16,8 +16,7 @@ export interface user_informations {
 })
 
 export class AuthService {
-  islogged : boolean = false;
-  is_logged_in : boolean = false;
+  is_auth : boolean = false;
   base_api_url : string = environment.city_url_api;
   user_info : user_informations;
 
@@ -33,8 +32,7 @@ export class AuthService {
       }
     ),catchError(
       err => {
-        
-        if ( err.error.message == 'alreadyLogged' ) {
+         if ( err.error.message == 'alreadyLogged' ) {
           this.redirect();
         } else {
           console.error(err.error.message);
@@ -49,14 +47,13 @@ export class AuthService {
         role : response['role'],
         username : response['username']
       };
-      console.log(this.user_info);
-      console.log('not secure at all');
+      this.is_auth = true;
       this.redirect();
     });
   }
 
   logout(): boolean{
-    let is_logged : boolean = this.is_logged_in;
+    let is_logged : boolean = this.is_auth;
 
     if ( is_logged == false) {
       return false;
@@ -78,12 +75,12 @@ export class AuthService {
       }
     )).subscribe(response  =>{
       console.log('Successfully logged out');
-      is_logged = false;
+      this.is_auth = false;
     });
     return is_logged;
   }
 
-  is_logged(): boolean {
+  is_logged(): void {
     let is_logged : boolean = false;
     let logged_api_url = this.base_api_url + '/ws/User/Logged';
     let headers = new HttpHeaders();
@@ -112,13 +109,14 @@ export class AuthService {
       };
       console.log('Logged ? -> yes');
       
-      is_logged = true;
+      this.is_auth = true;
       this.redirect();
     });
-    return is_logged;
   }
 
   redirect() {
+    console.log('uo');
+    console.log(this.is_auth);
     this.router.navigateByUrl('/graph', { state: this.user_info});
   }
 }

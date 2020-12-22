@@ -5,10 +5,11 @@ import { CommonModule } from '@angular/common';
 import { GraphComponent } from '../graph/graph.component';
 import { DevicesTableComponent } from '../devices-table/devices-table.component';
 import { LoginComponent } from '../login/login.component';
+import { GuardService } from '../auth_services/guard.service';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'graph', component: DevicesTableComponent },
+  { path: 'graph', canActivate: [GuardService], component: DevicesTableComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },  // Wildcard route for a 404 page
   { path: '**', redirectTo: '/login', pathMatch: 'full' },  // Wildcard route for a 404 page
 
@@ -18,5 +19,6 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
+
 export class AppRoutingModule { }
 export const routingComponents = [LoginComponent, DevicesTableComponent]

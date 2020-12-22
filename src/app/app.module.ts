@@ -34,6 +34,8 @@ import { AppRoutingModule, routingComponents } from './app-routing/app-routing.m
 
 import { InterceptorService } from './loader/interceptor.service';
 import { AuthService } from './auth_services/auth.service';
+import { GuardService } from './auth_services/guard.service';
+
 
 @NgModule({
   declarations: [
@@ -77,7 +79,8 @@ import { AuthService } from './auth_services/auth.service';
   ],
   providers: [
     { provide:HTTP_INTERCEPTORS, useClass:InterceptorService, multi:true },
-    AuthService
+    AuthService,
+    GuardService,
   ],
   bootstrap: [AppComponent]
 })

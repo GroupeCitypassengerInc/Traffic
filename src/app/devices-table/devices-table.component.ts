@@ -19,13 +19,12 @@ import { CdkTableModule} from '@angular/cdk/table';
 import { DataSource } from '@angular/cdk/table';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { FormControl } from '@angular/forms';
+import { FormControl, SelectControlValueAccessor } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { EMPTY, throwError, TimeoutError } from 'rxjs';
 import { catchError, timeout, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { GraphComponent } from '../graph/graph.component';
-
 
 export interface box_info {
   No: number, 
@@ -91,6 +90,7 @@ export class DevicesTableComponent implements OnInit {
   ngOnInit(): void {
     console.log(history.state);
     this.login_information = history.state;
+    this.get_devices();
     if ( false ) { //not tested yet
       this.get_devices();
     } else {
@@ -149,8 +149,7 @@ export class DevicesTableComponent implements OnInit {
   }
 
   getRecord(row): void {
-    this.selection = row;
-    let selected = this.selection;
+    let selected  = row;
     let api_prometheus : string = '';
     console.log(selected)
     if ( !isDevMode() ) {
@@ -229,15 +228,42 @@ export class DevicesTableComponent implements OnInit {
       }
     ),catchError(
       err => {
-        console.error(err);
-        this.openSnackBar(err);
         throw err;
       }
     )).subscribe(response  =>{
       console.log('map -> ok');
       console.log(response);
-      this.JSON_data = response;
-      this.data_formating();
+      //this.JSON_data = response;
+      //this.data_formating();
     });
+  }
+
+  get_group_info (selection) : void {
+    let group_id = selection.group_id;
+    let url = this.base_api_url + '/ws/Group/Info/' + group_id;
+    let headers = new HttpHeaders();
+    headers = headers.set('accept', 'application/json');
+  
+    this.httpClient.request('GET', url, {headers}).pipe(
+      timeout(10000), 
+      map(res => {
+        return res;
+      }
+    ),catchError(
+      err => {
+        throw err;
+      }
+    )).subscribe(response  =>{
+      console.log(response);
+    });
+
+    /*this.httpClient.request('GET', url, {headers})
+      .toPromise()
+      .then(response => {
+        console.log(response);
+        if ( response['status'] != 'success' ) {
+          throw new Error ('Request to prom : not successful');
+        }
+    });*/
   }
 }

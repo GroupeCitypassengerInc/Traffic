@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
     username: ['', Validators.required],
     password: ['', Validators.required]
   });
-  is_logged_in : boolean = false;
+  is_logged : boolean = this.auth.is_auth;
   base_api_url : string = environment.city_url_api;
   user_info : user_informations;
 
@@ -38,6 +38,7 @@ export class LoginComponent implements OnInit {
   
   ngOnInit(): void {
     this.auth.is_logged();
+    this.is_logged = this.auth.is_auth;
   }
 
   getError(field_name): string {
