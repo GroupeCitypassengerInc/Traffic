@@ -90,8 +90,8 @@ export class DevicesTableComponent implements OnInit {
   ngOnInit(): void {
     console.log(history.state);
     this.login_information = history.state;
-    this.get_devices();
-    if ( false ) { //not tested yet
+    //this.get_devices();
+    if ( !isDevMode() ) {
       this.get_devices();
     } else {
       this.httpClient.get("assets/json/map_devices.json").subscribe(json_data =>{
@@ -148,13 +148,13 @@ export class DevicesTableComponent implements OnInit {
     });
   }
 
-  getRecord(row): void {
+  getRecord(row:any, password:string): void {
     let selected  = row;
     let api_prometheus : string = '';
     console.log(selected)
     if ( !isDevMode() ) {
       console.log ('prod mode detected')
-      api_prometheus = this.prometheus_query + selected.group_name +'/api/v1/label/__name__/values';
+      api_prometheus = this.prometheus_query + selected.group_name + '/' + password + '/api/v1/label/__name__/values';
     } else {
       api_prometheus = this.prometheus_query + '/api/v1/label/__name__/values';
       console.log ('dev mode detected')
@@ -220,7 +220,7 @@ export class DevicesTableComponent implements OnInit {
   get_devices(){
     let url = this.base_api_url + '/ws/Map/Devices';
     let headers = new HttpHeaders();
-    headers = headers.set('Accept-Encoding:', 'application/json');
+    //headers = headers.set('Accept-Encoding:', 'application/json');
     this.httpClient.request('GET', url, {headers}).pipe(
       timeout(10000), 
       map(res => {
@@ -233,8 +233,8 @@ export class DevicesTableComponent implements OnInit {
     )).subscribe(response  =>{
       console.log('map -> ok');
       console.log(response);
-      //this.JSON_data = response;
-      //this.data_formating();
+      this.JSON_data = response['groups'];
+      this.data_formating();
     });
   }
 
@@ -244,7 +244,7 @@ export class DevicesTableComponent implements OnInit {
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json');
   
-    this.httpClient.request('GET', url, {headers}).pipe(
+    /*this.httpClient.request('GET', url, {headers}).pipe(
       timeout(10000), 
       map(res => {
         return res;
@@ -255,15 +255,18 @@ export class DevicesTableComponent implements OnInit {
       }
     )).subscribe(response  =>{
       console.log(response);
-    });
-
-    /*this.httpClient.request('GET', url, {headers})
+    });*/
+    this.httpClient.request('GET', url, {headers})
       .toPromise()
       .then(response => {
         console.log(response);
         if ( response['status'] != 'success' ) {
           throw new Error ('Request to prom : not successful');
+        } else {
+          let password = response['group'][selection.group_name]['localinterface_passwords']['user'];
+          console.log(password);
+          this.getRecord( selection, password )
         }
-    });*/
+    });
   }
 }

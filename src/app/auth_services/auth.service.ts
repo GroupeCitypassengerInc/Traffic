@@ -115,8 +115,6 @@ export class AuthService {
   }
 
   redirect() {
-    console.log('uo');
-    console.log(this.is_auth);
     this.router.navigateByUrl('/graph', { state: this.user_info});
   }
 }
