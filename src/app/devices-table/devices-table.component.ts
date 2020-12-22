@@ -120,6 +120,7 @@ export class DevicesTableComponent implements OnInit {
           box_name: sites.siteName, 
           address: sites.datas.address, 
           site_refer:sites.siteReferer,
+          password:''
         });
         index ++;
       }
