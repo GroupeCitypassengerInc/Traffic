@@ -263,7 +263,7 @@ export class DevicesTableComponent implements OnInit {
       .toPromise()
       .then(response => {
         console.log(response);
-        let password = response['group']['ienaDevices'][selection.group_name]['localinterface_passwords']['user'];
+        let password = response['group']['ienaDevices'][selection.box_name]['localinterface_passwords']['user'];
         console.log(password);
         this.password = password;
         this.getRecord(selection, password)
