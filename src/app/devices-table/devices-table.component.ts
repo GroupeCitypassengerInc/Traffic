@@ -22,6 +22,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { FormControl, SelectControlValueAccessor } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { EMPTY, throwError, TimeoutError } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 import { catchError, timeout, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { GraphComponent } from '../graph/graph.component';
@@ -67,28 +68,30 @@ export class DevicesTableComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  
-  login_information : user_informations;
 
-  information_dad:Array<string> = [];
+  login_information: user_informations;
+
+  information_dad: Array<string> = [];
   _show_graph: boolean = false;
 
-  base_api_url : string = environment.city_url_api;
-  prometheus_api : string = environment.base_url ;
+  base_api_url: string = environment.city_url_api;
+  prometheus_api: string = environment.base_url ;
   columnsToDisplay: string[] = ['address','group_name', 'box_name'];
   BOX_DATA: box_info[] = [];
   JSON_data: any = [];
-  dataSource = new MatTableDataSource(this.BOX_DATA);
-  graphs_form = new FormControl();
+
   selection: box_info;
-  prometheus_metrics_available: any;
   graphs_available_list: string[] = [];
   expandedElement: box_info | null;
-  _disabled_visualize : boolean = true;
-  http_request_ok : boolean = false
-  option : 'group'|'box' = "group";
-  password:string = '';
-  
+  _disabled_visualize: boolean = true;
+  http_request_ok: boolean = false
+  option: 'group'|'box' = "group";
+  password: string = '';
+
+  dataSource = new MatTableDataSource(this.BOX_DATA);
+  graphs_form = new FormControl();
+
+
   ngOnInit(): void {
     console.log(history.state);
     this.login_information = history.state;
@@ -174,8 +177,7 @@ export class DevicesTableComponent implements OnInit {
         throw err;
       }
       )).subscribe(prometheus_metrics =>{
-        this.prometheus_metrics_available = prometheus_metrics;
-        this.graph_avialable_catcher(this.prometheus_metrics_available.data);
+        this.graph_avialable_catcher(prometheus_metrics['data']);
         this.selection = row;
         this.http_request_ok = true;
         this._disabled_visualize = true; // enable visualize button if any error has been catched
@@ -242,18 +244,23 @@ export class DevicesTableComponent implements OnInit {
   }
 
   get_group_info (selection) : void {
-    let group_id = selection.group_id;
-    let url = this.base_api_url + '/ws/Group/Info/' + group_id;
-    let headers = new HttpHeaders();
-    headers = headers.set('accept', 'application/json');
-    this.httpClient.request('GET', url, {headers})
-      .toPromise()
-      .then(response => {
-        console.log(response);
-        let password = response['group']['ienaDevices'][selection.box_name]['localinterface_passwords']['user'];
-        console.log(password);
-        this.password = password;
-        this.getRecord(selection, password)
-      });
+    if ( isDevMode() ){
+      this.getRecord(selection, '')
+    } else {
+      let group_id = selection.group_id;
+      let url = this.base_api_url + '/ws/Group/Info/' + group_id;
+      let headers = new HttpHeaders();
+      headers = headers.set('accept', 'application/json');
+      this.httpClient.request('GET', url, {headers})
+        .toPromise()
+        .then(response => {
+          console.log(response);
+          let password = response['group']['ienaDevices'][selection.box_name]['localinterface_passwords']['user'];
+          console.log(password);
+          this.password = password;
+          this.getRecord(selection, password)
+        });
+    }
+    
   }
 }

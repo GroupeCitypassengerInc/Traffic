@@ -1,63 +1,62 @@
 <h2>Graphs</h2>
 <mat-grid-list cols='3' gutterSize='0px'>
-  <div *ngFor='let query of Object.keys(graphs_records)'>
-    <div class='graph_container'>
-      <mat-grid-tile class='graph' colspan='3' rowspan='1'>
-        <div>
-          <h4>{{query}}</h4>
-          <div id='increment' class='time_opt'>
-            <!-- increment section -->
-            <mat-form-field class='form'>
-              <button mat-button mat-icon-button matPrefix aria-label='Remove' [color]='primary'
-                (click)='incrementValue(-_step, query)' [disabled]='shouldDisableDecrement(_value)'>
-                <mat-icon>remove</mat-icon>
-              </button>
-              <input matInput type='number' class='counter' [(ngModel)]='graphs_records[query]["t_value"]'
-                (ngModelChange)='time_value_changes(query)' (focus)='setColor("primary")'
-                (blur)='setColor("default")' />
-              <button mat-button mat-icon-button matSuffix aria-label='Add' [color]='primary'
-                (click)='incrementValue(_step, query)' [disabled]='shouldDisableIncrement(_value)'>
-                <mat-icon>add</mat-icon>
-              </button>
-            </mat-form-field>
-
-            <!-- Unit section -->
-            <mat-form-field appearance='legacy' class='form'>
-              <mat-label>Unit option</mat-label>
-              <mat-select [(ngModel)]='graphs_records[query]["t_unit"]' placeholder='Unit'
-                [disabled]='unit_select.value' (ngModelChange)="unit_selection_changes(query)">
-                <mat-option value='minute'>minute</mat-option>
-                <mat-option value='hour'>hour</mat-option>
-                <mat-option value='day'>day</mat-option>
-              </mat-select>
-            </mat-form-field>
-            <p class='form_text'> Until </p>
-
-            <!-- Date time section -->
-            <form novalidate [formGroup]='form_group' class='form' id='datetime'>
-              <mat-form-field>
-                <mat-placeholder>Until</mat-placeholder>
-                <input matInput formControlName={{query}} [matDatetimepicker]='dts' required autocomplete='false' [disabled]='graphs_records[query]["t_now"]'>
-                <mat-datetimepicker-toggle [for]='dts' matSuffix></mat-datetimepicker-toggle>
-                <mat-datetimepicker #dts type='datetime' openOnFocus='true' timeInterval='5'></mat-datetimepicker>
-              </mat-form-field>
-            </form>
-            
-            <!-- Now checkbox -->
-            <!-- The value is updating correctly BUT w/o visual changes (still unchecked) -->
-            <mat-checkbox [(ngModel)]='graphs_records[query]["t_now"]' (change)='on_checkbox_change($event, query)' class='form_text'
-              [color]="primary">Now</mat-checkbox>
-
-            <!-- Reset -->
-            <button mat-button matTooltip='Restore default values' class='icon_button' (click)='set_default_settings(query)'>
-              <mat-icon>cached</mat-icon>
+  <div class='container' *ngFor='let query of Object.keys(graphs_records)'>
+    <mat-grid-tile class='graph' colspan='3' rowspan='1'>
+      <div>
+        <h4>{{query}}</h4>
+        <div id='increment' class='time_opt'>
+          <!-- increment section -->
+          <mat-form-field class='form'>
+            <button mat-button mat-icon-button matPrefix aria-label='Remove' [color]='primary'
+              (click)='incrementValue(-_step, query)' [disabled]='shouldDisableDecrement(_value)'>
+              <mat-icon>remove</mat-icon>
             </button>
-          </div>
+            <input matInput type='number' class='counter' [(ngModel)]='graphs_records[query]["t_value"]'
+              (ngModelChange)='time_value_changes(query)' (focus)='setColor("primary")' (blur)='setColor("default")' />
+            <button mat-button mat-icon-button matSuffix aria-label='Add' [color]='primary'
+              (click)='incrementValue(_step, query)' [disabled]='shouldDisableIncrement(_value)'>
+              <mat-icon>add</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <!-- Unit section -->
+          <mat-form-field appearance='legacy' class='form'>
+            <mat-label>Unit option</mat-label>
+            <mat-select [(ngModel)]='graphs_records[query]["t_unit"]' placeholder='Unit' [disabled]='unit_select.value'
+              (ngModelChange)="unit_selection_changes(query)">
+              <mat-option value='minute'>minute</mat-option>
+              <mat-option value='hour'>hour</mat-option>
+              <mat-option value='day'>day</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p class='form_text'> Until </p>
+
+          <!-- Date time section -->
+          <form novalidate [formGroup]='form_group' class='form' id='datetime'>
+            <mat-form-field>
+              <mat-placeholder>Until</mat-placeholder>
+              <input matInput formControlName={{query}} [matDatetimepicker]='dts' required autocomplete='false'
+                [disabled]='graphs_records[query]["t_now"]'>
+              <mat-datetimepicker-toggle [for]='dts' matSuffix></mat-datetimepicker-toggle>
+              <mat-datetimepicker #dts type='datetime' openOnFocus='true' timeInterval='5'></mat-datetimepicker>
+            </mat-form-field>
+          </form>
+
+          <!-- Now checkbox -->
+          <!-- The value is updating correctly BUT w/o visual changes (still unchecked) -->
+          <mat-checkbox [(ngModel)]='graphs_records[query]["t_now"]' (change)='on_checkbox_change($event, query)'
+            class='form_text' [color]="primary">Now</mat-checkbox>
+
+          <!-- Reset -->
+          <button mat-button matTooltip='Restore default values' class='icon_button'
+            (click)='set_default_settings(query)'>
+            <mat-icon>cached</mat-icon>
+          </button>
         </div>
-        <div class='graph'>
-          <canvas class='graph' id={{query}} width='1500' height='400'></canvas>
-        </div>
-      </mat-grid-tile>
-    </div>
+      </div>
+      <div class='graph'>
+        <canvas class='graph' id={{query}}></canvas>
+      </div>
+    </mat-grid-tile>
   </div>
 </mat-grid-list>

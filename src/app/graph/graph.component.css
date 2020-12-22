@@ -9,10 +9,12 @@
 ::ng-deep.mat-datetimepicker-calendar-header {
   background-color: #39499c !important;
 }
+
 .counter {
   -webkit-appearance: none;
   -moz-appearance: textfield;
 }
+
 .form {
   display: block;
   width: 95px;
@@ -22,6 +24,7 @@
 .time_opt {
   display: inline-flex;
 }
+
 ::ng-deep.mat-form-field-infix{
   -webkit-appearance: none;
   -moz-appearance: textfield;
@@ -46,10 +49,9 @@ input::-webkit-inner-spin-button {
 }
 
 .graph {
-  width: max;
-  max-height: 400;
+  max-width: 80%;
+  max-height: 80%; 
 }
-
 
 #datetime{
   width: 100%;

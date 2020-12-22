@@ -202,17 +202,16 @@ export class GraphComponent implements OnInit {
         if ( response['status'] != 'success' ) {
           throw new Error ('Request to prom : not successful');
         }
-        let parsed_data = this.parse_response(response['data']['result']);
+        let parsed_data = this.parse_response(response['data']['result'], metric);
         console.log('1');
         this.graphs_records[metric]['m_chart'] = this.chart_builder(metric, parsed_data);
       });
   }
 
-  parse_response(data_to_parse : any): Object {
+  parse_response(data_to_parse : any, metric:string): Object {
     console.log(data_to_parse);
     let datasets = [];
     let metric_timestamp_list = [];
-
     for ( const key in data_to_parse ) {
       let instance = data_to_parse[key]['metric']['instance'];
 
@@ -222,9 +221,10 @@ export class GraphComponent implements OnInit {
         metric_value_list.push(value[1]);
       });
       let dataset = {
-        label: instance,
+        label: metric + ' { instance : ' + instance + ' } ',
         data: metric_value_list,
-        borderColor : '#a3c037'
+        pointRadius: 1,
+        borderColor : this.getRandomColor()
       };
       datasets.push(dataset);
     }
@@ -233,6 +233,15 @@ export class GraphComponent implements OnInit {
       datasets: datasets
     };
     return parsed_data;
+  }
+
+  getRandomColor() {
+    var letters = '0123456789ABCDEF'.split('');
+    var color = '#';
+    for (var i = 0; i < 6; i++ ) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
   }
 
   // Build chart
@@ -256,14 +265,16 @@ export class GraphComponent implements OnInit {
           position: 'bottom',
           align: 'start'
         },
-        /*scales: {
+        scales: {
           xAxes: [{
             type: 'time',
             time: {
-              unit: this._unit
+              displayFormats: {
+                second: 'YYYY MM D hh:mm:ss a'
+              }
             }
           }]
-        }*/
+        }
       }
     });
     return chart;
@@ -352,4 +363,6 @@ export class GraphComponent implements OnInit {
     this.end_time = this.default_end_time;
     this.regenerate(query);
   }
+
+
 }

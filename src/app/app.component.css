@@ -16,65 +16,6 @@ p {
   margin: 0;
  }
 
-.map_container {
-  display: grid;
-  min-height: 700px;
-  min-width: 100%;
-  padding: 0;
-}
-
-.container {
-  display: grid;
-  /* grid-template-columns: 2fr 1fr; */
-  min-height: 600px;
-  min-width: 100%;
-  padding: 0;
-}
-
-.toolbar {
-  position: relative;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  background-color: #39499c;
-  color: white;
-  font-weight: 600;
-  font-size: 15px;
-}
-
-.devices-list{
-  margin-top: 2%;
-}
-
-.grid_1fr_2fr {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  padding: 1%;
-}
-.toolbar_branding{
-  margin-left: 1%;
-}
-
-.component{
-  margin: 2%;
-  /* display: block; */
-  justify-content:center;
-  align-items: center;
-  max-width: 100%;
-  min-width: 80%;
-}
-
-.loader-container{
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  opacity: 1;
-  z-index: 99;
-}
-
 .spacer {
   flex: 1 1 auto;
 }
