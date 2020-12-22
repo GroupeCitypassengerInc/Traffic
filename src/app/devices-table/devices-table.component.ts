@@ -92,7 +92,6 @@ export class DevicesTableComponent implements OnInit {
   ngOnInit(): void {
     console.log(history.state);
     this.login_information = history.state;
-    //this.get_devices();
     if ( !isDevMode() ) {
       this.get_devices();
     } else {
@@ -247,18 +246,6 @@ export class DevicesTableComponent implements OnInit {
     let url = this.base_api_url + '/ws/Group/Info/' + group_id;
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json');
-    /*this.httpClient.request('GET', url, {headers}).pipe(
-      timeout(10000), 
-      map(res => {
-        return res;
-      }
-    ),catchError(
-      err => {
-        throw err;
-      }
-    )).subscribe(response  =>{
-      console.log(response);
-    });*/
     this.httpClient.request('GET', url, {headers})
       .toPromise()
       .then(response => {

@@ -97,13 +97,7 @@ export class GraphComponent implements OnInit {
       this.base_url = '/' + this.options[1] + '/prometheus/' + this.options[0] + '/api/v1';
       this.box_selected = this.options[2]
     }
-    if ( !isDevMode() ) {
-      console.log ('prod mode detected')
-      this.endpoint = this.endpoint + this.base_url;
-    } else {
-      this.base_url = '/api/v1'
-      console.log ('dev mode detected')
-    }
+
     this.query_list = this.information;
     this.get_records();
     this.form_group.valueChanges.subscribe(date => {
@@ -193,6 +187,10 @@ export class GraphComponent implements OnInit {
     let end_time = ( timestamp +  this.end_time ) / 1000;
     let step = 10; //max 11 000
     let query = '/query_range?query=' + metric + '&start=' + start_time + '&end=' + end_time + '&step=' + step;
+    if ( isDevMode() ) {
+      console.log ('dev mode detected');
+      this.base_url = '/api/v1';
+    }
     let url = this.endpoint + this.base_url + query;
     console.log (url);
     let headers = new HttpHeaders();
