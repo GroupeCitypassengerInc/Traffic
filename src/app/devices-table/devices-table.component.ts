@@ -233,7 +233,7 @@ export class DevicesTableComponent implements OnInit {
     )).subscribe(response  =>{
       console.log('map -> ok');
       console.log(response);
-      this.JSON_data = response['groups'];
+      this.JSON_data = response;
       this.data_formating();
     });
   }
@@ -243,7 +243,7 @@ export class DevicesTableComponent implements OnInit {
     let url = this.base_api_url + '/ws/Group/Info/' + group_id;
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json');
-  
+    headers = headers.set('Content-Type', 'application/json');
     /*this.httpClient.request('GET', url, {headers}).pipe(
       timeout(10000), 
       map(res => {
