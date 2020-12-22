@@ -74,7 +74,7 @@ export class DevicesTableComponent implements OnInit {
   _show_graph: boolean = false;
 
   base_api_url : string = environment.city_url_api;
-  prometheus_query : string = environment.base_url ;
+  prometheus_api : string = environment.base_url ;
   columnsToDisplay: string[] = ['address','group_name', 'box_name'];
   BOX_DATA: box_info[] = [];
   JSON_data: any = [];
@@ -157,9 +157,9 @@ export class DevicesTableComponent implements OnInit {
     console.log(selected)
     if ( !isDevMode() ) {
       console.log ('prod mode detected')
-      api_prometheus = this.prometheus_query + selected.group_name + '/' + password + '/api/v1/label/__name__/values';
+      api_prometheus = this.prometheus_api + '/' + password + '/prometheus/'  + selected.group_name + '/api/v1/label/__name__/values';
     } else {
-      api_prometheus = this.prometheus_query + '/api/v1/label/__name__/values';
+      api_prometheus = this.prometheus_api + '/api/v1/label/__name__/values';
       console.log ('dev mode detected')
     }
     this.graphs_form = new FormControl();

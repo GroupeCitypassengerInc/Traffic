@@ -91,10 +91,10 @@ export class GraphComponent implements OnInit {
     this.options = this.information.shift();
     console.log(this.options);
     if ( this.options.length == 2 ) {
-      this.base_url = '/' + this.options[0] + '/'+ this.options[1] + '/api/v1';
+      this.base_url = '/' + this.options[1] + '/prometheus/' + this.options[0] + '/api/v1';
       this.box_selected = '';
     } else {
-      this.base_url = '/' + this.options[0] + '/'+ this.options[1] + '/api/v1';
+      this.base_url = '/' + this.options[1] + '/prometheus/' + this.options[0] + '/api/v1';
       this.box_selected = this.options[2]
     }
     if ( !isDevMode() ) {
