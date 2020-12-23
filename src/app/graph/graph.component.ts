@@ -254,7 +254,7 @@ export class GraphComponent implements OnInit {
   // Min step: 1s
   // Default: 1 step every 25px
   get_prometheus_step( start, end, chart_width ): number {
-    const second_duration = ( end.getTime() - start.getTime() ) / 1000;
+    const second_duration = ( end - start ) / 1000;
     let step = Math.floor( second_duration / chart_width ) * 25;
     return step;
   }
@@ -352,6 +352,14 @@ export class GraphComponent implements OnInit {
     } else {
       this.regenerate(query);
     }
+  }
+  
+  shouldDisableDecrement(inputValue: number): boolean {
+    return !this._wrap && inputValue <= this._min;
+  }
+  
+  shouldDisableIncrement(inputValue: number): boolean {
+    return !this._wrap && inputValue >= this._max;
   }
 
   on_checkbox_change($event:Event, query:string): void {
