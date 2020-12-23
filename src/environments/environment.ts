@@ -6,8 +6,6 @@ export const environment = {
   production: false,
   appVersion: require('../../package.json').version + '-dev',
   prometheus_base_api_url:'http://demo.robustperception.io:9090',
-  //base_url:'http://10.0.0.77:12333/prometheus',
-  //base_url:'https://current.citypassenger.com:4443/prometheus',
   city_url_api: 'https://preprod.citypassenger.com'
 };
 

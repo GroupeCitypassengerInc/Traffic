@@ -60,17 +60,12 @@ export class LoginComponent implements OnInit {
 
   //need to disable btn when waiting server's answer.
   onSubmit(form : FormGroup) : void {
-    console.log(form);
+    if ( isDevMode() ) {
+      console.log(form);
+    }
     let username = encodeURIComponent(form.controls['username'].value);
     let password = encodeURIComponent(form.controls['password'].value);
     let url_login = this.base_api_url + '/ws/User/Login?login=' + username + '&password=' + password;
     this.auth.login(url_login);
   }
-
-  openSnackBar(message: string): void {
-    this._snackBar.open(message,'ok',{
-      duration: 10000,
-    });
-  }
-
 }

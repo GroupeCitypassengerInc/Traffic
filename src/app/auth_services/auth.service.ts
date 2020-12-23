@@ -75,6 +75,7 @@ export class AuthService {
       }
     )).subscribe(response  =>{
       console.log('Successfully logged out');
+      this.redirect('/login')
       this.is_auth = false;
     });
     return is_logged;

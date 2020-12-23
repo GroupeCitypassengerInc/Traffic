@@ -275,7 +275,7 @@ export class GraphComponent implements OnInit {
         responsive : true,
         tension : 0,
         animation: {
-          duration: 0
+          duration: 1
         }, 
         legend: {
           position: 'bottom',
