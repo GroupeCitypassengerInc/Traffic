@@ -214,8 +214,12 @@ export class GraphComponent implements OnInit {
     let datasets = [];
     let metric_timestamp_list = [];
     for ( const key in data_to_parse ) {
-      let instance = data_to_parse[key]['metric']['instance'];
-
+      let instance;
+      if ( isDevMode() ) {
+        instance = data_to_parse[key]['metric']['instance'];
+      } else {
+        instance = data_to_parse[key]['metric']['job'];
+      }
       let metric_value_list = [];
       data_to_parse[key]['values'].forEach(value=>{
         metric_timestamp_list.push(value[0] * 1000); //Chartjs need ms timestamp to work correctly
