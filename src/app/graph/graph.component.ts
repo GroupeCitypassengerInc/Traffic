@@ -255,8 +255,10 @@ export class GraphComponent implements OnInit {
     const second_duration = ( end - start );
     let chart_width = window.innerWidth;
     let step = Math.floor( second_duration / chart_width ) * 5;
-    console.log (end + ' ' + start + ' ' + second_duration + ' ' + chart_width)
-    console.log(step);
+    if ( isDevMode() ) {
+      console.log (end + ' ' + start + ' ' + second_duration + ' ' + chart_width)
+      console.log(step);
+    }
     return step;
   }
   
