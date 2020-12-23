@@ -17,16 +17,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { Chart } from 'chart.js';
 import { throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
-
-export interface Graph_records {
-  [ metric_name : string ] : {
-    chart : Chart,
-    t_value : number,
-    t_unit : 'minute' | 'hour' | 'day',
-    t_date : any, // Have to change this
-    t_now : boolean,
-  }
-}
+import { setPriority } from 'os';
 
 export interface unit_conversion {
   minute : number,
@@ -48,7 +39,7 @@ export class GraphComponent implements OnInit {
   query_list : any = [];
 
   // Request : /prometheus/api/v1/query_range?query=up&start=1604584181.313&end=1604670581.313&step=9250
-  endpoint : string = environment.base_url;
+  prometheus_api_url : string = environment.prometheus_base_api_url;
   base_url : string = '';
   box_selected : string = '';
 
@@ -82,14 +73,14 @@ export class GraphComponent implements OnInit {
     this.form_group = this._formBuilder.group({
       default_date: [{ value: '', disabled: true }, Validators.required]
     });
-    
   }
   
   ngOnInit(): void {
-    console.log('init graph component');
     this.default_date.setHours(this.default_date.getHours());
     this.options = this.information.shift();
-    console.log(this.options);
+    if ( isDevMode() ) {
+      console.log(this.options);
+    }
     if ( this.options.length == 2 ) {
       this.base_url = '/' + this.options[1] + '/prometheus/' + this.options[0] + '/api/v1';
       this.box_selected = '';
@@ -97,7 +88,6 @@ export class GraphComponent implements OnInit {
       this.base_url = '/' + this.options[1] + '/prometheus/' + this.options[0] + '/api/v1';
       this.box_selected = this.options[2]
     }
-
     this.query_list = this.information;
     this.get_records();
     this.form_group.valueChanges.subscribe(date => {
@@ -111,8 +101,10 @@ export class GraphComponent implements OnInit {
 
   ngOnChanges(changes: any): void {
     if ( !changes['information'].isFirstChange() ) {
-      console.log('changes catch: ');
-      console.log(this.information);
+      if ( isDevMode() ) {
+        console.log('changes catch: ');
+        console.log(this.information);
+      }
       this.destroy_all()
       this.ngOnInit();
       this.get_records();
@@ -135,14 +127,15 @@ export class GraphComponent implements OnInit {
           t_now : this._now,
         }
         this.form_group.addControl(query, this.graphs_records[query]['t_date']);
-        console.log(this.graphs_records);
       }
     );
   }
 
   set_charts (): void {
-    console.log('set charts')
-    console.log(this.query_list)
+    if ( isDevMode() ) {
+      console.log('set charts')
+      console.log(this.query_list)
+    }
     this.query_list.forEach(
       query => {
         this.get_metric_from_prometheus(query);
@@ -150,13 +143,11 @@ export class GraphComponent implements OnInit {
     );
   }
 
-  // Generate all graph
   generate_all_graph(): void {
     this.get_records (); 
     this.set_charts ();
   }
 
-  // Destroy all graph
   destroy_all(): void {
     Object.keys(this.graphs_records).forEach(graph => {
       let chart = this.graphs_records[graph]['m_chart'];
@@ -164,52 +155,62 @@ export class GraphComponent implements OnInit {
     } );
   }
 
-  // Regenerate all graph
   regenerate_all_graph(): void {
     this.destroy_all();
     this.generate_all_graph();
   }
 
-  // Re-generate graph
   regenerate(id:string): void {
-    console.log ('destroying ' + id + ' chart');
     this.graphs_records[id]['m_chart'].destroy();
-    console.log(this.graphs_records);
-    console.log ('re-building ' + id + ' chart');
+    if ( isDevMode() ) {
+      console.log ('destroying ' + id + ' chart');
+      console.log(this.graphs_records);
+      console.log ('re-building ' + id + ' chart');
+    }
     this.graphs_records[id]['m_chart'] = this.get_metric_from_prometheus(id);
-    console.log(this.graphs_records[id]['m_chart'])
+    if ( isDevMode() ) {
+      console.log(this.graphs_records[id]['m_chart'])
+    }
   }
   
-  get_metric_from_prometheus( metric:string ) {
+  get_metric_from_prometheus( metric:string ): void {
     const currentDate = new Date();
     const timestamp = currentDate.getTime();
     let start_time = ( timestamp + this.up_start_time ) / 1000;
     let end_time = ( timestamp +  this.end_time ) / 1000;
     let step = 10; //max 11 000
+    let chart_width = this.get_chart_width();
+    this.get_prometheus_step(start_time, end_time, chart_width);
     let query = '/query_range?query=' + metric + '&start=' + start_time + '&end=' + end_time + '&step=' + step;
+    if ( this.box_selected != null ) {
+      query = query + '&job=~"' + this.box_selected + '.*"}';
+    }
     if ( isDevMode() ) {
       console.log ('dev mode detected');
       this.base_url = '/api/v1';
     }
-    let url = this.endpoint + this.base_url + query;
-    console.log (url);
+    let url = this.prometheus_api_url + this.base_url + query;
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json');
     this.httpClient.request('GET', url, {headers})
       .toPromise()
       .then(response => {
-        console.log(response);
+        if ( isDevMode() ) {
+          console.log(response);
+        }
+        
         if ( response['status'] != 'success' ) {
           throw new Error ('Request to prom : not successful');
         }
         let parsed_data = this.parse_response(response['data']['result'], metric);
-        console.log('1');
         this.graphs_records[metric]['m_chart'] = this.chart_builder(metric, parsed_data);
       });
   }
 
   parse_response(data_to_parse : any, metric:string): Object {
-    console.log(data_to_parse);
+    if ( isDevMode() ) {
+      console.log(data_to_parse);
+    }
     let datasets = [];
     let metric_timestamp_list = [];
     for ( const key in data_to_parse ) {
@@ -217,14 +218,14 @@ export class GraphComponent implements OnInit {
 
       let metric_value_list = [];
       data_to_parse[key]['values'].forEach(value=>{
-        metric_timestamp_list.push(value[0]);
+        metric_timestamp_list.push(value[0] * 1000); //Chartjs need ms timestamp to work correctly
         metric_value_list.push(value[1]);
       });
       let dataset = {
         label: metric + ' { instance : ' + instance + ' } ',
         data: metric_value_list,
         pointRadius: 1,
-        borderColor : this.getRandomColor()
+        borderColor : this.get_random_color()
       };
       datasets.push(dataset);
     }
@@ -235,23 +236,38 @@ export class GraphComponent implements OnInit {
     return parsed_data;
   }
 
-  getRandomColor() {
-    var letters = '0123456789ABCDEF'.split('');
+  get_random_color(): string {
+    var HEX = '0123456789ABCDEF'.split('');
     var color = '#';
-    for (var i = 0; i < 6; i++ ) {
-        color += letters[Math.floor(Math.random() * 16)];
+    for (var i = 0; i < 6; i++) {
+      color += HEX[Math.floor(Math.random() * 16)];
     }
     return color;
   }
 
-  // Build chart
-  chart_builder(metric:string, data) {
-    console.log('building : ' + metric + ' chart');
+  get_chart_width(): number{
+
+    return 5;
+  }
+
+  // Compute a step for range_query (interval between 2 points in second)
+  // Min step: 1s
+  // Default: 1 step every 25px
+  get_prometheus_step( start, end, chart_width ): number {
+    const second_duration = ( end.getTime() - start.getTime() ) / 1000;
+    let step = Math.floor( second_duration / chart_width ) * 25;
+    return step;
+  }
+  
+  chart_builder(metric:string, data): Chart {
+    if ( isDevMode() ) {
+      console.log('building : ' + metric + ' chart');
+      console.log(data);
+    }
     let ctx = document.getElementById(metric);
     if ( ctx === null ) {
       throw new Error('An error as occured. Can\'t get id ok : ' + metric);
     }
-    console.log(data);
     var chart = new Chart(ctx, {
       type: 'line',
       data: data,
@@ -306,31 +322,21 @@ export class GraphComponent implements OnInit {
     return inputValue;
   }
 
-  // not implemented yet
-  shouldDisableDecrement(inputValue: number): boolean {
-    return !this._wrap && inputValue <= this._min;
-  }
-
-  // not implemented yet
-  shouldDisableIncrement(inputValue: number): boolean {
-    return !this._wrap && inputValue >= this._max;
-  }
-
-  unit_selection_changes(query: string){
+  unit_selection_changes(query: string): void {
     let t_value = this.graphs_records[query]['t_value'];
     let t_unit = this.graphs_records[query]['t_unit'];
     this.up_start_time = -1 * t_value * this._unit[t_unit] + this.end_time;
     this.regenerate(query);
   }
 
-  time_value_changes(query: string){
+  time_value_changes(query: string): void {
     let t_value = this.graphs_records[query]['t_value'];
     let t_unit = this.graphs_records[query]['t_unit'];
     this.up_start_time = -1 * t_value * this._unit[t_unit] + this.end_time;
     this.regenerate(query);
   }
 
-  date_changes(date){
+  date_changes(date): void {
     let query = Object.keys(date).toString();
     this.default_date = new Date();
     let current_timestamp = this.default_date.getTime();
@@ -348,7 +354,7 @@ export class GraphComponent implements OnInit {
     }
   }
 
-  on_checkbox_change($event:Event, query:string){
+  on_checkbox_change($event:Event, query:string): void {
     if ( $event['checked'] ) {
       let t_value = this.graphs_records[query]['t_value'];
       let t_unit = this.graphs_records[query]['t_unit'];
@@ -358,11 +364,9 @@ export class GraphComponent implements OnInit {
     }
   }
 
-  set_default_settings(query:string){
+  set_default_settings(query:string): void {
     this.up_start_time = this.default_up_start_time;
     this.end_time = this.default_end_time;
     this.regenerate(query);
   }
-
-
 }

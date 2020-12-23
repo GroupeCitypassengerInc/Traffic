@@ -33,7 +33,7 @@ export class AuthService {
     ),catchError(
       err => {
          if ( err.error.message == 'alreadyLogged' ) {
-          this.redirect();
+          this.redirect('/graph');
         } else {
           console.error(err.error.message);
         }
@@ -48,7 +48,7 @@ export class AuthService {
         username : response['username']
       };
       this.is_auth = true;
-      this.redirect();
+      this.redirect('/graph');
     });
   }
 
@@ -110,12 +110,12 @@ export class AuthService {
       console.log('Logged ? -> yes');
       
       this.is_auth = true;
-      this.redirect();
+      this.redirect('/graph');
     });
   }
 
-  redirect() {
-    this.router.navigateByUrl('/graph', { state: this.user_info});
+  redirect(url:string) {
+    this.router.navigateByUrl(url, { state: this.user_info});
   }
 }
 

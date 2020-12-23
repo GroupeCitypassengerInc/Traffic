@@ -75,7 +75,7 @@ export class DevicesTableComponent implements OnInit {
   _show_graph: boolean = false;
 
   base_api_url: string = environment.city_url_api;
-  prometheus_api: string = environment.base_url ;
+  prometheus_api: string = environment.prometheus_base_api_url ;
   columnsToDisplay: string[] = ['address','group_name', 'box_name'];
   BOX_DATA: box_info[] = [];
   JSON_data: any = [];
@@ -91,9 +91,10 @@ export class DevicesTableComponent implements OnInit {
   dataSource = new MatTableDataSource(this.BOX_DATA);
   graphs_form = new FormControl();
 
-
   ngOnInit(): void {
-    console.log(history.state);
+    if ( isDevMode() ) {
+      console.log(history.state);
+    }
     this.login_information = history.state;
     if ( !isDevMode() ) {
       this.get_devices();
@@ -130,7 +131,10 @@ export class DevicesTableComponent implements OnInit {
   }
 
   onChange (event : Event): void {
-    console.log (event);
+    if ( isDevMode() ) {
+      console.log (event);
+    }
+    
     if ( this.graphs_form.value.length > 0 && this.http_request_ok == true ) {
       this._disabled_visualize = false;
     } else {
@@ -156,13 +160,12 @@ export class DevicesTableComponent implements OnInit {
   getRecord(row:any, password:string): void {
     let selected  = row;
     let api_prometheus : string = '';
-    console.log(selected)
+
     if ( !isDevMode() ) {
-      console.log ('prod mode detected')
       api_prometheus = this.prometheus_api + '/' + password + '/prometheus/'  + selected.group_name + '/api/v1/label/__name__/values';
     } else {
+      console.log(selected)
       api_prometheus = this.prometheus_api + '/api/v1/label/__name__/values';
-      console.log ('dev mode detected')
     }
     this.graphs_form = new FormControl();
     let headers = new HttpHeaders();
@@ -184,6 +187,7 @@ export class DevicesTableComponent implements OnInit {
       },err => {
         this._disabled_visualize = true; // disable visualize button on http error
         this.http_request_ok = false;
+        
         console.log(err);
         this.openSnackBar(err);
       });
@@ -198,9 +202,11 @@ export class DevicesTableComponent implements OnInit {
     
     if ( this.option == 'group' ) {
       informations.push([selected.group_name, selected.password]);
-      console.log(informations);
     } else {
       informations.push([selected.group_name, selected.password, selected.box_name]);
+    }
+
+    if ( isDevMode() ) {
       console.log(informations);
     }
 
@@ -222,7 +228,7 @@ export class DevicesTableComponent implements OnInit {
     });
   }
 
-  get_devices(){
+  get_devices(): void{
     let url = this.base_api_url + '/ws/Map/Devices';
     let headers = new HttpHeaders();
     //headers = headers.set('Accept-Encoding:', 'application/json');
@@ -236,8 +242,10 @@ export class DevicesTableComponent implements OnInit {
         throw err;
       }
     )).subscribe(response  =>{
-      console.log('map -> ok');
-      console.log(response);
+      if ( isDevMode() ) {
+        console.log('map -> ok');
+        console.log(response);
+      }
       this.JSON_data = response;
       this.data_formating();
     });
@@ -254,10 +262,12 @@ export class DevicesTableComponent implements OnInit {
       this.httpClient.request('GET', url, {headers})
         .toPromise()
         .then(response => {
-          console.log(response);
           let password = response['group']['ienaDevices'][selection.box_name]['localinterface_passwords']['user'];
-          console.log(password);
           this.password = password;
+          if ( isDevMode() ) {
+            console.log(response);
+            console.log(password);
+          }
           this.getRecord(selection, password)
         });
     }

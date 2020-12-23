@@ -8,7 +8,7 @@
   <mat-toolbar-row>
     <span>Baggage </span>
     <span class="spacer"></span>
-    <mat-icon>person_off</mat-icon>
+    <mat-icon *ngIf='!is_logged;' (click)=logout() >person_off</mat-icon>
     {{currentApplicationVersion}}
   </mat-toolbar-row>
 </mat-toolbar>
