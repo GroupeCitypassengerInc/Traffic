@@ -179,8 +179,7 @@ export class GraphComponent implements OnInit {
     let start_time = ( timestamp + this.up_start_time ) / 1000;
     let end_time = ( timestamp +  this.end_time ) / 1000;
     let step = 10; //max 11 000
-    let chart_width = this.get_chart_width();
-    this.get_prometheus_step(start_time, end_time, chart_width);
+    step = this.get_prometheus_step(start_time, end_time);
     let query = '/query_range?query=' + metric + '&start=' + start_time + '&end=' + end_time + '&step=' + step;
     if ( this.box_selected != null ) {
       query = query + '&job=~"' + this.box_selected + '.*"}';
@@ -249,17 +248,15 @@ export class GraphComponent implements OnInit {
     return color;
   }
 
-  get_chart_width(): number{
-
-    return 5;
-  }
-
   // Compute a step for range_query (interval between 2 points in second)
   // Min step: 1s
-  // Default: 1 step every 25px
-  get_prometheus_step( start, end, chart_width ): number {
-    const second_duration = ( end - start ) / 1000;
-    let step = Math.floor( second_duration / chart_width ) * 25;
+  // Default: 1 step every 5px
+  get_prometheus_step( start, end ): number {
+    const second_duration = ( end - start );
+    let chart_width = window.innerWidth;
+    let step = Math.floor( second_duration / chart_width ) * 5;
+    console.log (end + ' ' + start + ' ' + second_duration + ' ' + chart_width)
+    console.log(step);
     return step;
   }
   
