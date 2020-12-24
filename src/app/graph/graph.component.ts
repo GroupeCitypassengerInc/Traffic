@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatetimepickerModule, MatNativeDatetimeModule } from '@mat-datetimepicker/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Chart } from 'chart.js';
 import { throwError } from 'rxjs';
@@ -251,7 +252,7 @@ export class GraphComponent implements OnInit {
   // Compute a step for range_query (interval between 2 points in second)
   // Min step: 1s
   // Default: 1 step every 5px
-  get_prometheus_step( start, end ): number {
+  get_prometheus_step( start: number, end: number ): number {
     const second_duration = ( end - start );
     let chart_width = window.innerWidth;
     let step = Math.floor( second_duration / chart_width ) * 5;

@@ -8,8 +8,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../auth_services/auth.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { BrowserModule } from '@angular/platform-browser';
 
 export interface user_informations {
   id : number,
@@ -33,6 +36,7 @@ export class LoginComponent implements OnInit {
   is_logged : boolean = this.auth.is_auth;
   base_api_url : string = environment.city_url_api;
   user_info : user_informations;
+  isChecked : boolean = true;
 
   constructor(private form_builder: FormBuilder, private _snackBar: MatSnackBar, private auth: AuthService ) { }
   

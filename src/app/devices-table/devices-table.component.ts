@@ -90,7 +90,7 @@ export class DevicesTableComponent implements OnInit {
 
   dataSource = new MatTableDataSource(this.BOX_DATA);
   graphs_form = new FormControl();
-
+  
   ngOnInit(): void {
     if ( isDevMode() ) {
       console.log(history.state);
@@ -128,6 +128,7 @@ export class DevicesTableComponent implements OnInit {
         index ++;
       }
     }
+    this.refresh();
   }
 
   onChange (event : Event): void {
@@ -251,7 +252,7 @@ export class DevicesTableComponent implements OnInit {
     });
   }
 
-  get_group_info (selection) : void {
+  get_group_info(selection): void {
     if ( isDevMode() ){
       this.getRecord(selection, '')
     } else {
@@ -272,5 +273,9 @@ export class DevicesTableComponent implements OnInit {
         });
     }
     
+  }
+
+  refresh(): void {
+    this.dataSource.data = this.dataSource.data;
   }
 }

@@ -9,7 +9,8 @@ import { GuardService } from '../auth_services/guard.service';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'graph', canActivate: [GuardService], component: DevicesTableComponent },
+  //{ path: 'graph', canActivate: [GuardService], component: DevicesTableComponent },
+  { path: 'graph', component: DevicesTableComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },  // Wildcard route for a 404 page
   { path: '**', redirectTo: '/login', pathMatch: 'full' },  // Wildcard route for a 404 page
 

@@ -36,7 +36,6 @@ import { InterceptorService } from './loader/interceptor.service';
 import { AuthService } from './auth_services/auth.service';
 import { GuardService } from './auth_services/guard.service';
 
-
 @NgModule({
   declarations: [
     AppComponent,
