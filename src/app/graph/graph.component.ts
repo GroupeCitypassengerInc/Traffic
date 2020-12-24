@@ -84,7 +84,7 @@ export class GraphComponent implements OnInit {
     }
     if ( this.options.length == 2 ) {
       this.base_url = '/' + this.options[1] + '/prometheus/' + this.options[0] + '/api/v1';
-      this.box_selected = '';
+      this.box_selected = null;
     } else {
       this.base_url = '/' + this.options[1] + '/prometheus/' + this.options[0] + '/api/v1';
       this.box_selected = this.options[2]
@@ -181,9 +181,11 @@ export class GraphComponent implements OnInit {
     let end_time = ( timestamp +  this.end_time ) / 1000;
     let step = 10; //max 11 000
     step = this.get_prometheus_step(start_time, end_time);
-    let query = '/query_range?query=' + metric + '&start=' + start_time + '&end=' + end_time + '&step=' + step;
+    let query = ''; 
     if ( this.box_selected != null ) {
-      query = query + '&job=~"' + this.box_selected + '.*"}';
+      query = '/query_range?query=' + metric + '%7Bjob=~%22' + this.box_selected + '.*%22%7D&start=' + start_time + '&end=' + end_time + '&step=' + step;
+    } else {
+      query = '/query_range?query=' + metric + '&start=' + start_time + '&end=' + end_time + '&step=' + step;
     }
     if ( isDevMode() ) {
       console.log ('dev mode detected');

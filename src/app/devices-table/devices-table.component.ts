@@ -35,7 +35,7 @@ export interface box_info {
   box_name: string,  
   address: string, 
   site_refer: string, 
-  password: string ,
+  password: string,
 }
 export interface checkbox {
   name: string;
