@@ -85,3 +85,7 @@ tr.element-row:not(.expanded-row):active {
 .visualize_btn {
   margin: 1% 1% 2%;
 }
+
+.full-width {
+  width: 100%;
+}

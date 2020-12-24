@@ -79,9 +79,11 @@ export class DevicesTableComponent implements OnInit {
   columnsToDisplay: string[] = ['address','group_name', 'box_name'];
   BOX_DATA: box_info[] = [];
   JSON_data: any = [];
-
+  filterName = '';
+  
   selection: box_info;
   graphs_available_list: string[] = [];
+  graphs_available_list_backup: string[] = [];
   expandedElement: box_info | null;
   _disabled_visualize: boolean = true;
   http_request_ok: boolean = false
@@ -156,6 +158,7 @@ export class DevicesTableComponent implements OnInit {
     metrics_available.forEach(metric_name => {
       this.graphs_available_list.push(metric_name);
     });
+    this.graphs_available_list_backup = this.graphs_available_list;
   }
 
   getRecord(row:any, password:string): void {
@@ -277,5 +280,14 @@ export class DevicesTableComponent implements OnInit {
 
   refresh(): void {
     this.dataSource.data = this.dataSource.data;
+  }
+
+  filterListCareUnit(val: any):void {
+    this.graphs_available_list = this.graphs_available_list_backup.filter(unit => unit.indexOf(val) > -1);
+  }
+
+  clearfilter():void {
+    this.filterName = '';
+    this.filterListCareUnit(this.filterName);
   }
 }
