@@ -27,6 +27,7 @@ import { catchError, timeout, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { GraphComponent } from '../graph/graph.component';
 
+
 export interface box_info {
   No: number, 
   group_id: string, 

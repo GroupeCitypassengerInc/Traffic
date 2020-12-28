@@ -35,7 +35,8 @@
               <mat-grid-tile colspan='2' [style.background]='blue'>
                 <mat-form-field appearance='legacy' style='width:35%;'>
                   <mat-label>Graph available</mat-label>
-                  <mat-select [formControl]='graphs_form' (selectionChange)='onChange($event)' (openedChange)=clearfilter() multiple>
+                  <mat-select [formControl]='graphs_form' (selectionChange)='onChange($event)'
+                    (openedChange)=clearfilter() multiple>
                     <mat-form-field class="full-width">
                       <mat-label>search</mat-label>
                       <input class='input' [(ngModel)]="filterName" matInput type="text"

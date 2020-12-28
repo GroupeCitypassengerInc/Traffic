@@ -30,7 +30,7 @@
       <p class='form_text'> Until </p>
 
       <!-- Date time section -->
-      <form novalidate [formGroup]='form_group' class='form' id='datetime'>
+      <form novalidate [formGroup]='form_group' class='form' id='datetime' *ngIf='!graphs_records[query]["t_now"]'>
         <mat-form-field>
           <mat-placeholder>Until</mat-placeholder>
           <input matInput formControlName={{query}} [matDatetimepicker]='dts' required autocomplete='false'
@@ -40,10 +40,10 @@
         </mat-form-field>
       </form>
 
-      <!-- Now checkbox -->
+      <!-- Now slide toggle -->
       <!-- The value is updating correctly BUT w/o visual changes (still unchecked) -->
-      <mat-checkbox [(ngModel)]='graphs_records[query]["t_now"]' (change)='on_checkbox_change($event, query)'
-        class='form_text' [color]="primary">Now</mat-checkbox>
+      <mat-slide-toggle [(ngModel)]='graphs_records[query]["t_now"]' class='form_text'
+        (change)='on_checkbox_change($event, query)' color="primary">Now</mat-slide-toggle>
 
       <!-- Reset -->
       <button mat-button matTooltip='Restore default values' class='icon_button' (click)='set_default_settings(query)'>
