@@ -253,7 +253,7 @@ export class GraphComponent implements OnInit {
         };
       } else {
         dataset = {
-          label: metric + ' ' + extra_label +' : '+ data_to_parse[key]['metric'][extra_label] +' { instance : ' + instance + ' } ',
+          label: metric + ' { ' + extra_label +' : '+ data_to_parse[key]['metric'][extra_label] +' } { instance : ' + instance + ' } ',
           data: metric_value_list,
           pointRadius: 1,
           borderColor : this.get_random_color()
@@ -280,11 +280,11 @@ export class GraphComponent implements OnInit {
 
   // Compute a step for range_query (interval between 2 points in second)
   // Min step: 1s
-  // Default: 1 step every 5px
+  // Default: 1 step every 10px
   get_prometheus_step( start: number, end: number ): number {
     const second_duration = ( end - start );
     let chart_width = window.innerWidth;
-    let step = Math.floor( second_duration / chart_width ) * 5;
+    let step = Math.floor( second_duration / chart_width ) * 10;
     if ( isDevMode() ) {
       console.log (end + ' ' + start + ' ' + second_duration + ' ' + chart_width)
       console.log(step);
