@@ -15,9 +15,7 @@ const routes: Routes = [
   { path: '**', redirectTo: '/login', pathMatch: 'full' },  // Wildcard route for a 404 page
 
 ]; // sets up routes constant where you define your routes
-if ( isDevMode() ) {
-  routes.unshift({ path: 'graph', component: DevicesTableComponent });
-}
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
