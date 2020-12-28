@@ -114,7 +114,7 @@ export class GraphComponent implements OnInit {
     } 
   }
 
-  get_records (): void {
+  get_records(): void {
     this.graphs_records = {};
     this.query_list.forEach(
       query => {
@@ -132,7 +132,7 @@ export class GraphComponent implements OnInit {
     );
   }
 
-  set_charts (): void {
+  set_charts(): void {
     if ( isDevMode() ) {
       console.log('set charts')
       console.log(this.query_list)
@@ -209,6 +209,18 @@ export class GraphComponent implements OnInit {
       });
   }
 
+  get_extra_label(response:any): boolean | string {
+    delete response['__name__'];
+    delete response['instance'];
+    delete response['job'];
+    let extra_label = Object.keys(response).toString();
+    if ( extra_label == null ) {
+      return false;
+    } else {
+      return extra_label;
+    }
+  }
+
   parse_response(data_to_parse : any, metric:string): Object {
     if ( isDevMode() ) {
       console.log(data_to_parse);
@@ -216,23 +228,38 @@ export class GraphComponent implements OnInit {
     let datasets = [];
     let metric_timestamp_list = [];
     for ( const key in data_to_parse ) {
+
       let instance;
       if ( isDevMode() ) {
         instance = data_to_parse[key]['metric']['instance'];
       } else {
         instance = data_to_parse[key]['metric']['job'];
       }
+
       let metric_value_list = [];
       data_to_parse[key]['values'].forEach(value=>{
         metric_timestamp_list.push(value[0] * 1000); //Chartjs need ms timestamp to work correctly
         metric_value_list.push(value[1]);
       });
-      let dataset = {
-        label: metric + ' { instance : ' + instance + ' } ',
-        data: metric_value_list,
-        pointRadius: 1,
-        borderColor : this.get_random_color()
-      };
+      
+      let extra_label: any = this.get_extra_label(data_to_parse[key]['metric']);
+      let dataset;
+      if ( extra_label == false ) {
+        dataset = {
+          label: metric + ' { instance : ' + instance + ' } ',
+          data: metric_value_list,
+          pointRadius: 1,
+          borderColor : this.get_random_color()
+        };
+      } else {
+        dataset = {
+          label: metric + ' ' + extra_label +' : '+ data_to_parse[key]['metric'][extra_label] +' { instance : ' + instance + ' } ',
+          data: metric_value_list,
+          pointRadius: 1,
+          borderColor : this.get_random_color()
+        };
+      }
+      
       datasets.push(dataset);
     }
     let parsed_data = {
@@ -261,6 +288,9 @@ export class GraphComponent implements OnInit {
     if ( isDevMode() ) {
       console.log (end + ' ' + start + ' ' + second_duration + ' ' + chart_width)
       console.log(step);
+    }
+    if ( step == 0 ) {
+      step = 1;
     }
     return step;
   }
