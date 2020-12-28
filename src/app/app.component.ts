@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
   }
 
   logout():void {
+    console.log (this.is_logged );
     this.auth.logout();
   }
 }

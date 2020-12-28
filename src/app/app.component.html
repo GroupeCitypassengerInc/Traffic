@@ -6,7 +6,11 @@
   <mat-toolbar-row>
     <span>Baggage </span>
     <span class="spacer"></span>
-    <!-- <mat-icon *ngIf='!is_logged;' (click)=logout() >person_off</mat-icon> -->
+
+    
+    <button mat-button matTooltip='Logout'  *ngIf='is_logged;' (click)='logout()'>
+      <mat-icon>person_off</mat-icon>
+    </button>
     {{currentApplicationVersion}}
   </mat-toolbar-row>
 </mat-toolbar>

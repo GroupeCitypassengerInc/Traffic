@@ -242,8 +242,11 @@ export class GraphComponent implements OnInit {
       
       let extra_label: Array<string> = this.get_extra_labels(data_to_parse[key]['metric']);
       let label: string = metric + ' { instance: ' + instance + ' }';
+      if ( isDevMode ) {
+        label = metric + ' ';
+      }
       extra_label.forEach(element => {
-        label = label + ', { ' + element + ': ' + data_to_parse[key]['metric'][element] + ' }';
+        label = label + ' { ' + element + ': ' + data_to_parse[key]['metric'][element] + ' }';
       });
 
       let dataset;
@@ -314,9 +317,10 @@ export class GraphComponent implements OnInit {
           xAxes: [{
             type: 'time',
             time: {
-              displayFormats: {
-                second: 'YYYY MM D hh:mm:ss a'
-              }
+              // displayFormats: {
+              //   second: 'YYYY MM D hh:mm:ss a'
+              // },
+              stepSize : 4,
             }
           }]
         }
