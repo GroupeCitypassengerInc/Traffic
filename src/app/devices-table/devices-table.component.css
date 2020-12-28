@@ -88,4 +88,9 @@ tr.element-row:not(.expanded-row):active {
 
 .full-width {
   width: 100%;
+  margin-top: 1%;
+}
+
+.content {
+  margin: 1%;
 }

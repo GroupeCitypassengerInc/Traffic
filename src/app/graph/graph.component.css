@@ -2,6 +2,11 @@
   margin: 1%;
 }
 
+.container {
+  margin: 1%;
+  margin-bottom: 4%;
+}
+
 .graph >::ng-deep .mat-figure {
   display: block; 
 }
@@ -53,6 +58,6 @@ input::-webkit-inner-spin-button {
   height: 100%;
 }
 
-#datetime{
+#datetime {
   width: 100%;
 }

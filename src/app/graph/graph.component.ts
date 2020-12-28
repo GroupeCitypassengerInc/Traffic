@@ -211,16 +211,12 @@ export class GraphComponent implements OnInit {
       });
   }
 
-  get_extra_label(response:any): boolean | string {
+  get_extra_labels(response:any): Array<string> {
     delete response['__name__'];
     delete response['instance'];
     delete response['job'];
-    let extra_label = Object.keys(response).toString();
-    if ( extra_label == null ) {
-      return false;
-    } else {
-      return extra_label;
-    }
+    let extra_label = Object.keys(response);
+    return extra_label;
   }
 
   parse_response(data_to_parse : any, metric:string): Object {
@@ -244,24 +240,19 @@ export class GraphComponent implements OnInit {
         metric_value_list.push(value[1]);
       });
       
-      let extra_label: any = this.get_extra_label(data_to_parse[key]['metric']);
+      let extra_label: Array<string> = this.get_extra_labels(data_to_parse[key]['metric']);
+      let label: string = metric + ' { instance: ' + instance + ' }';
+      extra_label.forEach(element => {
+        label = label + ', { ' + element + ': ' + data_to_parse[key]['metric'][element] + ' }';
+      });
+
       let dataset;
-      if ( extra_label == false ) {
-        dataset = {
-          label: metric + ' { instance : ' + instance + ' } ',
-          data: metric_value_list,
-          pointRadius: 1,
-          borderColor : this.get_random_color()
-        };
-      } else {
-        dataset = {
-          label: metric + ' { ' + extra_label +' : '+ data_to_parse[key]['metric'][extra_label] +' } { instance : ' + instance + ' } ',
-          data: metric_value_list,
-          pointRadius: 1,
-          borderColor : this.get_random_color()
-        };
-      }
-      
+      dataset = {
+        label: label,
+        data: metric_value_list,
+        pointRadius: 1,
+        borderColor : this.get_random_color()
+      };
       datasets.push(dataset);
     }
     let parsed_data = {
