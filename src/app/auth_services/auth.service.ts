@@ -3,7 +3,7 @@ import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http'
 import { catchError, timeout, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
-
+import { Subject } from 'rxjs';
 
 export interface user_informations {
   id : number,
@@ -19,6 +19,7 @@ export class AuthService {
   is_auth : boolean = false;
   base_api_url : string = environment.city_url_api;
   user_info : user_informations;
+  log_status_change: Subject<boolean> = new Subject<boolean>();
 
   constructor(private httpClient: HttpClient, private router: Router) { }
   
@@ -47,7 +48,7 @@ export class AuthService {
         role : response['role'],
         username : response['username']
       };
-      this.is_auth = true;
+      this.update_log_status(true);
       this.redirect('/graph');
     });
   }
@@ -76,7 +77,7 @@ export class AuthService {
     )).subscribe(response  =>{
       console.log('Successfully logged out');
       this.redirect('/login')
-      this.is_auth = false;
+      this.update_log_status(false);
     });
     return is_logged;
   }
@@ -110,13 +111,18 @@ export class AuthService {
       };
       console.log('Logged ? -> yes');
       
-      this.is_auth = true;
+      this.update_log_status(true);
       this.redirect('/graph');
     });
   }
 
   redirect(url:string) {
     this.router.navigateByUrl(url, { state: this.user_info});
+  }
+
+  update_log_status(status:boolean): void {
+    this.is_auth = status;
+    this.log_status_change.next(this.is_auth);
   }
 }
 
