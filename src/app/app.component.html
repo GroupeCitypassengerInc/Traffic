@@ -1,19 +1,31 @@
 <!-- Vert: #a3c037 | Bleu: #39499c -->
 <app-spinner></app-spinner>
 
-<!-- Toolbar -->
-<mat-toolbar color="primary">
-  <mat-toolbar-row>
-    <span>Baggage </span>
-    <span class="spacer"></span>
-    <button mat-button matTooltip='Logout' *ngIf='is_logged;' (click)='logout()'>
-      <mat-icon>person_off</mat-icon>
-    </button>
-    {{currentApplicationVersion}}
-  </mat-toolbar-row>
-</mat-toolbar>
+<head>
+</head>
 
+<body>
+  <header>
+    <!-- Toolbar -->
+    <mat-toolbar color='primary'>
+      <mat-toolbar-row>
+        <span>
+          Baggage
+          <mat-icon style='vertical-align: middle;'>work</mat-icon>
+        </span>
+        <span class='spacer'></span>
+        <button mat-button matTooltip='Logout' *ngIf='is_logged;' (click)='logout()'>
+          <mat-icon>exit_to_app</mat-icon>
+        </button>
+        {{currentApplicationVersion}}
+      </mat-toolbar-row>
+    </mat-toolbar>
+  </header>
 
-<!-- Content -->
-<router-outlet class='container'>
-</router-outlet>
+  <!-- component -->
+  <router-outlet>
+  </router-outlet>
+</body>
+
+<footer>
+</footer>

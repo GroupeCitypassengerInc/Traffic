@@ -5,6 +5,7 @@ import { LoaderService } from './loader/loader.service';
 import { environment } from '../environments/environment';
 import { AuthService } from './auth_services/auth.service';
 import { Observable, Subject, Subscription } from 'rxjs';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-root',

@@ -67,7 +67,6 @@ tr.element-row:not(.expanded-row):active {
 }
 
 .radio {
-  /* margin: 1%; */
   text-align: left;
   align-content: left;
   padding: 1%;

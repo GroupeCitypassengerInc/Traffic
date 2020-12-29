@@ -31,8 +31,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatetimepickerModule, MatNativeDatetimeModule } from "@mat-datetimepicker/core";
 import { AppRoutingModule, routingComponents } from './app-routing/app-routing.module';
-import { MatSliderModule } from '@angular/material/slider'; //
-import { MatSlideToggleModule } from '@angular/material/slide-toggle'; //
+import { MatSliderModule } from '@angular/material/slider';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { InterceptorService } from './loader/interceptor.service';
 import { AuthService } from './auth_services/auth.service';
@@ -74,6 +75,7 @@ import { GuardService } from './auth_services/guard.service';
     MatDatetimepickerModule,
     MatNativeDatetimeModule,
     MatSliderModule,
+    MatTooltipModule,
     MatSlideToggleModule,
     AppRoutingModule,
   ],

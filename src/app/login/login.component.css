@@ -1,22 +1,10 @@
+
 .login-container {
-  height: 90%;
-  width: 100%;
-  align-items: center;
-  display: flex;
-}
-
-form {
-  width: 100%;
-}
-
-.login-content {
-  width: 400px;
-  display: block;
-  margin: 0 auto;
-}
-
-.login-toolbar {
-  justify-content: center;
+  position: relative;
+  max-width: 25%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .mat-form-field {
