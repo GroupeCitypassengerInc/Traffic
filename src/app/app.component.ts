@@ -9,7 +9,7 @@ import { Observable, Subject, Subscription } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from "@angular/platform-browser";
-import { local } from 'd3';
+import { local } from '../assets/images/';
 
 @Component({
   selector: 'app-root',
@@ -38,11 +38,11 @@ export class AppComponent implements OnInit {
   constructor(private auth: AuthService, private language: LanguageService, private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
     this.matIconRegistry.addSvgIcon(
       'fr_flag',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/fr.svg')
+      this.domSanitizer.bypassSecurityTrustResourceUrl('assets/images/fr.svg')
     );
     this.matIconRegistry.addSvgIcon(
       'gb_flag',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/images/gb.svg')
+      this.domSanitizer.bypassSecurityTrustResourceUrl('assets/images/gb.svg')
     );
   }
 
