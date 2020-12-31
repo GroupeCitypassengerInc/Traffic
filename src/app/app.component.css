@@ -8,6 +8,11 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+a, a:hover, a:focus, a:active {
+  text-decoration: none;
+  color: inherit;
+}
+
 .spacer {
   flex: 1 1 auto;
 }

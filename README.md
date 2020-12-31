@@ -1,11 +1,11 @@
-# Bagage
+# Baggage
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.2.0.
 
 ## Project install
 
 #### Install in Dev
-Clone the [project](https://github.com/GhioRodolphe/bagage.git).
+Clone the [project](https://github.com/GhioRodolphe/baggage.git).
 
 Run `npm install` in the project folder.
 

@@ -1,10 +1,9 @@
-
 .login-container {
   position: relative;
-  max-width: 25%;
+  max-width: 30em;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); 
 }
 
 .mat-form-field {
@@ -15,4 +14,11 @@
 .mat-raised-button {
   width: 100%;
   margin-top: 15px;
+}
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .login-container {
+    max-width: 80%;
+  }
 }

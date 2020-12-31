@@ -1,14 +1,18 @@
 {
-  "name": "bagage",
+  "name": "baggage",
   "version": "0.0.2",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --host app.citypassenger.com --port 4200",
+    "start:fr": "ng serve --configuration=fr --host app.citypassenger.com --port 4200",
+    "start:en": "ng serve --configuration=en --host app.citypassenger.com --port 4200",
     "build": "ng build",
+    "build:fr": "ng build --configuration=fr",
+    "build:en": "ng build --configuration=en",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "int:extract": "ng extract-i18n"
+    "int:extract": "ng extract-i18n --output-path src/multilingual --outFile translation.xlf"
   },
   "private": true,
   "dependencies": {

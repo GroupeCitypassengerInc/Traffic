@@ -1,22 +1,24 @@
-<div class="login-container">
-  <form [formGroup]="login_form_group" (ngSubmit)="onSubmit(login_form_group)">
+<div class='login-container'>
+
+  <form [formGroup]='login_form_group' (ngSubmit)='onSubmit(login_form_group)'>
     <mat-form-field>
       <mat-icon matPrefix>person_outline</mat-icon>
-      <input autofocus type="text" matInput placeholder="Username" formControlName="username">
-      <mat-error *ngIf="login_form_group.controls['username'].invalid">
+      <input autofocus type='text' matInput i18n-placeholder='Username placeholder|text wich discribe the field username@@username_placeholder' placeholder='Username' formControlName='username'>
+      <mat-error *ngIf='login_form_group.controls["username"].invalid'>
         {{getError('user')}}
       </mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <mat-icon matPrefix>lock_outline</mat-icon>
-      <input type="password" autocomplete="false" matInput placeholder="Password" formControlName="password">
-      <mat-error *ngIf="!login_form_group.controls['password'].valid">
+      <input type='password' autocomplete='false' matInput i18n-placeholder='Password placeholder|text wich discribe the field password@@password_placeholder' placeholder='Password' formControlName='password'>
+      <mat-error *ngIf='!login_form_group.controls["password"].valid'>
         {{getError('pass')}}
       </mat-error>
     </mat-form-field>
 
-    <button type="submit" mat-raised-button color="primary"
-      [disabled]="!login_form_group.valid || !is_login_enable || is_logged">Login</button>
+    <button type='submit' mat-raised-button color='primary'
+      [disabled]='!login_form_group.valid || !is_login_enable || is_logged'
+      i18n='Loggin button text|text for the loggin button@@Loggin_btn_txt'>Sign in</button>
   </form>
 </div>

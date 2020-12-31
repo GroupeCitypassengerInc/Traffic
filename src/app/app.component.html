@@ -14,7 +14,19 @@
           <mat-icon style='vertical-align: middle;'>work</mat-icon>
         </span>
         <span class='spacer'></span>
-        <button mat-button matTooltip='Logout' *ngIf='is_logged;' (click)='logout()'>
+        <div>
+          <a href="/en/baggage/graph">
+            <button *ngIf='(site_locale == "fr")' mat-button matTooltip='Basculez en anglais'>
+              <mat-icon>flag</mat-icon>
+            </button>
+          </a>
+          <a href="/fr/baggage/graph">
+            <button *ngIf='(site_locale == "en")' mat-button matTooltip='Switch to French'>
+              <mat-icon>flag</mat-icon>
+            </button>
+          </a>
+        </div>
+        <button mat-button i18n-matTooltip='Logout matTooltip|text wich discribe the Logout button@@logout_tooltip' matTooltip='Logout' *ngIf='is_logged;' (click)='logout()'>
           <mat-icon>exit_to_app</mat-icon>
         </button>
         {{currentApplicationVersion}}

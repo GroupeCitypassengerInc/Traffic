@@ -46,6 +46,8 @@ export class GraphComponent implements OnInit {
   base_url : string = '';
   box_selected : string = '';
 
+  group_name : string;
+
   default_up_start_time : number = -1 * 60 * 60 * 1000;
   default_end_time : any = 0;
   up_start_time : number = this.default_up_start_time;
@@ -81,7 +83,9 @@ export class GraphComponent implements OnInit {
   ngOnInit(): void {
     this.default_date.setHours(this.default_date.getHours());
     this.options = this.information.shift();
+    this.group_name = this.options[0];
     if ( isDevMode() ) {
+      console.log('options');
       console.log(this.options);
     }
     if ( this.options.length == 2 ) {

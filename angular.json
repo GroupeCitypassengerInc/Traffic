@@ -3,12 +3,24 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "bagage": {
+    "baggage": {
       "projectType": "application",
       "schematics": {},
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+      "i18n": {
+        "sourceLocale": {
+          "code": "en",
+          "baseHref": "/en/baggage/"
+        },
+        "locales": {
+          "fr": {
+            "translation": "src/multilingual/translation.fr.xlf",
+            "baseHref": "/fr/baggage/"
+          }
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -16,9 +28,8 @@
             "allowedCommonJsDependencies":[
               "chart.js"
             ],
-            "baseHref": "/baggage/",
-            "deployUrl": "/baggage/",
-            "outputPath": "dist/bagage",
+
+            "outputPath": "dist/baggage/",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -60,30 +71,44 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "65kb",
-                  "maximumError": "70kb"
+                  "maximumWarning": "70kb",
+                  "maximumError": "90kb"
                 }
               ]
+            },
+            "fr": {
+              "localize": ["fr"]
+            },
+            "en": {
+              "localize": ["en"]
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "bagage:build",
-            "baseHref": "/baggage/",
-            "deployUrl": "/baggage/"
+            "browserTarget": "baggage:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "bagage:build:production"
+              "browserTarget": "baggage:build:production"
+            },
+            "fr": {
+              "baseHref": "/fr/baggage/",
+              "deployUrl": "/fr/baggage/",
+              "browserTarget": "baggage:build:fr"
+            },
+            "en": {
+              "baseHref": "/en/baggage/",
+              "deployUrl": "/en/baggage/",
+              "browserTarget": "baggage:build:en"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "bagage:build"
+            "browserTarget": "baggage:build"
           }
         },
         "test": {
@@ -121,18 +146,18 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "bagage:serve"
+            "devServerTarget": "baggage:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "bagage:serve:production"
+              "devServerTarget": "baggage:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "bagage",
+  "defaultProject": "baggage",
   "schematics": {
     "@schematics/angular:component": {
       "styleext": "scss"

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file datatype="plaintext" source-language="en" target-language="fr">
+    <body>
+      <trans-unit id="Loggin_btn_txt">
+        <target>Connexion</target>
+      </trans-unit>
+      <trans-unit id="Title_graph">
+        <target>Graphique</target>
+      </trans-unit>
+      <trans-unit id="button_visualize_devices_table">
+        <target>Visualiser</target>
+      </trans-unit>
+      <trans-unit id="day_unit_time_selection_graph">
+        <target>jour</target>
+      </trans-unit>
+      <trans-unit id="description_graph" datatype="html">
+        <source>You are currently viewing the data of the <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{group_name}}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt; "/> group boxes.</source>
+        <target>Vous êtes en train de consulter les données des boîtiers du groupe <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{group_name}}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt; "/>  .</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/graph/graph.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <note priority="1" from="description">description graph</note>
+      </trans-unit>
+      <trans-unit id="hour_unit_time_selection_graph">
+        <target>heure</target>
+      </trans-unit>
+      <trans-unit id="logout_tooltip">
+        <target>Déconnexion</target>
+      </trans-unit>
+      <trans-unit id="minute_unit_time_selection_graph">
+        <target>minute</target>
+      </trans-unit>
+      <trans-unit id="password_placeholder">
+        <target>Mot de passe</target>
+      </trans-unit>
+      <trans-unit id="search_metric_input_devices_table">
+        <target>rechercher un métrique</target>
+      </trans-unit>
+      <trans-unit id="search_tip_devices_table">
+        <target>Tapez ici pour rechercher un appareil spécifique</target>
+      </trans-unit>
+      <trans-unit id="short_description_devices_table">
+        <target>Baggage vous permet de visualiser les données de performance de vos appareils. Sélectionnez un appareil dans le tableau
+    ci-dessous, une fois l'appareil sélectionné, choisissez les données que vous souhaitez visualiser et cliquez ensuite sur le bouton &quot;view&quot;.</target>
+      </trans-unit>
+      <trans-unit id="text_now_time_selection_graph">
+        <target>maintenant</target>
+      </trans-unit>
+      <trans-unit id="text_until_time_selection_graph" datatype="html">
+        <source> Until </source>
+        <target>jusqu'à</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/graph/graph.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <note priority="1" from="description">&quot;until&quot; text in time range selection</note>
+        <note priority="1" from="meaning">&quot;until&quot; text</note>
+      </trans-unit>
+      <trans-unit id="text_until_date_selection_time_selection_graph" datatype="html">
+        <source>Until</source>
+        <target>jusqu'à</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/graph/graph.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <note priority="1" from="description">&quot;until&quot; text in time range selection</note>
+        <note priority="1" from="meaning">&quot;until&quot; text date selection</note>
+      </trans-unit>
+      <trans-unit id="tip_text_description_devices_table">
+        <target>Pour consulter les données collectées, sélectionnez les données que vous souhaitez consulter, puis cliquez sur le bouton Visualiser</target>
+      </trans-unit>
+      <trans-unit id="title_metric_selection_devices_table">
+        <target>Graphique disponible</target>
+      </trans-unit>
+      <trans-unit id="title_unit_options_time_selection_graph">
+        <target>Unité</target>
+      </trans-unit>
+      <trans-unit id="title_your_devices_table">
+        <target>Vos appareils</target>
+      </trans-unit>
+      <trans-unit id="tooltip_restore_default_time_selection_graph">
+        <target>Restaurer les valeurs par défauts</target>
+      </trans-unit>
+      <trans-unit id="username_placeholder">
+        <target>Nom d'utilisateur</target>
+      </trans-unit>
+      <trans-unit id="welcome_devices_table" datatype="html">
+        <source> Welcome to baggage <x id="INTERPOLATION" equiv-text="{{login_information[&apos;username&apos;]}}"/> !</source>
+        <target>Bienvenue sur Baggage</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/devices-table/devices-table.component.html</context>
+          <context context-type="linenumber">2,4</context>
+        </context-group>
+        <note priority="1" from="description">welcome text device table component</note>
+        <note priority="1" from="meaning">welcome text</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

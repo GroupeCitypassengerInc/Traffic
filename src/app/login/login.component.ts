@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
   }
 
   //need to disable btn when waiting server's answer.
-  onSubmit(form : FormGroup) : void {
+  onSubmit(form : FormGroup): void {
     if ( isDevMode() ) {
       console.log(form);
     }

@@ -14,6 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoaderService } from '../loader/loader.service';
+import { LanguageService } from '../lingual_service/language.service'
 import { ThemePalette } from '@angular/material/core';
 import { CdkTableModule} from '@angular/cdk/table';
 import { DataSource } from '@angular/cdk/table';
@@ -63,12 +64,14 @@ export interface user_informations {
 })
 
 export class DevicesTableComponent implements OnInit {
-  constructor(private httpClient: HttpClient, private _snackBar: MatSnackBar) {
+  constructor(private httpClient: HttpClient, private _snackBar: MatSnackBar, private language: LanguageService) {
     this._disabled_visualize = true;
   }
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+
+  site_language: string;
 
   login_information: user_informations;
 
@@ -77,7 +80,24 @@ export class DevicesTableComponent implements OnInit {
 
   base_api_url: string = environment.city_url_api;
   prometheus_api: string = environment.prometheus_base_api_url ;
-  columnsToDisplay: string[] = ['address','group_name', 'box_name'];
+  columnsToDisplay: Array<any> = [
+    {
+      'key':'address',
+      'fr':'Adresse',
+      'en':'Address'
+    },
+    {
+      'key':'group_name',
+      'fr':'Nom de groupe',
+      'en':'Group name'
+    },
+    {
+      'key':'box_name',
+      'fr':'Nom de boitier',
+      'en':'Box name'
+    }
+  ];
+  columnsToDisplayKeys: string[];
   BOX_DATA: box_info[] = [];
   JSON_data: any = [];
   filterName = '';
@@ -95,6 +115,8 @@ export class DevicesTableComponent implements OnInit {
   graphs_form = new FormControl();
   
   ngOnInit(): void {
+    this.site_language = this.language.get_language();
+
     if ( isDevMode() ) {
       console.log(history.state);
     }
@@ -107,9 +129,14 @@ export class DevicesTableComponent implements OnInit {
         this.data_formating();
       });
     }
+    this.columnsToDisplayKeys = this.columnsToDisplay.map(col => col.key);
+    console.log(this.columnsToDisplayKeys);
   }
  
   ngAfterViewInit(): void {
+    if ( this.site_language == 'fr' ) {
+      this.paginator = this.language.translate_paginator(this.paginator);
+    }
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }

@@ -1,4 +1,5 @@
-<h2>Graphs</h2>
+<h2 i18n='title Graph@@Title_graph'>Graphs</h2>
+<h3 i18n='description graph@@description_graph'>You are currently viewing the data of the <strong>{{group_name}}</strong> group boxes.</h3>
 <div class='container' *ngFor='let query of Object.keys(graphs_records)'>
   <div>
     <h3>{{query}}</h3>
@@ -19,20 +20,20 @@
 
       <!-- Unit section -->
       <mat-form-field appearance='legacy' class='form'>
-        <mat-label>Unit option</mat-label>
+        <mat-label i18n='title unit options|title unit options@@title_unit_options_time_selection_graph'>Unit options</mat-label>
         <mat-select [(ngModel)]='graphs_records[query]["t_unit"]' placeholder='Unit' [disabled]='unit_select.value'
           (ngModelChange)="unit_selection_changes(query)">
-          <mat-option value='minute'>minute</mat-option>
-          <mat-option value='hour'>hour</mat-option>
-          <mat-option value='day'>day</mat-option>
+          <mat-option value='minute' i18n='minute unit option|minute unit option for time range selection@@minute_unit_time_selection_graph'>minute</mat-option>
+          <mat-option value='hour' i18n='hour unit option|hour unit option for time range selection@@hour_unit_time_selection_graph'>hour</mat-option>
+          <mat-option value='day' i18n='day unit option|day unit option for time range selection@@day_unit_time_selection_graph'>day</mat-option>
         </mat-select>
       </mat-form-field>
-      <p class='form_text'> Until </p>
+      <p class='form_text' i18n='"until" text|"until" text in time range selection@@text_until_time_selection_graph'> Until </p>
 
       <!-- Date time section -->
       <form novalidate [formGroup]='form_group' class='form' id='datetime' *ngIf='!graphs_records[query]["t_now"]'>
         <mat-form-field>
-          <mat-placeholder>Until</mat-placeholder>
+          <mat-placeholder i18n='"until" text date selection|"until" text in time range selection@@text_until_date_selection_time_selection_graph'>Until</mat-placeholder>
           <input matInput formControlName={{query}} [matDatetimepicker]='dts' required autocomplete='false'
             [disabled]='graphs_records[query]["t_now"]'>
           <mat-datetimepicker-toggle [for]='dts' matSuffix></mat-datetimepicker-toggle>
@@ -43,10 +44,10 @@
       <!-- Now slide toggle -->
       <!-- The value is updating correctly BUT w/o visual changes (still unchecked) -->
       <mat-slide-toggle [(ngModel)]='graphs_records[query]["t_now"]' class='form_text'
-        (change)='on_checkbox_change($event, query)' color="primary">Now</mat-slide-toggle>
+        (change)='on_checkbox_change($event, query)' color="primary" i18n='"now" text|"now" text in time range selection@@text_now_time_selection_graph'>Now</mat-slide-toggle>
 
       <!-- Reset -->
-      <button mat-button matTooltip='Restore default values' class='icon_button' (click)='set_default_settings(query)'>
+      <button mat-button i18n-matTooltip='tooltip restore default|tooltip of button which restore default settings@@tooltip_restore_default_time_selection_graph' matTooltip='Restore default values' class='icon_button' (click)='set_default_settings(query)'>
         <mat-icon>cached</mat-icon>
       </button>
     </div>
