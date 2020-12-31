@@ -9,7 +9,7 @@ import { Observable, Subject, Subscription } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from "@angular/platform-browser";
-import { local } from '../assets/images/';
+import { local } from 'd3';
 
 @Component({
   selector: 'app-root',
