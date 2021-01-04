@@ -81,24 +81,3 @@ export class AppComponent implements OnInit {
     }
   }
 }
-
-@Component({
-  selector: 'log_out_confirmation_popup',
-  templateUrl: 'confirmation_popup.html',
-})
-export class LogOutDialog {
-  
-  constructor(
-    private auth: AuthService, 
-    public dialogRef: MatDialogRef<LogOutDialog>) {
-  }
-
-  logout(): void {
-    this.dialogRef.close();
-    this.auth.logout();
-  }
-
-  close(): void {
-    this.dialogRef.close();
-  }
-}
