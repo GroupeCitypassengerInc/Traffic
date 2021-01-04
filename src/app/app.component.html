@@ -5,7 +5,7 @@
 </head>
 
 <body>
-  <header>
+  <header style='color:#fefefe'>
     <!-- Toolbar -->
     <mat-toolbar color='primary'>
       <mat-toolbar-row>
@@ -14,21 +14,31 @@
           <mat-icon style='vertical-align: middle;'>work</mat-icon>
         </span>
         <span class='spacer'></span>
-        <div>
-          <a href="/en/baggage/graph">
-            <button *ngIf='(site_locale == "fr")' mat-button matTooltip='Basculez en anglais'>
-              <mat-icon svgIcon='gb_flag'></mat-icon>
-            </button>
-          </a>
-          <a href="/fr/baggage/graph">
-            <button *ngIf='(site_locale == "en")' mat-button matTooltip='Switch to French'>
-              <mat-icon svgIcon='fr_flag'></mat-icon>
-            </button>
-          </a>
-        </div>
-        <button mat-button i18n-matTooltip='Logout matTooltip|text wich discribe the Logout button@@logout_tooltip' matTooltip='Logout' *ngIf='is_logged;' (click)='logout()'>
-          <mat-icon>exit_to_app</mat-icon>
+
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+          <mat-icon>menu</mat-icon>
         </button>
+        <mat-menu #menu="matMenu">
+          <div>
+            <a href="/en/baggage/graph">
+              <button mat-menu-item *ngIf='(site_locale == "fr")'>
+                <mat-icon svgIcon='gb_flag'></mat-icon>
+                <span>Basculez en anglais</span>
+              </button>
+            </a>
+            <a href="/fr/baggage/graph">
+              <button *ngIf='(site_locale == "en")'>
+                <mat-icon svgIcon='fr_flag'></mat-icon>
+                <span>Switch to French</span>
+              </button>
+            </a>
+          </div>
+          <button mat-menu-item i18n-matTooltip='Logout matTooltip|text wich discribe the Logout button@@logout_tooltip' *ngIf='is_logged;' (click)='logout()'>
+            <mat-icon>exit_to_app</mat-icon>
+            <span i18n='log out button|log out button stored in navbar menu@@log_out_button'>Log out</span>
+          </button>
+        </mat-menu>
+
         {{currentApplicationVersion}}
       </mat-toolbar-row>
     </mat-toolbar>

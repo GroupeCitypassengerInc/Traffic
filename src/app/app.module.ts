@@ -34,6 +34,7 @@ import { AppRoutingModule, routingComponents } from './app-routing/app-routing.m
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { InterceptorService } from './loader/interceptor.service';
 import { AuthService } from './auth_services/auth.service';
@@ -77,6 +78,7 @@ import { GuardService } from './auth_services/guard.service';
     MatSliderModule,
     MatTooltipModule,
     MatSlideToggleModule,
+    MatMenuModule,
     AppRoutingModule,
   ],
   exports:[
