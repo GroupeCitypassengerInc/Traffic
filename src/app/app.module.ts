@@ -39,6 +39,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { InterceptorService } from './loader/interceptor.service';
 import { AuthService } from './auth_services/auth.service';
 import { GuardService } from './auth_services/guard.service';
+import { LogOutDialogComponent } from './dialog/log-out-dialog/log-out-dialog.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { GuardService } from './auth_services/guard.service';
     SpinnerComponent,
     LoginComponent,
     routingComponents,
+    LogOutDialogComponent,
   ],
   imports: [
     BrowserModule,

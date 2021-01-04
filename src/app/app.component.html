@@ -27,7 +27,7 @@
               </button>
             </a>
             <a href="/fr/baggage/graph">
-              <button *ngIf='(site_locale == "en")'>
+              <button mat-menu-item *ngIf='(site_locale == "en")'>
                 <mat-icon svgIcon='fr_flag'></mat-icon>
                 <span>Switch to French</span>
               </button>
@@ -38,6 +38,10 @@
             <span i18n='log out button|log out button stored in navbar menu@@log_out_button'>Log out</span>
           </button>
         </mat-menu>
+
+        <button mat-icon-button *ngIf='is_dev_mode;' (click)='devLogin()'>
+          <mat-icon>campaign</mat-icon>
+        </button>
 
         {{currentApplicationVersion}}
       </mat-toolbar-row>

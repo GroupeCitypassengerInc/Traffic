@@ -1,5 +1,5 @@
+import { Component, Output, EventEmitter, HostListener, OnInit, Inject, isDevMode } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Component, Output, EventEmitter, HostListener, OnInit, Inject } from '@angular/core';
 import { GraphComponent } from './graph/graph.component';
 import { LoaderService } from './loader/loader.service';
 import { environment } from '../environments/environment';
@@ -11,22 +11,22 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from "@angular/platform-browser";
 import { local } from 'd3';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
-
+import { LogOutDialogComponent } from './dialog/log-out-dialog/log-out-dialog.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-
 export class AppComponent implements OnInit {
   _show_graph: boolean = false;
   is_logged: boolean = false;
   currentApplicationVersion = environment.appVersion;
   auth_status_subscription : Subscription;
-
+  is_dev_mode: boolean = false;
   site_locale: string;
   language_list = [
     { 
@@ -51,6 +51,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.is_dev_mode = isDevMode();
     this.is_logged = this.auth.is_auth;
     this.auth_status_subscription = this.auth.log_status_change.subscribe((status) => {
       this.is_logged = status;
@@ -63,9 +64,7 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
-    const dialogRef = this.dialog.open(LogOutDialog, {
-      width: '250px'
-    });
+    const dialogRef = this.dialog.open(LogOutDialogComponent)
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
@@ -75,20 +74,23 @@ export class AppComponent implements OnInit {
   debug(): void {
     console.log (this.is_logged );
   }
-}
 
+  devLogin(): void {
+    if ( isDevMode() ) {
+      this.auth.update_log_status(true);
+    }
+  }
+}
 
 @Component({
   selector: 'log_out_confirmation_popup',
   templateUrl: 'confirmation_popup.html',
 })
-
 export class LogOutDialog {
+  
   constructor(
     private auth: AuthService, 
-    public dialogRef: MatDialogRef<LogOutDialog>, 
-    @Inject(MAT_DIALOG_DATA) public data: string) {
-    
+    public dialogRef: MatDialogRef<LogOutDialog>) {
   }
 
   logout(): void {

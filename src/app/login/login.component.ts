@@ -9,7 +9,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../auth_services/auth.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { BrowserModule } from '@angular/platform-browser';
@@ -38,7 +37,7 @@ export class LoginComponent implements OnInit {
   user_info : user_informations;
   isChecked : boolean = true;
 
-  constructor(private form_builder: FormBuilder, private _snackBar: MatSnackBar, private auth: AuthService ) { }
+  constructor(private form_builder: FormBuilder, private auth: AuthService ) { }
   
   ngOnInit(): void {
     this.auth.is_logged();

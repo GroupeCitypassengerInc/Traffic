@@ -1,0 +1,8 @@
+<h1 mat-dialog-title i18n='log out pop up title@@log_out_pop_up_title'>Confirmation</h1>
+<div mat-dialog-content i18n='log out pop up content@@log_out_pop_up_content'>Would you like to disconnect ?</div>
+<div mat-dialog-actions>
+  <button mat-flat-button i18n='log out pop up cancel button@@log_out_pop_up_cancel_button'
+    (click)='close()'>Cancel</button>
+  <button mat-flat-button i18n='log out pop up diconnect button@@log_out_pop_up_diconnect_button' (click)='logout()'
+    cdkFocusInitial>Disconnect me</button>
+</div>

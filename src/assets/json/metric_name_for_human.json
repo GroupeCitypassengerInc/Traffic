@@ -1,0 +1,46 @@
+{
+  "Devices_on_lan_gauge": {
+    "human_metric_name_en": "",
+    "human_metric_name_fr": ""
+  },
+  "KVM_files_count": {
+    "human_metric_name_en": "",
+    "human_metric_name_fr": ""
+  },
+  "cpustats_cpu_usage_percent": {
+    "human_metric_name_en": "",
+    "human_metric_name_fr": ""
+  },
+  "memstats_memory_usage_percent": {
+    "human_metric_name_en": "",
+    "human_metric_name_fr": ""
+  },
+  "memstats_total_memory_bytes": {
+    "human_metric_name_en": "",
+    "human_metric_name_fr": ""
+  },
+  "memstats_used_memory_bytes": {
+    "human_metric_name_en": "",
+    "human_metric_name_fr": ""
+  },
+  "scrape_duration_seconds": {
+    "human_metric_name_en": "",
+    "human_metric_name_fr": ""
+  },
+  "scrape_samples_post_metric_relabeling": {
+    "human_metric_name_en": "",
+    "human_metric_name_fr": ""
+  },
+  "scrape_samples_scraped": {
+    "human_metric_name_en": "",
+    "human_metric_name_fr": ""
+  },
+  "scrape_series_added": {
+    "human_metric_name_en": "",
+    "human_metric_name_fr": ""
+  },
+  "up": {
+    "human_metric_name_en": "",
+    "human_metric_name_fr": ""
+  }
+}
