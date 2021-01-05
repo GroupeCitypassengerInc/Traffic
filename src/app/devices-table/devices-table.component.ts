@@ -217,9 +217,7 @@ export class DevicesTableComponent implements OnInit {
     if ( isDevMode ) {
       this.getRecord(group, '');
     } else {
-      let group_password:string = this.get_password(group['group_id'], group['box_name']);
-      this.getRecord(group, group_password);
-      this.selection.password = group_password;
+      this.get_password(group);
     }
   }
 
@@ -274,24 +272,29 @@ export class DevicesTableComponent implements OnInit {
     });
   }
 
-  get_password(group_id, box_name): any {
-    if ( isDevMode() ){
-    } else {
-      let url = this.base_api_url + '/ws/Group/Info/' + group_id;
-      let headers = new HttpHeaders();
-      headers = headers.set('accept', 'application/json');
-      this.httpClient.request('GET', url, {headers})
-        .toPromise()
-        .then(response => {
-          let password: string = response['group']['ienaDevices'][box_name]['localinterface_passwords']['user'];
-          if ( isDevMode() ) {
-            console.log(response);
-            console.log(password);
-          }
-          return password;
-        });
+  get_password(group): any {
+    
+    let group_id = group['group_id'];
+    let box_name = group['box_name']
+      if ( isDevMode() ){
+        console.log('getting paswword');
+      } else {
+        let url = this.base_api_url + '/ws/Group/Info/' + group_id;
+        let headers = new HttpHeaders();
+        headers = headers.set('accept', 'application/json');
+        this.httpClient.request('GET', url, {headers})
+          .toPromise()
+          .then(response => {
+            let password: string = response['group']['ienaDevices'][box_name]['localinterface_passwords']['user'];
+            if ( isDevMode() ) {
+              console.log(response);
+              console.log(password);
+            }
+            this.selection.password = password;
+            this.getRecord(group, password);
+          });
+      }
     }
-  }
 
   refresh(): void {
     this.dataSource.data = this.dataSource.data;
