@@ -65,7 +65,6 @@ export interface user_informations {
 
 export class DevicesTableComponent implements OnInit {
   constructor(private httpClient: HttpClient, private _snackBar: MatSnackBar, private language: LanguageService) {
-    this._disabled_visualize = true;
   }
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -100,19 +99,22 @@ export class DevicesTableComponent implements OnInit {
   columnsToDisplayKeys: string[];
   BOX_DATA: box_info[] = [];
   JSON_data: any = [];
-  filterName = '';
+  filterNameBox = '';
+  filterNameGroup = '';
   
   selection: box_info;
   graphs_available_list: string[] = [];
   graphs_available_list_backup: string[] = [];
   expandedElement: box_info | null;
-  _disabled_visualize: boolean = true;
+  _disabled_visualize_box_form: boolean = true;
+  _disabled_visualize_group_form: boolean = true;
   http_request_ok: boolean = false
   option: 'group'|'box' = "group";
   password: string = '';
 
   dataSource = new MatTableDataSource(this.BOX_DATA);
-  graphs_form = new FormControl();
+  graphs_group_form = new FormControl();
+  graphs_box_form = new FormControl();
   
   ngOnInit(): void {
     this.site_language = this.language.get_language();
@@ -161,18 +163,6 @@ export class DevicesTableComponent implements OnInit {
     this.refresh();
   }
 
-  onChange (event : Event): void {
-    if ( isDevMode() ) {
-      console.log (event);
-    }
-    
-    if ( this.graphs_form.value.length > 0 && this.http_request_ok == true ) {
-      this._disabled_visualize = false;
-    } else {
-      this._disabled_visualize = true;
-    }
-  }
-
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -199,7 +189,8 @@ export class DevicesTableComponent implements OnInit {
       console.log(selected)
       api_prometheus = this.prometheus_api + '/api/v1/label/__name__/values';
     }
-    this.graphs_form = new FormControl();
+    this.graphs_group_form = new FormControl();
+    this.graphs_box_form = new FormControl();
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json');
     this.httpClient.request('GET', api_prometheus, {headers}).pipe(
@@ -215,49 +206,47 @@ export class DevicesTableComponent implements OnInit {
         this.graph_avialable_catcher(prometheus_metrics['data']);
         this.selection = row;
         this.http_request_ok = true;
-        this._disabled_visualize = true; // enable visualize button if any error has been catched
       },err => {
-        this._disabled_visualize = true; // disable visualize button on http error
         this.http_request_ok = false;
-        
         console.log(err);
-        this.openSnackBar(err);
       });
     row.highlighted = !row.highlighted;
   }
 
-  Visualize(): void {
-    let informations: Array<any> = [];
-    let checked = this.graphs_form.value;
-    let selected = this.selection;
-    selected.password = this.password;
-    
-    if ( this.option == 'group' ) {
-      informations.push([selected.group_name, selected.password]);
+  get_group_info(group:any): void {
+    if ( isDevMode ) {
+      this.getRecord(group, '');
     } else {
-      informations.push([selected.group_name, selected.password, selected.box_name]);
+      let group_password:string = this.get_password(group['group_id'], group['group_name']);
+      this.getRecord(group, group_password);
+      this.selection.password = group_password;
     }
+  }
+
+  Visualize(group_name:any, box_name:string, _box_mode:boolean): void {
+    let informations: Array<any> = [];
+    let selected = this.selection;
+    let checked;
+    if ( _box_mode == false ) {
+      informations.push([group_name, selected.password]);
+      checked = this.graphs_group_form.value;
+    } else {
+      informations.push([group_name, selected.password, box_name,]);
+      checked = this.graphs_box_form.value;
+    }
+    checked.forEach(metric => {
+      informations.push(metric);
+    });
 
     if ( isDevMode() ) {
       console.log(informations);
     }
-
-    checked.forEach(metric => {
-      informations.push(metric);
-    });
-    
     this._show_graph = true;
     this.information_dad = informations;
   }
 
   radioChange(event:any): void {
     this.option = event.value;
-  }
-
-  openSnackBar(message: string): void {
-    this._snackBar.open(message,'ok',{
-      duration: 10000,
-    });
   }
 
   get_devices(): void{
@@ -283,27 +272,23 @@ export class DevicesTableComponent implements OnInit {
     });
   }
 
-  get_group_info(selection): void {
+  get_password(group_id, box_name): any {
     if ( isDevMode() ){
-      this.getRecord(selection, '')
     } else {
-      let group_id = selection.group_id;
       let url = this.base_api_url + '/ws/Group/Info/' + group_id;
       let headers = new HttpHeaders();
       headers = headers.set('accept', 'application/json');
       this.httpClient.request('GET', url, {headers})
         .toPromise()
         .then(response => {
-          let password = response['group']['ienaDevices'][selection.box_name]['localinterface_passwords']['user'];
-          this.password = password;
+          let password: string = response['group']['ienaDevices'][box_name]['localinterface_passwords']['user'];
           if ( isDevMode() ) {
             console.log(response);
             console.log(password);
           }
-          this.getRecord(selection, password)
+          return password;
         });
     }
-    
   }
 
   refresh(): void {
@@ -314,8 +299,36 @@ export class DevicesTableComponent implements OnInit {
     this.graphs_available_list = this.graphs_available_list_backup.filter(unit => unit.indexOf(val) > -1);
   }
 
-  clearfilter():void {
-    this.filterName = '';
-    this.filterListCareUnit(this.filterName);
+  clearfilterBoxForm():void {
+    this.filterNameBox = '';
+    this.filterListCareUnit(this.filterNameBox);
+  }
+
+  clearfilterGroupForm():void {
+    this.filterNameGroup = '';
+    this.filterListCareUnit(this.filterNameGroup);
+  }
+  
+  onChangeBoxForm (event: Event): void {
+    if ( isDevMode() ) {
+      console.log (event);
+    }
+    if ( this.graphs_box_form.value.length > 0 && this.http_request_ok == true ) {
+      this._disabled_visualize_box_form = false;
+    } else {
+      this._disabled_visualize_box_form = true;
+    }
+  }
+
+  onChangeGroupForm (event: Event): void {
+    if ( isDevMode() ) {
+      console.log (event);
+    }
+    if ( this.graphs_group_form.value.length > 0 && this.http_request_ok == true ) {
+      this._disabled_visualize_group_form = false;
+    } else {
+      this._disabled_visualize_group_form = true;
+    }
+    console.log(this._disabled_visualize_group_form)
   }
 }

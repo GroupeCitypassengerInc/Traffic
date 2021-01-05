@@ -4,8 +4,8 @@
     "fr": "Nombre de personne sur le réseau"
   },
   "KVM_files_count": {
-    "en": "KVM_files_count",
-    "fr": "KVM_files_count"
+    "en": "KVM files count",
+    "fr": "KVM files count"
   },
   "cpustats_cpu_usage_percent": {
     "en": "Processor usage (%)",
@@ -24,20 +24,20 @@
     "fr": "Mémoire vive utilisé (octet)"
   },
   "scrape_duration_seconds": {
-    "en": "scrape_duration_seconds",
-    "fr": "scrape_duration_seconds"
+    "en": "scrape duration seconds",
+    "fr": "scrape duration seconds"
   },
   "scrape_samples_post_metric_relabeling": {
-    "en": "scrape_samples_post_metric_relabeling",
-    "fr": "scrape_samples_post_metric_relabeling"
+    "en": "scrape samples post metric relabeling",
+    "fr": "scrape samples post metric relabeling"
   },
   "scrape_samples_scraped": {
-    "en": "scrape_samples_scraped",
-    "fr": "scrape_samples_scraped"
+    "en": "scrape_samples scraped",
+    "fr": "scrape_samples scraped"
   },
   "scrape_series_added": {
-    "en": "scrape_series_added",
-    "fr": "scrape_series_added"
+    "en": "scrape series added",
+    "fr": "scrape series added"
   },
   "up": {
     "en": "Device status",
