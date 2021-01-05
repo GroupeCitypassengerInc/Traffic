@@ -217,7 +217,7 @@ export class DevicesTableComponent implements OnInit {
     if ( isDevMode ) {
       this.getRecord(group, '');
     } else {
-      let group_password:string = this.get_password(group['group_id'], group['group_name']);
+      let group_password:string = this.get_password(group['group_id'], group['box_name']);
       this.getRecord(group, group_password);
       this.selection.password = group_password;
     }
@@ -252,7 +252,9 @@ export class DevicesTableComponent implements OnInit {
   get_devices(): void{
     let url = this.base_api_url + '/ws/Map/Devices';
     let headers = new HttpHeaders();
-    headers = headers.set('Accept-Encoding:', 'application/json');
+    if ( isDevMode() ) {
+      headers = headers.set('Accept-Encoding:', 'application/json');
+    }
     this.httpClient.request('GET', url, {headers}).pipe(
       timeout(10000), 
       map(res => {
