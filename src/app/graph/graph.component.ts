@@ -21,6 +21,8 @@ import { Chart } from 'chart.js';
 import { throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { setPriority } from 'os';
+import { LanguageService } from '../lingual_service/language.service';
+import * as alternative_metrics_names from '../../assets/json/metric_name_for_human.json';
 
 export interface unit_conversion {
   minute : number,
@@ -39,7 +41,9 @@ export class GraphComponent implements OnInit {
   @Input() information: Array<string>;
   Object = Object;
 
-  query_list : any = [];
+  query_list: any = [];
+  _lang: string;
+  metric_alternative_name: any = (alternative_metrics_names as any).default;
 
   // Request : /prometheus/api/v1/query_range?query=up&start=1604584181.313&end=1604670581.313&step=9250
   prometheus_api_url : string = environment.prometheus_base_api_url;
@@ -74,13 +78,15 @@ export class GraphComponent implements OnInit {
   }
   unit_select = new FormControl(false);
 
-  constructor(private appRef: ChangeDetectorRef,  private _formBuilder: FormBuilder, private httpClient: HttpClient) {
+  constructor(private appRef: ChangeDetectorRef,  private _formBuilder: FormBuilder, private httpClient: HttpClient, public lingual: LanguageService) {
     this.form_group = this._formBuilder.group({
       default_date: [{ value: '', disabled: true }, Validators.required]
     });
   }
   
   ngOnInit(): void {
+    this._lang = this.lingual.get_language();
+    console.log(this._lang)
     this.default_date.setHours(this.default_date.getHours());
     this.options = this.information.shift();
     this.group_name = this.options[0];
@@ -101,7 +107,7 @@ export class GraphComponent implements OnInit {
       this.date_changes(date);
     });
   }
-
+  //demo.robustperception.io:
   ngAfterViewInit(): void {
     this.set_charts();
   }
@@ -245,14 +251,14 @@ export class GraphComponent implements OnInit {
       });
       
       let extra_label: Array<string> = this.get_extra_labels(data_to_parse[key]['metric']);
-      let label: string = metric + ' { instance: ' + instance + ' }';
+      let label: string = this.metric_alternative_name[metric][this._lang] + ' { instance: ' + instance + ' }';
       // if ( isDevMode ) {
       //   label = metric + ' ';
       // }
       extra_label.forEach(element => {
         label = label + ' { ' + element + ': ' + data_to_parse[key]['metric'][element] + ' }';
       });
-
+      console.log (this.get_random_color_2(instance));
       let dataset;
       dataset = {
         label: label,
@@ -276,6 +282,16 @@ export class GraphComponent implements OnInit {
       color += HEX[Math.floor(Math.random() * 16)];
     }
     return color;
+  }
+
+  get_random_color_2(string_to_convert: string): string {
+    var hash = 0;
+    for (var i = 0; i < string_to_convert.length; i++) {
+      hash = string_to_convert.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    var c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+    var color = "00000".substring(0, 6 - c.length) + c;
+    return '#' + color; 
   }
 
   // Compute a step for range_query (interval between 2 points in second)

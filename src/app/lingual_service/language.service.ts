@@ -34,7 +34,7 @@ export class LanguageService {
   constructor() { }
 
   get_language(): string {
-    this.language = window.location.pathname.split('/')[1];
+    this.language = window.location.pathname.split('/')[2];
     this.site_language = this.language_list.find(
       f => f.code === this.language
     ).label;

@@ -2,7 +2,7 @@
 <h3 i18n='description graph@@description_graph'>You are currently viewing the data of the <strong>{{group_name}}</strong> group boxes.</h3>
 <div class='container' *ngFor='let query of Object.keys(graphs_records)'>
   <div>
-    <h3>{{query}}</h3>
+    <h3>{{metric_alternative_name[query][_lang]}}</h3>
     <div id='increment' class='time_opt'>
       <!-- increment section -->
       <mat-form-field class='form'>

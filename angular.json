@@ -12,12 +12,12 @@
       "i18n": {
         "sourceLocale": {
           "code": "en",
-          "baseHref": "/en/baggage/"
+          "baseHref": "/baggage/en/"
         },
         "locales": {
           "fr": {
             "translation": "src/multilingual/translation.fr.xlf",
-            "baseHref": "/fr/baggage/"
+            "baseHref": "/baggage/fr/"
           }
         }
       },
@@ -28,7 +28,6 @@
             "allowedCommonJsDependencies":[
               "chart.js"
             ],
-
             "outputPath": "dist/baggage/",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -94,13 +93,13 @@
               "browserTarget": "baggage:build:production"
             },
             "fr": {
-              "baseHref": "/fr/baggage/",
-              "deployUrl": "/fr/baggage/",
+              "baseHref": "/baggage/fr/",
+              "deployUrl": "/baggage/fr/",
               "browserTarget": "baggage:build:fr"
             },
             "en": {
-              "baseHref": "/en/baggage/",
-              "deployUrl": "/en/baggage/",
+              "baseHref": "/baggage/en/",
+              "deployUrl": "/baggage/en/",
               "browserTarget": "baggage:build:en"
             }
           }

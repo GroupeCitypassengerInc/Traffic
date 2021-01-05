@@ -1,46 +1,50 @@
 {
   "Devices_on_lan_gauge": {
-    "human_metric_name_en": "",
-    "human_metric_name_fr": ""
+    "en": "Number of persons on the network",
+    "fr": "Nombre de personne sur le réseau"
   },
   "KVM_files_count": {
-    "human_metric_name_en": "",
-    "human_metric_name_fr": ""
+    "en": "KVM_files_count",
+    "fr": "KVM_files_count"
   },
   "cpustats_cpu_usage_percent": {
-    "human_metric_name_en": "",
-    "human_metric_name_fr": ""
+    "en": "Processor usage (%)",
+    "fr": "Usage du processeur (%)"
   },
   "memstats_memory_usage_percent": {
-    "human_metric_name_en": "",
-    "human_metric_name_fr": ""
+    "en": "Random access memory usage (%)",
+    "fr": "Usage de la mémoire vive (%)"
   },
   "memstats_total_memory_bytes": {
-    "human_metric_name_en": "",
-    "human_metric_name_fr": ""
+    "en": "Total random access memory (byte)",
+    "fr": "Total mémoire vive (octet)"
   },
   "memstats_used_memory_bytes": {
-    "human_metric_name_en": "",
-    "human_metric_name_fr": ""
+    "en": "Used random access memory (byte)",
+    "fr": "Mémoire vive utilisé (octet)"
   },
   "scrape_duration_seconds": {
-    "human_metric_name_en": "",
-    "human_metric_name_fr": ""
+    "en": "scrape_duration_seconds",
+    "fr": "scrape_duration_seconds"
   },
   "scrape_samples_post_metric_relabeling": {
-    "human_metric_name_en": "",
-    "human_metric_name_fr": ""
+    "en": "scrape_samples_post_metric_relabeling",
+    "fr": "scrape_samples_post_metric_relabeling"
   },
   "scrape_samples_scraped": {
-    "human_metric_name_en": "",
-    "human_metric_name_fr": ""
+    "en": "scrape_samples_scraped",
+    "fr": "scrape_samples_scraped"
   },
   "scrape_series_added": {
-    "human_metric_name_en": "",
-    "human_metric_name_fr": ""
+    "en": "scrape_series_added",
+    "fr": "scrape_series_added"
   },
   "up": {
-    "human_metric_name_en": "",
-    "human_metric_name_fr": ""
+    "en": "Device status",
+    "fr": "État de la machine"
+  },
+  "go_goroutines": {
+    "en": "go goroutines en",
+    "fr": "go goroutines fr"
   }
 }

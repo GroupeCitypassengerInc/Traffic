@@ -28,16 +28,7 @@ export class AppComponent implements OnInit {
   auth_status_subscription : Subscription;
   is_dev_mode: boolean = false;
   site_locale: string;
-  language_list = [
-    { 
-      code: 'en', 
-      label: 'English' 
-    },
-    { 
-      code: 'fr', 
-      label: 'Français' 
-    }
-  ];
+  language_list: Array<any>;
 
   constructor(private auth: AuthService, public dialog: MatDialog, private language: LanguageService, private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
     this.matIconRegistry.addSvgIcon(
@@ -51,6 +42,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.language_list = this.language.language_list;
     this.is_dev_mode = isDevMode();
     this.is_logged = this.auth.is_auth;
     this.auth_status_subscription = this.auth.log_status_change.subscribe((status) => {
