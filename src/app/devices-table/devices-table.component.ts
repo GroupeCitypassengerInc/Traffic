@@ -252,7 +252,7 @@ export class DevicesTableComponent implements OnInit {
   get_devices(): void{
     let url = this.base_api_url + '/ws/Map/Devices';
     let headers = new HttpHeaders();
-    //headers = headers.set('Accept-Encoding:', 'application/json');
+    headers = headers.set('Accept-Encoding:', 'application/json');
     this.httpClient.request('GET', url, {headers}).pipe(
       timeout(10000), 
       map(res => {
