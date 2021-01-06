@@ -92,7 +92,7 @@
 
       <trans-unit id="welcome_devices_table" datatype="html">
         <source> Welcome to baggage <x id="INTERPOLATION" equiv-text="{{login_information[&apos;username&apos;]}}"/> !</source>
-        <target>Bienvenue sur Baggage</target>
+        <target>Bienvenue sur Baggage <x id="INTERPOLATION" equiv-text="{{login_information[&apos;username&apos;]}}"/> !</target>
       </trans-unit>
 
       <trans-unit id="log_out_pop_up_title" datatype="html">

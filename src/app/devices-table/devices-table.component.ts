@@ -133,6 +133,7 @@ export class DevicesTableComponent implements OnInit {
     }
     this.columnsToDisplayKeys = this.columnsToDisplay.map(col => col.key);
     console.log(this.columnsToDisplayKeys);
+    console.log(this.login_information['username'])
   }
  
   ngAfterViewInit(): void {
@@ -226,13 +227,12 @@ export class DevicesTableComponent implements OnInit {
 
   Visualize(group_name:any, box_name:string, _box_mode:boolean): void {
     let informations: Array<any> = [];
-    let selected = this.selection;
     let checked;
     if ( _box_mode == false ) {
-      informations.push([group_name, selected.password]);
+      informations.push([group_name, this.password]);
       checked = this.graphs_group_form.value;
     } else {
-      informations.push([group_name, selected.password, box_name,]);
+      informations.push([group_name, this.password, box_name,]);
       checked = this.graphs_box_form.value;
     }
     checked.forEach(metric => {
@@ -293,6 +293,7 @@ export class DevicesTableComponent implements OnInit {
           console.log(response);
           console.log(password);
         }
+        this.password = password;
         this.getRecord(group, password);
       });
     }
