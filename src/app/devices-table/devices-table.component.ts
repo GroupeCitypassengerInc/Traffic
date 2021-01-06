@@ -180,6 +180,7 @@ export class DevicesTableComponent implements OnInit {
   }
 
   getRecord(row:any, password:string): void {
+    console.log('getRecord');
     let selected  = row;
     let api_prometheus : string = '';
 
@@ -214,7 +215,7 @@ export class DevicesTableComponent implements OnInit {
   }
 
   get_group_info(group:any): void {
-    if ( isDevMode ) {
+    if ( isDevMode() ) { //
       this.getRecord(group, '');
     } else {
       this.get_password(group);
@@ -250,7 +251,7 @@ export class DevicesTableComponent implements OnInit {
   get_devices(): void{
     let url = this.base_api_url + '/ws/Map/Devices';
     let headers = new HttpHeaders();
-    if ( isDevMode() ) {
+    if ( !isDevMode() ) {
       headers = headers.set('Accept-Encoding:', 'application/json');
     }
     this.httpClient.request('GET', url, {headers}).pipe(
@@ -273,27 +274,23 @@ export class DevicesTableComponent implements OnInit {
   }
 
   get_password(group): any {
-    
+    console.log('getting paswword');
     let group_id = group['group_id'];
     let box_name = group['box_name']
-      if ( isDevMode() ){
-        console.log('getting paswword');
-      } else {
-        let url = this.base_api_url + '/ws/Group/Info/' + group_id;
-        let headers = new HttpHeaders();
-        headers = headers.set('accept', 'application/json');
-        this.httpClient.request('GET', url, {headers})
-          .toPromise()
-          .then(response => {
-            let password: string = response['group']['ienaDevices'][box_name]['localinterface_passwords']['user'];
-            if ( isDevMode() ) {
-              console.log(response);
-              console.log(password);
-            }
-            this.selection.password = password;
-            this.getRecord(group, password);
-          });
-      }
+    let url = this.base_api_url + '/ws/Group/Info/' + group_id;
+    let headers = new HttpHeaders();
+    headers = headers.set('accept', 'application/json');
+    this.httpClient.request('GET', url, {headers})
+      .toPromise()
+      .then(response => {
+        let password: string = response['group']['ienaDevices'][box_name]['localinterface_passwords']['user'];
+        if ( isDevMode() ) {
+          console.log(response);
+          console.log(password);
+        }
+        this.selection.password = password;
+        this.getRecord(group, password);
+      });
     }
 
   refresh(): void {
