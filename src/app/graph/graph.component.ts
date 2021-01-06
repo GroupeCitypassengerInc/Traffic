@@ -98,8 +98,8 @@ export class GraphComponent implements OnInit {
     if (isDevMode()){
       this.user_role = 'Support'
     } else {
-      this.user_role = this.auth.user_info.role;
       this.auth.is_logged();
+      
     }
   }
   
@@ -107,12 +107,13 @@ export class GraphComponent implements OnInit {
     this.user_info_subscription = this.auth.log_user_info_change.subscribe((user_info:user_informations) => {
       this.user_role = user_info.role;
     });
+    this.user_role = this.auth.user_info.role;
     this._lang = this.lingual.get_language();
-    console.log(this._lang)
     this.default_date.setHours(this.default_date.getHours());
     this.options = this.information.shift();
     this.group_name = this.options[0];
     if ( isDevMode() ) {
+      console.log(this._lang)
       console.log('options');
       console.log(this.options);
     }
@@ -146,6 +147,10 @@ export class GraphComponent implements OnInit {
       this.appRef.detectChanges();
       this.generate_all_graph();
     } 
+  }
+
+  ngOnDestroy(): void {
+    this.user_info_subscription.unsubscribe();
   }
 
   get_records(): void {
@@ -277,7 +282,6 @@ export class GraphComponent implements OnInit {
       extra_label.forEach(element => {
         label = label + ' { ' + element + ': ' + data_to_parse[key]['metric'][element] + ' }';
       });
-      console.log (this.get_random_color_2(instance));
       let dataset;
       dataset = {
         label: label,

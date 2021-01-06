@@ -150,6 +150,10 @@ export class DevicesTableComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
+  ngOnDestroy(): void {
+    this.user_info_subscription.unsubscribe();
+  }
+
   data_formating(): void {
     let index = 0;
     for ( let group of this.JSON_data.groups ) {
@@ -186,7 +190,6 @@ export class DevicesTableComponent implements OnInit {
       }
     });
     this.graphs_available_list_backup = this.graphs_available_list;
-    console.log(this.graphs_available_list_backup)
   }
 
   getRecord(row:any, password:string): void {

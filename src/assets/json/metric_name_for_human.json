@@ -1,53 +1,103 @@
 {
+  "Admin":{
+    "Devices_on_lan_gauge":{
+      "en":"Devices_on_lan_gauge",
+      "fr":"Devices_on_lan_gauge"
+    },
+    "KVM_files_count":{
+      "en":"KVM_files_count",
+      "fr":"KVM_files_count"
+    },
+    "cpustats_cpu_usage_percent":{
+      "en":"cpustats_cpu_usage_percentt",
+      "fr":"cpustats_cpu_usage_percent"
+    },
+    "memstats_memory_usage_percent":{
+      "en":"memstats_memory_usage_percent)",
+      "fr":"memstats_memory_usage_percent"
+    },
+    "memstats_total_memory_bytes":{
+      "en":"memstats_total_memory_bytes",
+      "fr":"memstats_total_memory_bytes"
+    },
+    "memstats_used_memory_bytes":{
+      "en":"memstats_used_memory_bytes",
+      "fr":"memstats_used_memory_bytes"
+    },
+    "scrape_duration_seconds":{
+      "en":"scrape_duration_seconds",
+      "fr":"scrape_duration_seconds"
+    },
+    "scrape_samples_post_metric_relabeling":{
+      "en":"scrape_samples_post_metric_relabeling",
+      "fr":"scrape_samples_post_metric_relabeling"
+    },
+    "scrape_samples_scraped":{
+      "en":"scrape_samples_scraped",
+      "fr":"scrape_samples_scraped"
+    },
+    "scrape_series_added":{
+      "en":"scrape_series_added",
+      "fr":"scrape_series_added"
+    },
+    "up":{
+      "en":"up",
+      "fr":"up"
+    },
+    "go_goroutines":{
+      "en":"go_goroutines",
+      "fr":"go_goroutines"
+    }
+  },
   "Support":{
-     "Devices_on_lan_gauge":{
-        "en":"Devices on lan gauge",
-        "fr":"Devices on lan gauge"
-     },
-     "KVM_files_count":{
-        "en":"KVM files count",
-        "fr":"KVM files count"
-     },
-     "cpustats_cpu_usage_percent":{
-        "en":"cpu usage percent",
-        "fr":"cpu usage percent"
-     },
-     "memstats_memory_usage_percent":{
-        "en":"Random access memory usage (%)",
-        "fr":"Usage de la mémoire vive (%)"
-     },
-     "memstats_total_memory_bytes":{
-        "en":"Total random access memory (byte)",
-        "fr":"Total mémoire vive (octet)"
-     },
-     "memstats_used_memory_bytes":{
-        "en":"Used random access memory (byte)",
-        "fr":"Mémoire vive utilisé (octet)"
-     },
-     "scrape_duration_seconds":{
-        "en":"scrape duration seconds",
-        "fr":"scrape duration seconds"
-     },
-     "scrape_samples_post_metric_relabeling":{
-        "en":"scrape samples post metric relabeling",
-        "fr":"scrape samples post metric relabeling"
-     },
-     "scrape_samples_scraped":{
-        "en":"scrape_samples scraped",
-        "fr":"scrape_samples scraped"
-     },
-     "scrape_series_added":{
-        "en":"scrape series added",
-        "fr":"scrape series added"
-     },
-     "up":{
-        "en":"Device status",
-        "fr":"État de la machine"
-     },
-     "go_goroutines":{
-        "en":"go goroutines en",
-        "fr":"go goroutines fr"
-     }
+    "Devices_on_lan_gauge":{
+      "en":"Number of persons on the network",
+      "fr":"Nombre de personne sur le réseau"
+    },
+    "KVM_files_count":{
+      "en":"count of KVM files",
+      "fr":"nombre de fichier KVM"
+    },
+    "cpustats_cpu_usage_percent":{
+      "en":"cpu usage (%)",
+      "fr":"utilisation du cpu (%)"
+    },
+    "memstats_memory_usage_percent":{
+      "en":"Random access memory usage (%)",
+      "fr":"Usage de la mémoire vive (%)"
+    },
+    "memstats_total_memory_bytes":{
+      "en":"Total random access memory (byte)",
+      "fr":"Total mémoire vive (octet)"
+    },
+    "memstats_used_memory_bytes":{
+      "en":"Used random access memory (byte)",
+      "fr":"Mémoire vive utilisé (octet)"
+    },
+    "scrape_duration_seconds":{
+      "en":"scrape duration (seconds)",
+      "fr":"durée de ramassage (secondes)"
+    },
+    "scrape_samples_post_metric_relabeling":{
+      "en":"scrape samples post metric relabeling",
+      "fr":"nombre de série réétiqueté"
+    },
+    "scrape_samples_scraped":{
+      "en":"scrape samples scraped",
+      "fr":"échantillons prélevés"
+    },
+    "scrape_series_added":{
+      "en":"scrape series added",
+      "fr":"ajout de série"
+    },
+    "up":{
+      "en":"Device status",
+      "fr":"État de la machine"
+    },
+    "go_goroutines":{
+      "en":"go goroutines en",
+      "fr":"go goroutines fr"
+    }
   },
   "User":{
     "Devices_on_lan_gauge":{
@@ -75,10 +125,16 @@
     "up":{
       "en":"Device status",
       "fr":"État de la machine"
+    }
+  },
+  "Commercial ":{
+    "Devices_on_lan_gauge":{
+      "en":"Number of persons on the network",
+      "fr":"Nombre de personne sur le réseau"
     },
-    "go_goroutines":{
-      "en":"go goroutines en (marketing)",
-      "fr":"go goroutines fr (marketing)"
+    "up":{
+      "en":"Device status",
+      "fr":"État de la machine"
     }
   }
 }

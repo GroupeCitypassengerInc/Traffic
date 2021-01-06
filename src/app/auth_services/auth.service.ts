@@ -42,7 +42,7 @@ export class AuthService {
       }
     )).subscribe(response  =>{
       console.log('Login -> ok');
-      console.log(response);
+      //console.log(response);
       let user_info = {
         id : response['id'],
         role : response['role'],
@@ -72,7 +72,7 @@ export class AuthService {
       }
     ),catchError(
       err => {
-        console.log('an errer occured please try again');
+        console.log('an error occured please try again');
         throw err;
       }
     )).subscribe(response  =>{
@@ -100,7 +100,7 @@ export class AuthService {
         throw err;
       }
     )).subscribe(response  =>{
-      console.log(response);
+      //console.log(response);
       if ( response == null ) {
         this.update_log_status(false);
         is_logged = false;
