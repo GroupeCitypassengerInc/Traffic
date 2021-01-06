@@ -218,6 +218,8 @@ export class DevicesTableComponent implements OnInit {
   }
 
   get_group_info(group:any): void {
+    this._disabled_visualize_group_form = true;
+    this._disabled_visualize_group_form = true;
     if ( isDevMode() ) { //
       this.getRecord(group, '');
     } else {
