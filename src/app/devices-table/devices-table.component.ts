@@ -22,12 +22,12 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { FormControl, SelectControlValueAccessor } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { EMPTY, throwError, TimeoutError } from 'rxjs';
+import { EMPTY, throwError, TimeoutError, Subscription } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
-import { catchError, timeout, map } from 'rxjs/operators';
+import { catchError, timeout, map, } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { GraphComponent } from '../graph/graph.component';
-
+import { AuthService } from '../auth_services/auth.service';
 
 export interface box_info {
   No: number, 
@@ -64,14 +64,27 @@ export interface user_informations {
 })
 
 export class DevicesTableComponent implements OnInit {
-  constructor(private httpClient: HttpClient, private _snackBar: MatSnackBar, private language: LanguageService) {
+  constructor(private httpClient: HttpClient, private _snackBar: MatSnackBar, private language: LanguageService, private auth: AuthService) {
+    this.user_info_subscription = this.auth.log_user_info_change.subscribe((user_info:user_informations) => {
+      this.login_information = user_info;
+      this.user_role = user_info.role;
+    });
+    this.site_language = this.language.get_language();
+    if (isDevMode()){
+      this.user_role = 'Support'
+    } else {
+      this.auth.is_logged();
+      this.user_role = this.auth.user_info.role;
+    }
   }
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   site_language: string;
-
+  metric_alternative_name: any = this.language.metric_alternative_name;
+  user_role: string = 'Support';
+  user_info_subscription : Subscription;
   login_information: user_informations;
 
   information_dad: Array<string> = [];
@@ -117,11 +130,6 @@ export class DevicesTableComponent implements OnInit {
   graphs_box_form = new FormControl();
   
   ngOnInit(): void {
-    this.site_language = this.language.get_language();
-
-    if ( isDevMode() ) {
-      console.log(history.state);
-    }
     this.login_information = history.state;
     if ( !isDevMode() ) {
       this.get_devices();
@@ -132,8 +140,6 @@ export class DevicesTableComponent implements OnInit {
       });
     }
     this.columnsToDisplayKeys = this.columnsToDisplay.map(col => col.key);
-    console.log(this.columnsToDisplayKeys);
-    console.log(this.login_information['username'])
   }
  
   ngAfterViewInit(): void {
@@ -175,15 +181,15 @@ export class DevicesTableComponent implements OnInit {
   graph_avialable_catcher(metrics_available): void {
     this.graphs_available_list = [];
     metrics_available.forEach(metric_name => {
-      this.graphs_available_list.push(metric_name);
+      if ( metric_name in this.metric_alternative_name[this.user_role] ){
+        this.graphs_available_list.push(metric_name);
+      }
     });
     this.graphs_available_list_backup = this.graphs_available_list;
+    console.log(this.graphs_available_list_backup)
   }
 
   getRecord(row:any, password:string): void {
-    console.log('getRecord');
-    console.log ('row : ');
-    console.log (row);
     let selected  = row;
     let api_prometheus : string = '';
 
@@ -193,6 +199,7 @@ export class DevicesTableComponent implements OnInit {
       console.log(selected)
       api_prometheus = this.prometheus_api + '/api/v1/label/__name__/values';
     }
+    
     this.graphs_group_form = new FormControl();
     this.graphs_box_form = new FormControl();
     let headers = new HttpHeaders();
@@ -278,18 +285,14 @@ export class DevicesTableComponent implements OnInit {
   }
 
   get_password(group): any {
-    console.log('getting paswword');
     let group_id = group['group_id'];
     let box_name = group['box_name'];
-    console.log('group_id : ' + group_id);
-    console.log('box_name : ' + box_name);
     let url = this.base_api_url + '/ws/Group/Info/' + group_id;
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json');
     this.httpClient.request('GET', url, {headers})
       .toPromise()
       .then(response => {
-        console.log(response);
         let password = response['group']['ienaDevices'][box_name]['localinterface_passwords']['user'];
         if ( isDevMode() ) {
           console.log(response);
@@ -338,6 +341,5 @@ export class DevicesTableComponent implements OnInit {
     } else {
       this._disabled_visualize_group_form = true;
     }
-    console.log(this._disabled_visualize_group_form)
   }
 }

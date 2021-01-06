@@ -18,16 +18,22 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Chart } from 'chart.js';
-import { throwError } from 'rxjs';
+import { throwError, Subscription } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { setPriority } from 'os';
 import { LanguageService } from '../lingual_service/language.service';
+import { AuthService } from '../auth_services/auth.service';
 import * as alternative_metrics_names from '../../assets/json/metric_name_for_human.json';
 
 export interface unit_conversion {
   minute : number,
   hour : number,
   day : number,
+}
+export interface user_informations {
+  id : number,
+  role : string,
+  username : string,
 }
 
 @Component({
@@ -41,9 +47,12 @@ export class GraphComponent implements OnInit {
   @Input() information: Array<string>;
   Object = Object;
 
+  user_role: string;
+  user_info_subscription : Subscription;
+
   query_list: any = [];
   _lang: string;
-  metric_alternative_name: any = (alternative_metrics_names as any).default;
+  metric_alternative_name: any = this.lingual.metric_alternative_name;
 
   // Request : /prometheus/api/v1/query_range?query=up&start=1604584181.313&end=1604670581.313&step=9250
   prometheus_api_url : string = environment.prometheus_base_api_url;
@@ -78,13 +87,26 @@ export class GraphComponent implements OnInit {
   }
   unit_select = new FormControl(false);
 
-  constructor(private appRef: ChangeDetectorRef,  private _formBuilder: FormBuilder, private httpClient: HttpClient, public lingual: LanguageService) {
+  constructor(private appRef: ChangeDetectorRef,  private _formBuilder: FormBuilder, private httpClient: HttpClient, public lingual: LanguageService, private auth: AuthService) {
     this.form_group = this._formBuilder.group({
       default_date: [{ value: '', disabled: true }, Validators.required]
     });
+    this.user_info_subscription = this.auth.log_user_info_change.subscribe((user_info:user_informations) => {
+      this.user_role = user_info.role;
+    });
+    this._lang = this.lingual.get_language();
+    if (isDevMode()){
+      this.user_role = 'Support'
+    } else {
+      this.user_role = this.auth.user_info.role;
+      this.auth.is_logged();
+    }
   }
   
   ngOnInit(): void {
+    this.user_info_subscription = this.auth.log_user_info_change.subscribe((user_info:user_informations) => {
+      this.user_role = user_info.role;
+    });
     this._lang = this.lingual.get_language();
     console.log(this._lang)
     this.default_date.setHours(this.default_date.getHours());
@@ -251,10 +273,7 @@ export class GraphComponent implements OnInit {
       });
       
       let extra_label: Array<string> = this.get_extra_labels(data_to_parse[key]['metric']);
-      let label: string = this.metric_alternative_name[metric][this._lang] + ' { instance: ' + instance + ' }';
-      // if ( isDevMode ) {
-      //   label = metric + ' ';
-      // }
+      let label: string = this.metric_alternative_name[this.user_role][metric][this._lang] + ' { instance: ' + instance + ' }';
       extra_label.forEach(element => {
         label = label + ' { ' + element + ': ' + data_to_parse[key]['metric'][element] + ' }';
       });

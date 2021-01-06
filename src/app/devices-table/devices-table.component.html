@@ -45,7 +45,7 @@
                             (keyup)="filterListCareUnit($event.target.value)">
                         </mat-form-field>
                         <mat-option *ngFor='let graph_available of graphs_available_list' value='{{graph_available}}'>
-                          {{graph_available}}</mat-option>
+                          {{metric_alternative_name[user_role][graph_available][site_language]}}</mat-option>
                       </mat-select>
                     </mat-form-field>
                     <br/><button mat-flat-button [disabled]='_disabled_visualize_group_form' color='primary'
@@ -71,7 +71,7 @@
                             (keyup)="filterListCareUnit($event.target.value)">
                         </mat-form-field>
                         <mat-option *ngFor='let graph_available of graphs_available_list' value='{{graph_available}}'>
-                          {{graph_available}}</mat-option>
+                          {{metric_alternative_name[user_role][graph_available][site_language]}}</mat-option> 
                       </mat-select>
                     </mat-form-field>
                     <br/><button mat-flat-button [disabled]='_disabled_visualize_box_form' color='primary'

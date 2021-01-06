@@ -14,12 +14,12 @@ export interface user_informations {
 @Injectable({
   providedIn: 'root'
 })
-
 export class AuthService {
   is_auth : boolean = false;
   base_api_url : string = environment.city_url_api;
-  user_info : user_informations;
+  public user_info : user_informations;
   log_status_change: Subject<boolean> = new Subject<boolean>();
+  log_user_info_change: Subject<Object> = new Subject<Object>();
 
   constructor(private httpClient: HttpClient, private router: Router) { }
   
@@ -43,11 +43,12 @@ export class AuthService {
     )).subscribe(response  =>{
       console.log('Login -> ok');
       console.log(response);
-      this.user_info = {
+      let user_info = {
         id : response['id'],
         role : response['role'],
         username : response['username']
       };
+      this.update_user_info(user_info);
       this.update_log_status(true);
       this.redirect('/graph');
     });
@@ -82,7 +83,7 @@ export class AuthService {
     return is_logged;
   }
 
-  is_logged(): void {
+  is_logged(): void | boolean {
     let is_logged : boolean = false;
     let logged_api_url = this.base_api_url + '/ws/User/Logged';
     let headers = new HttpHeaders();
@@ -101,18 +102,26 @@ export class AuthService {
     )).subscribe(response  =>{
       console.log(response);
       if ( response == null ) {
+        this.update_log_status(false);
         is_logged = false;
+        this.redirect('/login');
         return is_logged;
       }
-      this.user_info = {
+      let user_info = {
         id : response['id'],
         role : response['role'],
         username : response['username']
       };
+      is_logged = true;
       console.log('Logged ? -> yes');
-      
+      this.update_user_info(user_info);
       this.update_log_status(true);
-      this.redirect('/graph');
+      if (window.location.pathname.split('/')[1] != 'graph'){
+        this.redirect('/graph');
+      } else {
+        is_logged = true;
+        return is_logged;
+      }
     });
   }
 
@@ -123,6 +132,11 @@ export class AuthService {
   update_log_status(status:boolean): void {
     this.is_auth = status;
     this.log_status_change.next(this.is_auth);
+  }
+  
+  update_user_info(user_info:user_informations){
+    this.user_info = user_info;
+    this.log_user_info_change.next(this.user_info);
   }
 }
 

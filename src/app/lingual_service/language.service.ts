@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
+import * as alternative_metrics_names from '../../assets/json/metric_name_for_human.json';
 
 const frenchRangeLabel = (page: number, pageSize: number, length: number) => {
   if (length == 0 || pageSize == 0) { return `0 sur ${length}`; }
@@ -31,6 +32,8 @@ export class LanguageService {
       label: 'Français' 
     }
   ];
+  metric_alternative_name: any = (alternative_metrics_names as any).default;
+
   constructor() { }
 
   get_language(): string {
