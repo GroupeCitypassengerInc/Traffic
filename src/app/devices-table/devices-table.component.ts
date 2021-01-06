@@ -251,7 +251,7 @@ export class DevicesTableComponent implements OnInit {
   get_devices(): void{
     let url = this.base_api_url + '/ws/Map/Devices';
     let headers = new HttpHeaders();
-    if ( !isDevMode() ) {
+    if ( isDevMode() ) {
       headers = headers.set('Accept-Encoding:', 'application/json');
     }
     this.httpClient.request('GET', url, {headers}).pipe(
