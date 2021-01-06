@@ -293,7 +293,6 @@ export class DevicesTableComponent implements OnInit {
           console.log(response);
           console.log(password);
         }
-        this.selection.password = password;
         this.getRecord(group, password);
       });
     }
