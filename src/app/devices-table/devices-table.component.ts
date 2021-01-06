@@ -181,6 +181,8 @@ export class DevicesTableComponent implements OnInit {
 
   getRecord(row:any, password:string): void {
     console.log('getRecord');
+    console.log ('row : ');
+    console.log (row);
     let selected  = row;
     let api_prometheus : string = '';
 
@@ -276,14 +278,17 @@ export class DevicesTableComponent implements OnInit {
   get_password(group): any {
     console.log('getting paswword');
     let group_id = group['group_id'];
-    let box_name = group['box_name']
+    let box_name = group['box_name'];
+    console.log('group_id : ' + group_id);
+    console.log('box_name : ' + box_name);
     let url = this.base_api_url + '/ws/Group/Info/' + group_id;
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json');
     this.httpClient.request('GET', url, {headers})
       .toPromise()
       .then(response => {
-        let password: string = response['group']['ienaDevices'][box_name]['localinterface_passwords']['user'];
+        console.log(response);
+        let password = response['group']['ienaDevices'][box_name]['localinterface_passwords']['user'];
         if ( isDevMode() ) {
           console.log(response);
           console.log(password);
