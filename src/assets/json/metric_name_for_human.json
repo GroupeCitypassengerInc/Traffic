@@ -1,5 +1,13 @@
 {
   "Admin":{
+    "output":{
+      "en":"output",
+      "fr":"output"
+    },
+    "input":{
+      "en":"input",
+      "fr":"input"
+    },
     "Devices_on_lan_gauge":{
       "en":"Devices_on_lan_gauge",
       "fr":"Devices_on_lan_gauge"
@@ -50,6 +58,14 @@
     }
   },
   "Support":{
+    "output":{
+      "en":"output",
+      "fr":"output"
+    },
+    "input":{
+      "en":"input",
+      "fr":"input"
+    },
     "Devices_on_lan_gauge":{
       "en":"Number of persons on the network",
       "fr":"Nombre de personne sur le réseau"
