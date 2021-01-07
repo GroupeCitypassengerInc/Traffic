@@ -220,8 +220,8 @@ export class GraphComponent implements OnInit {
   }
 
   transform_metric_query(metric_name:string, box:string): string{
-    if ( this.box_selected != null ) {
-      metric_name = metric_name + '%7Bjob=~%22' + this.box_selected + '.*%22%7D';
+    if ( box != null ) {
+      metric_name = metric_name + '%7Bjob=~%22' + box + '.*%22%7D';
     }
     let scrape_interval = 2; //scrape interval => 2min
     let range = scrape_interval * 4; //safe 
@@ -240,9 +240,10 @@ export class GraphComponent implements OnInit {
     let end_time = ( timestamp +  this.end_time ) / 1000;
     let step = 10; //max 11 000 pts
     step = this.get_prometheus_step(start_time, end_time);
-
+    
+    let selected_box = this.box_selected
     let raw_metric_name = metric;
-    metric = this.transform_metric_query(metric, this.box_selected);
+    metric = this.transform_metric_query(metric, selected_box);
 
     let query = ''; 
     query = '/query_range?query=' + metric + '&start=' + start_time + '&end=' + end_time + '&step=' + step;
