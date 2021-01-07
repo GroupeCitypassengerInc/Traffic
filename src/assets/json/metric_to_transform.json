@@ -1,6 +1,6 @@
 {
   "range_vectors":{
-    "ouput":"deriv",
+    "output":"deriv",
     "input":"deriv",
     "go_goroutines":"deriv"
   },
