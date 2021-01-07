@@ -18,9 +18,14 @@
         <target>jour</target>
       </trans-unit>
 
-      <trans-unit id="description_graph" datatype="html">
+      <trans-unit id="description_graph_group" datatype="html">
         <source>You are currently viewing the data of the <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{group_name}}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt; "/> group boxes.</source>
         <target>Vous êtes en train de consulter les données des boîtiers du groupe <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{group_name}}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt; "/>  .</target>
+      </trans-unit>
+
+      <trans-unit id="description_graph_box" datatype="html">
+        <source>You are currently viewing the data of  <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{box_selected}}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt; "/> device.</source>
+        <target>Vous êtes en train de consulter les données du boîtier <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{box_selected}}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt; "/>  .</target>
       </trans-unit>
 
       <trans-unit id="hour_unit_time_selection_graph">

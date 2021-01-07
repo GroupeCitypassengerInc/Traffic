@@ -238,9 +238,8 @@ export class GraphComponent implements OnInit {
     const timestamp = currentDate.getTime();
     let start_time = ( timestamp + this.up_start_time ) / 1000;
     let end_time = ( timestamp +  this.end_time ) / 1000;
-    let step = 10; //max 11 000 pts
-    step = this.get_prometheus_step(start_time, end_time);
-    
+    let step = this.get_prometheus_step(start_time, end_time);
+
     let selected_box = this.box_selected
     let raw_metric_name = metric;
     metric = this.transform_metric_query(metric, selected_box);
@@ -300,9 +299,14 @@ export class GraphComponent implements OnInit {
       });
       
       let extra_label: Array<string> = this.get_extra_labels(data_to_parse[key]['metric']);
-      console.log(this.user_role +' '+metric+' '+this._lang);
-      console.log(this.metric_alternative_name);
-      let label: string = this.metric_alternative_name[this.user_role][metric][this._lang] + ' { instance: ' + instance + ' }';
+      //console.log(this.user_role + ' '  +metric + ' ' + this._lang);
+      //console.log(this.metric_alternative_name);
+      let label: string;
+      if (this.box_selected != null){
+        label = this.metric_alternative_name[this.user_role][metric][this._lang]
+      } else {
+        label = this.metric_alternative_name[this.user_role][metric][this._lang] + ' { instance: ' + instance + ' }';
+      }
       extra_label.forEach(element => {
         label = label + ' { ' + element + ': ' + data_to_parse[key]['metric'][element] + ' }';
       });
@@ -353,7 +357,7 @@ export class GraphComponent implements OnInit {
       console.log(step);
     }
     if ( step == 0 ) {
-      step = 1;
+      step = 10;
     }
     return step;
   }
