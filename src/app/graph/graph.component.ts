@@ -218,7 +218,21 @@ export class GraphComponent implements OnInit {
       console.log(this.graphs_records[id]['m_chart'])
     }
   }
-  
+
+  transform_metric_query(metric_name:string, box:string): string{
+    if ( this.box_selected != null ) {
+      metric_name = metric_name + '%7Bjob=~%22' + this.box_selected + '.*%22%7D';
+    }
+    let scrape_interval = 2; //scrape interval => 2min
+    let range = scrape_interval * 4; //safe 
+    if (  metric_name in this.metric_to_transform['range_vectors'] ) {
+      metric_name = this.metric_to_transform['range_vectors'][metric_name] + '(' + metric_name + '[' + range + 'm])';
+    } else if ( metric_name in this.metric_to_transform['instant_vectors'] ) {
+      metric_name = this.metric_to_transform['instant_vectors'][metric_name] + '(' + metric_name + ')';
+    }
+    return metric_name;
+  }
+
   get_metric_from_prometheus(metric:string): void {
     const currentDate = new Date();
     const timestamp = currentDate.getTime();
@@ -226,14 +240,13 @@ export class GraphComponent implements OnInit {
     let end_time = ( timestamp +  this.end_time ) / 1000;
     let step = 10; //max 11 000 pts
     step = this.get_prometheus_step(start_time, end_time);
+
     let raw_metric_name = metric;
-    metric = this.transform_metric_query(metric);
+    metric = this.transform_metric_query(metric, this.box_selected);
+
     let query = ''; 
-    if ( this.box_selected != null ) {
-      query = '/query_range?query=' + metric + '%7Bjob=~%22' + this.box_selected + '.*%22%7D&start=' + start_time + '&end=' + end_time + '&step=' + step;
-    } else {
-      query = '/query_range?query=' + metric + '&start=' + start_time + '&end=' + end_time + '&step=' + step;
-    }
+    query = '/query_range?query=' + metric + '&start=' + start_time + '&end=' + end_time + '&step=' + step;
+
     if ( isDevMode() ) {
       console.log ('dev mode detected');
       this.base_url = '/api/v1';
@@ -344,17 +357,7 @@ export class GraphComponent implements OnInit {
     return step;
   }
 
-  transform_metric_query(metric_name:string): string{
-    let scrape_interval = 2; //scrape interval => 2min
-    let range = scrape_interval * 4; 
-    if (  metric_name in this.metric_to_transform['range_vectors'] ) {
-      metric_name = this.metric_to_transform['range_vectors'][metric_name] + '(' + metric_name + '[' + range + 'm])';
-    } else if ( metric_name in this.metric_to_transform['instant_vectors'] ) {
-      metric_name = this.metric_to_transform['instant_vectors'][metric_name] + '(' + metric_name + ')';
-    }
-    return metric_name;
-  }
-
+  
   
   chart_builder(metric:string, data): Chart {
     if ( isDevMode() ) {
