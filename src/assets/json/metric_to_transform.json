@@ -1,0 +1,10 @@
+{
+  "range_vectors":{
+    "ouput":"deriv",
+    "input":"deriv",
+    "go_goroutines":"deriv"
+  },
+  "instant_vectors":{
+    "example":"example"
+  }
+}

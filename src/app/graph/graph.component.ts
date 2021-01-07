@@ -23,7 +23,7 @@ import { environment } from '../../environments/environment';
 import { setPriority } from 'os';
 import { LanguageService } from '../lingual_service/language.service';
 import { AuthService } from '../auth_services/auth.service';
-import * as alternative_metrics_names from '../../assets/json/metric_name_for_human.json';
+import * as metric_to_transform from '../../assets/json/metric_to_transform.json';
 
 export interface unit_conversion {
   minute : number,
@@ -53,6 +53,7 @@ export class GraphComponent implements OnInit {
   query_list: any = [];
   _lang: string;
   metric_alternative_name: any = this.lingual.metric_alternative_name;
+  metric_to_transform: any = (metric_to_transform as any).default;
 
   // Request : /prometheus/api/v1/query_range?query=up&start=1604584181.313&end=1604670581.313&step=9250
   prometheus_api_url : string = environment.prometheus_base_api_url;
@@ -107,7 +108,12 @@ export class GraphComponent implements OnInit {
     this.user_info_subscription = this.auth.log_user_info_change.subscribe((user_info:user_informations) => {
       this.user_role = user_info.role;
     });
-    this.user_role = this.auth.user_info.role;
+    if (!isDevMode()){
+      this.user_role = this.auth.user_info.role;
+    } else {
+      this.user_role = 'Support';
+    }
+    
     this._lang = this.lingual.get_language();
     this.default_date.setHours(this.default_date.getHours());
     this.options = this.information.shift();
@@ -213,13 +219,15 @@ export class GraphComponent implements OnInit {
     }
   }
   
-  get_metric_from_prometheus( metric:string ): void {
+  get_metric_from_prometheus(metric:string): void {
     const currentDate = new Date();
     const timestamp = currentDate.getTime();
     let start_time = ( timestamp + this.up_start_time ) / 1000;
     let end_time = ( timestamp +  this.end_time ) / 1000;
-    let step = 10; //max 11 000
+    let step = 10; //max 11 000 pts
     step = this.get_prometheus_step(start_time, end_time);
+    let raw_metric_name = metric;
+    metric = this.transform_metric_query(metric);
     let query = ''; 
     if ( this.box_selected != null ) {
       query = '/query_range?query=' + metric + '%7Bjob=~%22' + this.box_selected + '.*%22%7D&start=' + start_time + '&end=' + end_time + '&step=' + step;
@@ -243,8 +251,8 @@ export class GraphComponent implements OnInit {
         if ( response['status'] != 'success' ) {
           throw new Error ('Request to prom : not successful');
         }
-        let parsed_data = this.parse_response(response['data']['result'], metric);
-        this.graphs_records[metric]['m_chart'] = this.chart_builder(metric, parsed_data);
+        let parsed_data = this.parse_response(response['data']['result'], raw_metric_name);
+        this.graphs_records[raw_metric_name]['m_chart'] = this.chart_builder(raw_metric_name, parsed_data);
       });
   }
 
@@ -278,6 +286,8 @@ export class GraphComponent implements OnInit {
       });
       
       let extra_label: Array<string> = this.get_extra_labels(data_to_parse[key]['metric']);
+      console.log(this.user_role +' '+metric+' '+this._lang);
+      console.log(this.metric_alternative_name);
       let label: string = this.metric_alternative_name[this.user_role][metric][this._lang] + ' { instance: ' + instance + ' }';
       extra_label.forEach(element => {
         label = label + ' { ' + element + ': ' + data_to_parse[key]['metric'][element] + ' }';
@@ -333,6 +343,18 @@ export class GraphComponent implements OnInit {
     }
     return step;
   }
+
+  transform_metric_query(metric_name:string): string{
+    let scrape_interval = 2; //scrape interval => 2min
+    let range = scrape_interval * 4; 
+    if (  metric_name in this.metric_to_transform['range_vectors'] ) {
+      metric_name = this.metric_to_transform['range_vectors'][metric_name] + '(' + metric_name + '[' + range + 'm])';
+    } else if ( metric_name in this.metric_to_transform['instant_vectors'] ) {
+      metric_name = this.metric_to_transform['instant_vectors'][metric_name] + '(' + metric_name + ')';
+    }
+    return metric_name;
+  }
+
   
   chart_builder(metric:string, data): Chart {
     if ( isDevMode() ) {
