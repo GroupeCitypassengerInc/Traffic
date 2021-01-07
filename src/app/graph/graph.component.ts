@@ -220,17 +220,18 @@ export class GraphComponent implements OnInit {
   }
 
   transform_metric_query(metric_name:string, box:string): string{
+    let query: string = metric_name;
     if ( box != null ) {
-      metric_name = metric_name + '%7Bjob=~%22' + box + '.*%22%7D';
+      query = metric_name + '%7Bjob=~%22' + box + '.*%22%7D';
     }
     let scrape_interval = 2; //scrape interval => 2min
     let range = scrape_interval * 4; //safe 
     if (  metric_name in this.metric_to_transform['range_vectors'] ) {
-      metric_name = this.metric_to_transform['range_vectors'][metric_name] + '(' + metric_name + '[' + range + 'm])';
+      query = this.metric_to_transform['range_vectors'][metric_name] + '(' + query + '[' + range + 'm])';
     } else if ( metric_name in this.metric_to_transform['instant_vectors'] ) {
-      metric_name = this.metric_to_transform['instant_vectors'][metric_name] + '(' + metric_name + ')';
+      query = this.metric_to_transform['instant_vectors'][metric_name] + '(' + query + ')';
     }
-    return metric_name;
+    return query;
   }
 
   get_metric_from_prometheus(metric:string): void {
@@ -361,8 +362,6 @@ export class GraphComponent implements OnInit {
     }
     return step;
   }
-
-  
   
   chart_builder(metric:string, data): Chart {
     if ( isDevMode() ) {
@@ -482,5 +481,9 @@ export class GraphComponent implements OnInit {
     this.up_start_time = this.default_up_start_time;
     this.end_time = this.default_end_time;
     this.regenerate(query);
+  }
+
+  hide_lines(metric:string): void {
+    console.log(this.graphs_records[metric]['m_chart']);
   }
 }

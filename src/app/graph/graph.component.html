@@ -1,6 +1,6 @@
 <h2 i18n='title Graph@@Title_graph'>Graphs</h2>
-<h3 *ngIf=' box_selected == null 'i18n='description graph group@@description_graph_group'>You are currently viewing the data of the <strong>{{group_name}}</strong> group boxes.</h3>
-<h3 *ngIf=' box_selected != null ' i18n='description graph box@@description_graph_box'>You are currently viewing the data of <strong>{{box_selected}}</strong> device.</h3>
+<h4 *ngIf=' box_selected == null 'i18n='description graph group@@description_graph_group'>You are currently viewing the data of the <strong>{{group_name}}</strong> group boxes.</h4>
+<h4 *ngIf=' box_selected != null ' i18n='description graph box@@description_graph_box'>You are currently viewing the data of <strong>{{box_selected}}</strong> device.</h4>
 <div class='container' *ngFor='let query of Object.keys(graphs_records)'>
   <div>
     <h3>{{metric_alternative_name[user_role][query][_lang]}}</h3>
@@ -50,6 +50,11 @@
       <!-- Reset -->
       <button mat-button i18n-matTooltip='tooltip restore default|tooltip of button which restore default settings@@tooltip_restore_default_time_selection_graph' matTooltip='Restore default values' class='icon_button' (click)='set_default_settings(query)'>
         <mat-icon>cached</mat-icon>
+      </button>
+
+      <!-- Reset -->
+      <button *ngIf='false' mat-button  matTooltip='Restore default values' class='icon_button' (click)='hide_lines(query)'>
+        <mat-icon>visibility_off</mat-icon>
       </button>
     </div>
   </div>
