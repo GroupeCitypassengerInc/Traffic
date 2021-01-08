@@ -514,6 +514,9 @@ export class GraphComponent implements OnInit {
   set_default_settings(query:string): void {
     this.up_start_time = this.default_up_start_time;
     this.end_time = this.default_end_time;
+    this.graphs_records[query]["t_value"] = this.default_value;
+    this.graphs_records[query]["t_unit"] = 'hour';
+    this.graphs_records[query]["t_now"] = true;
     this.regenerate(query);
   }
 

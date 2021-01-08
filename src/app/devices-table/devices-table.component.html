@@ -1,4 +1,4 @@
-<div class='content'>
+<div class='content mat-app-background'>
   <h3 i18n='welcome text|welcome text device table component@@welcome_devices_table'>
     Welcome to baggage {{login_information['username']}} !</h3>
   <h5 style='max-width: 60%;' i18n='short description@@short_description_devices_table'>
@@ -48,7 +48,7 @@
                           {{metric_alternative_name[user_role][graph_available][site_language]}}</mat-option>
                       </mat-select>
                     </mat-form-field>
-                    <br/><button mat-flat-button [disabled]='_disabled_visualize_group_form' color='primary'
+                    <br /><button mat-flat-button [disabled]='_disabled_visualize_group_form' color='primary'
                       (click)='Visualize(box["group_name"], box["box_name"], false)' class='visualize_btn'
                       i18n='text visualize button|text used in visualize button in devices table@@button_visualize_devices_table'>Visualize</button>
                   </md-content>
@@ -71,10 +71,10 @@
                             (keyup)="filterListCareUnit($event.target.value)">
                         </mat-form-field>
                         <mat-option *ngFor='let graph_available of graphs_available_list' value='{{graph_available}}'>
-                          {{metric_alternative_name[user_role][graph_available][site_language]}}</mat-option> 
+                          {{metric_alternative_name[user_role][graph_available][site_language]}}</mat-option>
                       </mat-select>
                     </mat-form-field>
-                    <br/><button mat-flat-button [disabled]='_disabled_visualize_box_form' color='primary'
+                    <br /><button mat-flat-button [disabled]='_disabled_visualize_box_form' color='primary'
                       (click)='Visualize(box["group_name"], box["box_name"], true)' class='visualize_btn'
                       i18n='text visualize button|text used in visualize button in devices table@@button_visualize_devices_table'>Visualize</button>
                   </md-content>
@@ -86,9 +86,9 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef='columnsToDisplayKeys'></tr>
-      <tr mat-row *matRowDef='let box; columns: columnsToDisplayKeys;' class='element-row'
-        [class.expanded-row]='expandedElement === box' (click)='expandedElement = expandedElement === box ? null : box '
-        (click)='get_group_info(box)'>
+      <tr mat-row *matRowDef='let box; columns: columnsToDisplayKeys;' [class.element-row-dark]='_is_dark_mode_enabled'
+        [class.element-row]='!_is_dark_mode_enabled' [class.expanded-row]='expandedElement === box'
+        (click)='expandedElement = expandedElement === box ? null : box ' (click)='get_group_info(box)'>
       </tr>
       <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class='detail-row'></tr>
     </table>

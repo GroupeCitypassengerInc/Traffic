@@ -7,6 +7,7 @@ import { DevicesTableComponent } from './devices-table/devices-table.component';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
+import { OverlayModule} from '@angular/cdk/overlay';
 import { throwError, TimeoutError } from 'rxjs';
 import { catchError, timeout, map } from 'rxjs/operators';
 import { SpinnerComponent } from './spinner/spinner.component';
@@ -84,6 +85,7 @@ import { NotificationComponent } from './notification/notification.component';
     MatSlideToggleModule,
     MatMenuModule,
     AppRoutingModule,
+    OverlayModule,
   ],
   exports:[
 

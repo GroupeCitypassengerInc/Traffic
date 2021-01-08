@@ -1,10 +1,11 @@
-import { Component, Output, EventEmitter, HostListener, OnInit, Inject, isDevMode } from '@angular/core';
+import { Component, Output, EventEmitter, HostListener, OnInit, Inject, isDevMode, HostBinding  } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { GraphComponent } from './graph/graph.component';
 import { LoaderService } from './loader/loader.service';
 import { environment } from '../environments/environment';
 import { AuthService } from './auth_services/auth.service';
 import { LanguageService } from './lingual_service/language.service'
+import { ThemeHandlerService } from './theme_handler/theme-handler.service'
 import { Observable, Subject, Subscription } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -14,8 +15,10 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { LogOutDialogComponent } from './dialog/log-out-dialog/log-out-dialog.component';
 import { NotificationServiceService } from './notification/notification-service.service'
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-root',
@@ -28,8 +31,10 @@ export class AppComponent implements OnInit {
   currentApplicationVersion = environment.appVersion;
   auth_status_subscription : Subscription;
   is_dev_mode: boolean = false;
+  is_dark_mode_enabled: boolean = false;
   site_locale: string;
   language_list: Array<any>;
+  _theme: string;
 
   constructor(
     private auth: AuthService, 
@@ -37,8 +42,9 @@ export class AppComponent implements OnInit {
     private language: LanguageService, 
     private matIconRegistry: MatIconRegistry, 
     private domSanitizer: DomSanitizer,
-    private notification_service: NotificationServiceService
-    ) {
+    public overlayContainer: OverlayContainer,
+    public theme_handler: ThemeHandlerService
+  ) {    
     this.matIconRegistry.addSvgIcon(
       'fr_flag',
       this.domSanitizer.bypassSecurityTrustResourceUrl('assets/images/fr.svg')
@@ -57,23 +63,36 @@ export class AppComponent implements OnInit {
       this.is_logged = status;
     });
     this.site_locale = this.language.get_language();
+
+    this._theme = localStorage.getItem('theme');
+    this.is_dark_mode_enabled = this._theme === 'Dark' ? true : false;
+    this.theme_handler.update_theme(this._theme);
+    if ( !this.is_dark_mode_enabled ) {
+      this.overlayContainer.getContainerElement().classList.remove('dark-theme-mode');
+    } else {
+      this.overlayContainer.getContainerElement().classList.add('dark-theme-mode');
+    }
+    
   }
 
   ngOnDestroy(): void {
     this.auth_status_subscription.unsubscribe();
   }
 
-  logout() {
+  logout(): void  {
     const dialogRef = this.dialog.open(LogOutDialogComponent)
-
     dialogRef.afterClosed().subscribe(result => {
-      //console.log('The dialog was closed');
     });
   }
 
-  devLogin(): void {
-    if ( isDevMode() ) {
-      this.auth.update_log_status(true);
+  store_theme_selection(): void  {
+    localStorage.setItem('theme', this.is_dark_mode_enabled ? 'Dark' : 'Light');
+    this._theme = this.is_dark_mode_enabled === true ? 'Dark' : 'Light';
+    if ( !this.is_dark_mode_enabled ) {
+      this.overlayContainer.getContainerElement().classList.remove('dark-theme-mode');
+    } else {
+      this.overlayContainer.getContainerElement().classList.add('dark-theme-mode');
     }
+    this.theme_handler.update_theme(this._theme);
   }
 }

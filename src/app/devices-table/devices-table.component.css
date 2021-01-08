@@ -40,7 +40,6 @@ table {
   background: #8094fb;
 }
 
-
 tr.detail-row {
   height: 0;
 }
@@ -48,6 +47,11 @@ tr.detail-row {
 tr.element-row:not(.expanded-row):hover {
   background: whitesmoke;
 }
+
+tr.element-row-dark:not(.expanded-row):hover {
+  background: #565656;
+}
+
 
 tr.element-row:not(.expanded-row):active {
   background: #efefef;

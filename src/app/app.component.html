@@ -1,57 +1,71 @@
 <!-- Vert: #a3c037 | Bleu: #39499c -->
-<app-spinner></app-spinner>
+<div class="app-frame mat-app-background">
+  <app-spinner></app-spinner>
 
-<head>
-</head>
+  <head>
+  </head>
 
-<body>
-  <header style='color:#fefefe'>
-    <!-- Toolbar -->
-    <mat-toolbar color='primary'>
-      <mat-toolbar-row>
-        <span>
-          Baggage
-          <mat-icon style='vertical-align: middle;'>work</mat-icon>
-        </span>
-        <span class='spacer'></span>
+  <body class='mat-app-background' [ngClass]='{"dark-theme-mode":is_dark_mode_enabled}'>
+    <header style='color:#fefefe'>
+      <!-- Toolbar -->
+      <mat-toolbar color='primary'>
+        <mat-toolbar-row>
+          <span>
+            Baggage
+            <mat-icon style='vertical-align: middle;'>work</mat-icon>
+          </span>
+          <span class='spacer'></span>
 
-        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-          <mat-icon>menu</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
-          <div>
-            <a href="/baggage/en/graph">
-              <button mat-menu-item *ngIf='(site_locale == "fr")'>
-                <mat-icon svgIcon='gb_flag'></mat-icon>
-                <span>Basculez en anglais</span>
-              </button>
-            </a>
-            <a href="/baggage/fr/graph">
-              <button mat-menu-item *ngIf='(site_locale == "en")'>
-                <mat-icon svgIcon='fr_flag'></mat-icon>
-                <span>Switch to French</span>
-              </button>
-            </a>
-          </div>
-          <button mat-menu-item i18n-matTooltip='Logout matTooltip|text wich discribe the Logout button@@logout_tooltip' *ngIf='is_logged;' (click)='logout()'>
-            <mat-icon>exit_to_app</mat-icon>
-            <span i18n='log out button|log out button stored in navbar menu@@log_out_button'>Log out</span>
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+            <mat-icon>menu</mat-icon>
           </button>
-        </mat-menu>
 
-        <button mat-icon-button *ngIf='is_dev_mode;' (click)='devLogin()'>
-          <mat-icon>campaign</mat-icon>
-        </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <mat-icon *ngIf='is_dark_mode_enabled'>bedtime</mat-icon>
+              <mat-icon *ngIf='!is_dark_mode_enabled'>wb_sunny</mat-icon>
+              <span *ngIf='!is_dark_mode_enabled'>Switch off the lights</span>
+              <span *ngIf='is_dark_mode_enabled'>Switch on the lights</span>
+              <span style='align-self: normal;'>
+                <mat-slide-toggle color='warn' labelPosition='before' [(ngModel)]='is_dark_mode_enabled'
+                  (change)='store_theme_selection()'>
+                </mat-slide-toggle>
+              </span>
+            </button>
 
-        {{currentApplicationVersion}}
-      </mat-toolbar-row>
-    </mat-toolbar>
-  </header>
+            <div>
+              <a href="/baggage/en/graph">
+                <button mat-menu-item *ngIf='(site_locale == "fr")'>
+                  <mat-icon svgIcon='gb_flag'></mat-icon>
+                  <span>Basculez en anglais</span>
+                </button>
+              </a>
+              <a href="/baggage/fr/graph">
+                <button mat-menu-item *ngIf='(site_locale == "en")'>
+                  <mat-icon svgIcon='fr_flag'></mat-icon>
+                  <span>Switch to French</span>
+                </button>
+              </a>
+            </div>
 
-  <!-- component -->
-  <router-outlet>
-  </router-outlet>
-</body>
+            <button mat-menu-item
+              i18n-matTooltip='Logout matTooltip|text wich discribe the Logout button@@logout_tooltip'
+              *ngIf='is_logged;' (click)='logout()'>
+              <mat-icon>exit_to_app</mat-icon>
+              <span i18n='log out button|log out button stored in navbar menu@@log_out_button'>Log out</span>
+            </button>
+          </mat-menu>
 
-<footer>
-</footer>
+          {{currentApplicationVersion}}
+        </mat-toolbar-row>
+      </mat-toolbar>
+    </header>
+
+    <!-- component -->
+    <router-outlet class="app-frame">
+    </router-outlet>
+  </body>
+
+  <footer>
+  </footer>
+</div>

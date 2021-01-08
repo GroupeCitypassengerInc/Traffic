@@ -28,6 +28,7 @@ import { catchError, timeout, map, } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { GraphComponent } from '../graph/graph.component';
 import { AuthService } from '../auth_services/auth.service';
+import { ThemeHandlerService } from '../theme_handler/theme-handler.service'
 
 export interface box_info {
   No: number, 
@@ -64,7 +65,12 @@ export interface user_informations {
 })
 
 export class DevicesTableComponent implements OnInit {
-  constructor(private httpClient: HttpClient, private _snackBar: MatSnackBar, private language: LanguageService, private auth: AuthService) {
+  constructor(
+    private httpClient: HttpClient,
+    private language: LanguageService, 
+    private auth: AuthService,
+    public theme_handler: ThemeHandlerService
+  ) {
     this.user_info_subscription = this.auth.log_user_info_change.subscribe((user_info:user_informations) => {
       this.login_information = user_info;
       this.user_role = user_info.role;
@@ -80,12 +86,14 @@ export class DevicesTableComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-
+  
   site_language: string;
   metric_alternative_name: any = this.language.metric_alternative_name;
   user_role: string = 'Support';
   user_info_subscription : Subscription;
   login_information: user_informations;
+  _is_dark_mode_enabled: boolean;
+  theme_subscription : Subscription;
 
   information_dad: Array<string> = [];
   _show_graph: boolean = false;
@@ -124,12 +132,16 @@ export class DevicesTableComponent implements OnInit {
   http_request_ok: boolean = false
   option: 'group'|'box' = "group";
   password: string = '';
-
+  
   dataSource = new MatTableDataSource(this.BOX_DATA);
   graphs_group_form = new FormControl();
   graphs_box_form = new FormControl();
   
   ngOnInit(): void {
+    this._is_dark_mode_enabled = localStorage.getItem('theme') === 'Dark' ? true : false;
+    this.theme_subscription = this.theme_handler.theme_changes.subscribe((theme) => {
+      this._is_dark_mode_enabled = theme === 'Dark' ? true : false;
+    });
     this.login_information = history.state;
     if ( !isDevMode() ) {
       this.get_devices();
@@ -152,6 +164,7 @@ export class DevicesTableComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.user_info_subscription.unsubscribe();
+    this.theme_subscription.unsubscribe();
   }
 
   data_formating(): void {

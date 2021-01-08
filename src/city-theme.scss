@@ -68,18 +68,44 @@ $md-citygreen: (
   )
 );
 
-$city-baggage-theme-primary: mat-palette($md-cityblue, 500);
-$city-baggage-theme-secondary: mat-palette($md-citygreen, 500);
-$city-baggage-theme-warn: mat-palette($md-cityblue, A500);
-$city-baggage-theme-accent: mat-palette($md-cityblue, A500);
+// light theme
+$city-baggage-light-theme-primary: mat-palette($md-cityblue);
+$city-baggage-light-theme-secondary: mat-palette($md-citygreen);
+$city-baggage-light-theme-warn: mat-palette($md-cityblue);
+$city-baggage-light-theme-accent: mat-palette($md-cityblue);
+//$city-baggage-light-theme: mat-light-theme($city-baggage-light-theme-primary, $city-baggage-light-theme-accent, $city-baggage-light-theme-warn);
 
-$city-baggage-theme: mat-light-theme((
+$city-baggage-light-theme: mat-light-theme((
   color: (
-    primary: $city-baggage-theme-primary,
-    accent: $city-baggage-theme-accent,
-    warn: $city-baggage-theme-warn,  
-    secondary: $city-baggage-theme-secondary,
+    primary: $city-baggage-light-theme-primary,
+    secondary: $city-baggage-light-theme-secondary,
+    warn: $city-baggage-light-theme-warn, 
+    accent: $city-baggage-light-theme-accent
+  )
+));
+@include angular-material-theme($city-baggage-light-theme);
+
+.light-theme-mode {
+  @include angular-material-theme($city-baggage-light-theme);
+}
+
+// dark theme
+$city-baggage-dark-theme-primary: mat-palette($md-cityblue, 500);
+$city-baggage-dark-theme-secondary: mat-palette($md-citygreen, 500);
+$city-baggage-dark-theme-warn: mat-palette($md-cityblue, 400);
+$city-baggage-dark-theme-accent: mat-palette($md-cityblue, A500);
+
+
+$city-baggage-dark-theme: mat-dark-theme((
+  color: (
+    primary: $city-baggage-dark-theme-primary,
+    secondary: $city-baggage-dark-theme-secondary,
+    warn: $city-baggage-dark-theme-warn,  
+    accent: $city-baggage-dark-theme-accent,
   )
 ));
 
-@include angular-material-theme($city-baggage-theme);
+.dark-theme-mode {
+  @include angular-material-theme($city-baggage-dark-theme);
+  
+}

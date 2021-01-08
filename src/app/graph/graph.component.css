@@ -61,3 +61,6 @@ input::-webkit-inner-spin-button {
 #datetime {
   width: 100%;
 }
+tr.mat-row:hover {
+  background-color: yellow;
+}
