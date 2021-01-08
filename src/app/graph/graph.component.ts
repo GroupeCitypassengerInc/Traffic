@@ -23,6 +23,7 @@ import { environment } from '../../environments/environment';
 import { setPriority } from 'os';
 import { LanguageService } from '../lingual_service/language.service';
 import { AuthService } from '../auth_services/auth.service';
+import { NotificationServiceService } from '../notification/notification-service.service'
 import * as metric_to_transform from '../../assets/json/metric_to_transform.json';
 
 export interface unit_conversion {
@@ -75,7 +76,7 @@ export class GraphComponent implements OnInit {
   default_date: Date = new Date();
 
   _step: number = 1;
-  _min: number = 0;
+  _min: number = 1;
   _max: number = Infinity;
   _wrap: boolean = true;
   _now: boolean = true;
@@ -88,19 +89,27 @@ export class GraphComponent implements OnInit {
   }
   unit_select = new FormControl(false);
 
-  constructor(private appRef: ChangeDetectorRef,  private _formBuilder: FormBuilder, private httpClient: HttpClient, public lingual: LanguageService, private auth: AuthService) {
+  constructor(private appRef: ChangeDetectorRef,  
+    private _formBuilder: FormBuilder, 
+    private httpClient: HttpClient, 
+    public lingual: LanguageService, 
+    private auth: AuthService,
+    private notification: NotificationServiceService
+  ) {
     this.form_group = this._formBuilder.group({
       default_date: [{ value: '', disabled: true }, Validators.required]
     });
+
     this.user_info_subscription = this.auth.log_user_info_change.subscribe((user_info:user_informations) => {
       this.user_role = user_info.role;
     });
+
     this._lang = this.lingual.get_language();
+
     if (isDevMode()){
       this.user_role = 'Support'
     } else {
       this.auth.is_logged();
-      
     }
   }
   
@@ -238,7 +247,8 @@ export class GraphComponent implements OnInit {
     const currentDate = new Date();
     const timestamp = currentDate.getTime();
     let start_time = ( timestamp + this.up_start_time ) / 1000;
-    let end_time = ( timestamp +  this.end_time ) / 1000;
+    let end_time = ( timestamp + this.end_time ) / 1000;
+    console.log(end_time + ' ' + start_time)
     let step = this.get_prometheus_step(start_time, end_time);
 
     let selected_box = this.box_selected
@@ -261,8 +271,8 @@ export class GraphComponent implements OnInit {
         if ( isDevMode() ) {
           console.log(response);
         }
-        
         if ( response['status'] != 'success' ) {
+          this.notification.show_notification('An error occurred while communicating with prometheus.','Close','error');
           throw new Error ('Request to prom : not successful');
         }
         let parsed_data = this.parse_response(response['data']['result'], raw_metric_name);
@@ -300,8 +310,6 @@ export class GraphComponent implements OnInit {
       });
       
       let extra_label: Array<string> = this.get_extra_labels(data_to_parse[key]['metric']);
-      //console.log(this.user_role + ' '  +metric + ' ' + this._lang);
-      //console.log(this.metric_alternative_name);
       let label: string;
       if (this.box_selected != null){
         label = this.metric_alternative_name[this.user_role][metric][this._lang]
@@ -316,7 +324,7 @@ export class GraphComponent implements OnInit {
         label: label,
         data: metric_value_list,
         pointRadius: 1,
-        borderColor : this.get_random_color()
+        borderColor : this.get_random_color(),
       };
       datasets.push(dataset);
     }
@@ -358,8 +366,9 @@ export class GraphComponent implements OnInit {
       console.log(step);
     }
     if ( step == 0 ) {
-      step = 10;
+      step = 50;
     }
+    
     return step;
   }
   
@@ -372,12 +381,17 @@ export class GraphComponent implements OnInit {
     if ( ctx === null ) {
       throw new Error('An error as occured. Can\'t get id ok : ' + metric);
     }
+    let tension = 0;
+    if (  metric in this.metric_to_transform['tension'] ) {
+      tension = this.metric_to_transform['tension'][metric];
+    }
+    console.log(tension)
     var chart = new Chart(ctx, {
       type: 'line',
       data: data,
       options: {
         responsive : true,
-        tension : 0,
+        tension : tension,
         animation: {
           duration: 1
         }, 
@@ -420,7 +434,7 @@ export class GraphComponent implements OnInit {
     }
     if ( inputValue < this._min ) {
       if ( this._max === Infinity ) {
-        return 0;
+        return this._min;
       }
       return this._max + inputValue;
     }
@@ -441,24 +455,44 @@ export class GraphComponent implements OnInit {
     this.regenerate(query);
   }
 
-  date_changes(date): void {
+  date_changes(date: Date): void {
     let query = Object.keys(date).toString();
     this.default_date = new Date();
     let current_timestamp = this.default_date.getTime();
     let selected_date_timestamp = date[query].getTime();
+
     this.end_time = (current_timestamp - selected_date_timestamp) * -1;
+
     let t_value = this.graphs_records[query]['t_value'];
     let t_unit = this.graphs_records[query]['t_unit'];
+
     this.up_start_time = -1 * t_value * this._unit[t_unit] + this.end_time;
-    this.regenerate(query);
-    if ( this.end_time < this.up_start_time ) {
+
+    if ( current_timestamp < selected_date_timestamp ) {
       this.end_time = 0;
-      throw new Error('the selected date must not be in the future. Selected date : ' + date[query].toTimeString() );
-    } else {
-      this.regenerate(query);
+      this.up_start_time = -1 * t_value * this._unit[t_unit]
+
+      if ( this._lang == 'fr' ) {
+        this.notification.show_notification(
+          'La date choisie ne doit pas se situer dans le futur. Date sélectionnée : ' 
+          + date[query].toLocaleDateString('fr-FR') + ' ' 
+          + date[query].toLocaleTimeString('fr-FR'), 
+          'Ok', 
+          'error'
+        );
+      } else {
+        this.notification.show_notification(
+          'The selected date must not be in the future. Selected date : ' 
+          + date[query].toLocaleDateString('en-US') + ' ' 
+          + date[query].toLocaleTimeString('en-US'), 
+          'Ok', 
+          'error'
+        );
+      }
     }
+    this.regenerate(query);
   }
-  
+
   shouldDisableDecrement(inputValue: number): boolean {
     return !this._wrap && inputValue <= this._min;
   }
@@ -467,11 +501,11 @@ export class GraphComponent implements OnInit {
     return !this._wrap && inputValue >= this._max;
   }
 
-  on_checkbox_change($event:Event, query:string): void {
+  on_slide_toggle_change($event:Event, query:string): void {
     if ( $event['checked'] ) {
       let t_value = this.graphs_records[query]['t_value'];
       let t_unit = this.graphs_records[query]['t_unit'];
-      this.up_start_time = -1 * t_value * this._unit[t_unit] + this.end_time;
+      this.up_start_time = -1 * t_value * this._unit[t_unit];
       this.end_time = 0;
       this.regenerate(query);
     }
@@ -484,6 +518,15 @@ export class GraphComponent implements OnInit {
   }
 
   hide_lines(metric:string): void {
-    console.log(this.graphs_records[metric]['m_chart']);
+    console.log(this.graphs_records[metric]['m_chart']['data']);
+    console.log(this.graphs_records[metric]['m_chart']['options']);
+    Object.entries(this.graphs_records[metric]['m_chart']['data']).forEach(
+      ([key, value]) => console.log(value)
+    );
+    this.graphs_records[metric]['m_chart'].render();
+  }
+
+  chart_update(metric:string): void {
+    this.graphs_records[metric]['m_chart'].update();
   }
 }

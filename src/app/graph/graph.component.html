@@ -45,11 +45,14 @@
       <!-- Now slide toggle -->
       <!-- The value is updating correctly BUT w/o visual changes (still unchecked) -->
       <mat-slide-toggle [(ngModel)]='graphs_records[query]["t_now"]' class='form_text'
-        (change)='on_checkbox_change($event, query)' color="primary" i18n='"now" text|"now" text in time range selection@@text_now_time_selection_graph'>Now</mat-slide-toggle>
+        (change)='on_slide_toggle_change($event, query)' color="primary" i18n='"now" text|"now" text in time range selection@@text_now_time_selection_graph'>Now</mat-slide-toggle>
 
       <!-- Reset -->
       <button mat-button i18n-matTooltip='tooltip restore default|tooltip of button which restore default settings@@tooltip_restore_default_time_selection_graph' matTooltip='Restore default values' class='icon_button' (click)='set_default_settings(query)'>
-        <mat-icon>cached</mat-icon>
+        <mat-icon>restore</mat-icon>
+      </button>
+      <button  *ngIf='false' mat-button i18n-matTooltip='@@' matTooltip='Refresh' class='icon_button' (click)='chart_update(query)'>
+        <mat-icon>update</mat-icon>
       </button>
 
       <!-- Reset -->
@@ -58,7 +61,6 @@
       </button>
     </div>
   </div>
-
   <div class='graph'>
     <canvas class='graph' id={{query}} width="4" height="1"></canvas>
   </div>

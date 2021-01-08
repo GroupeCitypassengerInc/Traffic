@@ -5,6 +5,10 @@
     "go_goroutines":"deriv"
   },
   "instant_vectors":{
-    "example":"example"
+  },
+  "tension":{
+    "output":0.5,
+    "input":0.5,
+    "go_goroutines":1
   }
 }

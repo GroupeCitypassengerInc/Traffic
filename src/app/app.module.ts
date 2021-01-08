@@ -40,6 +40,7 @@ import { InterceptorService } from './loader/interceptor.service';
 import { AuthService } from './auth_services/auth.service';
 import { GuardService } from './auth_services/guard.service';
 import { LogOutDialogComponent } from './dialog/log-out-dialog/log-out-dialog.component';
+import { NotificationComponent } from './notification/notification.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { LogOutDialogComponent } from './dialog/log-out-dialog/log-out-dialog.co
     LoginComponent,
     routingComponents,
     LogOutDialogComponent,
+    NotificationComponent,
   ],
   imports: [
     BrowserModule,

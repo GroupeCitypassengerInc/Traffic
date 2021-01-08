@@ -15,6 +15,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { LogOutDialogComponent } from './dialog/log-out-dialog/log-out-dialog.component';
+import { NotificationServiceService } from './notification/notification-service.service'
 
 @Component({
   selector: 'app-root',
@@ -30,7 +31,14 @@ export class AppComponent implements OnInit {
   site_locale: string;
   language_list: Array<any>;
 
-  constructor(private auth: AuthService, public dialog: MatDialog, private language: LanguageService, private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
+  constructor(
+    private auth: AuthService, 
+    public dialog: MatDialog, 
+    private language: LanguageService, 
+    private matIconRegistry: MatIconRegistry, 
+    private domSanitizer: DomSanitizer,
+    private notification_service: NotificationServiceService
+    ) {
     this.matIconRegistry.addSvgIcon(
       'fr_flag',
       this.domSanitizer.bypassSecurityTrustResourceUrl('assets/images/fr.svg')
