@@ -5,6 +5,7 @@
 .container {
   margin: 1%;
   margin-bottom: 4%;
+  height: 100%;
 }
 
 .graph >::ng-deep .mat-figure {

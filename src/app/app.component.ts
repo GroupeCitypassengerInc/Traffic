@@ -78,7 +78,6 @@ export class AppComponent implements OnInit {
     } else {
       this.overlayContainer.getContainerElement().classList.add('dark-theme-mode');
     }
-    
   }
 
   ngOnDestroy(): void {

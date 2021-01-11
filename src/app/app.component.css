@@ -20,6 +20,7 @@ a, a:hover, a:focus, a:active {
   margin : 2%;
 }
 
-html,  app-root, .app-frame {
+html, app-root, body, .app-frame {
   height: 100%;
+  box-sizing: border-box;
 }

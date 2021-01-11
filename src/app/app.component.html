@@ -5,7 +5,7 @@
   <head>
   </head>
 
-  <body class='mat-app-background' [ngClass]='{"dark-theme-mode":is_dark_mode_enabled}'>
+  <body class="app-frame mat-app-background" [ngClass]='{"dark-theme-mode":is_dark_mode_enabled}'>
     <header style='color:#fefefe'>
       <!-- Toolbar -->
       <mat-toolbar color='primary'>
@@ -62,7 +62,7 @@
     </header>
 
     <!-- component -->
-    <router-outlet class="app-frame">
+    <router-outlet>
     </router-outlet>
   </body>
 
