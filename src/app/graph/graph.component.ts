@@ -24,6 +24,7 @@ import { setPriority } from 'os';
 import { LanguageService } from '../lingual_service/language.service';
 import { AuthService } from '../auth_services/auth.service';
 import { NotificationServiceService } from '../notification/notification-service.service'
+import { ThemeHandlerService } from '../theme_handler/theme-handler.service'
 import * as metric_to_transform from '../../assets/json/metric_to_transform.json';
 
 export interface unit_conversion {
@@ -89,12 +90,17 @@ export class GraphComponent implements OnInit {
   }
   unit_select = new FormControl(false);
 
+  _is_dark_mode_enabled: boolean = false;
+  theme_subscription : Subscription;
+
   constructor(private appRef: ChangeDetectorRef,  
     private _formBuilder: FormBuilder, 
     private httpClient: HttpClient, 
     public lingual: LanguageService, 
     private auth: AuthService,
-    private notification: NotificationServiceService
+    private notification: NotificationServiceService,
+    public theme_handler: ThemeHandlerService
+
   ) {
     this.form_group = this._formBuilder.group({
       default_date: [{ value: '', disabled: true }, Validators.required]
@@ -102,6 +108,11 @@ export class GraphComponent implements OnInit {
 
     this.user_info_subscription = this.auth.log_user_info_change.subscribe((user_info:user_informations) => {
       this.user_role = user_info.role;
+    });
+
+    this.theme_subscription = this.theme_handler.theme_changes.subscribe((theme) => {
+      this._is_dark_mode_enabled = theme === 'Dark' ? true : false;
+      this.change_theme(this._is_dark_mode_enabled);
     });
 
     this._lang = this.lingual.get_language();
@@ -114,9 +125,11 @@ export class GraphComponent implements OnInit {
   }
   
   ngOnInit(): void {
-    this.user_info_subscription = this.auth.log_user_info_change.subscribe((user_info:user_informations) => {
-      this.user_role = user_info.role;
-    });
+    if ( this.theme_handler.get_theme() == 'Dark' ) {
+      this._is_dark_mode_enabled = true;
+      this.change_theme(this._is_dark_mode_enabled);
+    }
+
     if (!isDevMode()){
       this.user_role = this.auth.user_info.role;
     } else {
@@ -204,10 +217,15 @@ export class GraphComponent implements OnInit {
   }
 
   destroy_all(): void {
-    Object.keys(this.graphs_records).forEach(graph => {
-      let chart = this.graphs_records[graph]['m_chart'];
-      chart.destroy();
-    } );
+    Chart.helpers.each(Chart.instances, function(instance){
+      instance.chart.destroy();
+    });
+  }
+
+  update_all(): void {
+    Chart.helpers.each(Chart.instances, function(instance){
+      instance.chart.update();
+    });
   }
 
   regenerate_all_graph(): void {
@@ -521,15 +539,29 @@ export class GraphComponent implements OnInit {
   }
 
   hide_lines(metric:string): void {
+    console.log(Chart.helpers);
+    console.log(".......................")
     console.log(this.graphs_records[metric]['m_chart']['data']);
     console.log(this.graphs_records[metric]['m_chart']['options']);
     Object.entries(this.graphs_records[metric]['m_chart']['data']).forEach(
       ([key, value]) => console.log(value)
     );
-    this.graphs_records[metric]['m_chart'].render();
+    this.graphs_records[metric]['m_chart'].update();
+
   }
 
   chart_update(metric:string): void {
     this.graphs_records[metric]['m_chart'].update();
+  }
+
+  change_theme(dark_theme:boolean): void {
+    if ( dark_theme ) {
+      Chart.defaults.global.defaultFontColor = 'white';
+    } else {
+      Chart.defaults.global.defaultFontColor = 'black';
+    }
+    Chart.helpers.each(Chart.instances, function(instance){
+      instance.chart.update();
+    });
   }
 }

@@ -142,6 +142,7 @@ export class DevicesTableComponent implements OnInit {
     this.theme_subscription = this.theme_handler.theme_changes.subscribe((theme) => {
       this._is_dark_mode_enabled = theme === 'Dark' ? true : false;
     });
+
     this.login_information = history.state;
     if ( !isDevMode() ) {
       this.get_devices();
