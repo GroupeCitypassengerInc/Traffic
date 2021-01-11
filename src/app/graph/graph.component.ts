@@ -56,6 +56,7 @@ export class GraphComponent implements OnInit {
   _lang: string;
   metric_alternative_name: any = this.lingual.metric_alternative_name;
   metric_to_transform: any = (metric_to_transform as any).default;
+  is_dev: boolean = false;
 
   // Request : /prometheus/api/v1/query_range?query=up&start=1604584181.313&end=1604670581.313&step=9250
   prometheus_api_url : string = environment.prometheus_base_api_url;
@@ -128,6 +129,7 @@ export class GraphComponent implements OnInit {
   }
   
   ngOnInit(): void {
+    this.is_dev = isDevMode();
     if ( this.theme_handler.get_theme() == 'Dark' ) {
       this._is_dark_mode_enabled = true;
       this.change_theme(this._is_dark_mode_enabled);

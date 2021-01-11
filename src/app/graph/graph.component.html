@@ -66,13 +66,13 @@
         matTooltip='Restore default values' class='icon_button' (click)='set_default_settings(query)'>
         <mat-icon>restore</mat-icon>
       </button>
-      <button *ngIf='false' mat-button i18n-matTooltip='@@' matTooltip='Refresh' class='icon_button'
+      <button *ngIf='is_dev' mat-button i18n-matTooltip='@@' matTooltip='Refresh' class='icon_button'
         (click)='chart_update(query)'>
         <mat-icon>update</mat-icon>
       </button>
 
       <!-- Reset -->
-      <button *ngIf='true' mat-button matTooltip='Restore default values' class='icon_button'
+      <button *ngIf='is_dev' mat-button matTooltip='Restore default values' class='icon_button'
         (click)='hide_lines(query)'>
         <mat-icon>visibility_off</mat-icon>
       </button>
