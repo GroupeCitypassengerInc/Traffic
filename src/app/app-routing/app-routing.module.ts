@@ -10,9 +10,7 @@ import { environment } from '../../environments/environment';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'graph', component: DevicesTableComponent },
-  { path: 'graph/:visualize', component: DevicesTableComponent },
-  { path: 'graph/:group/:metric', component: DevicesTableComponent },
+  //{ path: 'graph', component: DevicesTableComponent },
   { path: 'graph', canActivate: [GuardService], component: DevicesTableComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },  // Wildcard route for a 404 page
   { path: '**', redirectTo: '/login', pathMatch: 'full' },  // Wildcard route for a 404 page
