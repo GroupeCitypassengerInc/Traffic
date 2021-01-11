@@ -3,7 +3,7 @@ import { HttpClientModule, HttpClient, HttpHeaders }    from '@angular/common/ht
 import { catchError, timeout, map } from 'rxjs/operators';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Form, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule, _countGroupLabelsBeforeOption } from '@angular/material/core';
@@ -93,15 +93,18 @@ export class GraphComponent implements OnInit {
   _is_dark_mode_enabled: boolean = false;
   theme_subscription : Subscription;
 
-  constructor(private appRef: ChangeDetectorRef,  
-    private _formBuilder: FormBuilder, 
-    private httpClient: HttpClient, 
-    public lingual: LanguageService, 
-    private auth: AuthService,
-    private notification: NotificationServiceService,
-    public theme_handler: ThemeHandlerService
+  time_input_form_control: FormControl = new FormControl('',[
+    Validators.required,
+    Validators.min(1)
+  ]); //To change
 
-  ) {
+  constructor(private appRef: ChangeDetectorRef,  
+              private _formBuilder: FormBuilder, 
+              private httpClient: HttpClient, 
+              public lingual: LanguageService, 
+              private auth: AuthService,
+              private notification: NotificationServiceService,
+              public theme_handler: ThemeHandlerService) {
     this.form_group = this._formBuilder.group({
       default_date: [{ value: '', disabled: true }, Validators.required]
     });

@@ -1,5 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, ViewChild, isDevMode} from '@angular/core';
-import { animate, AnimationEvent, state, style, transition, trigger } from '@angular/animations';
+import { Location } from '@angular/common';
+import { animate, AnimationEvent, group, state, style, transition, trigger } from '@angular/animations';
 import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
@@ -24,11 +25,15 @@ import { FormControl, SelectControlValueAccessor } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { EMPTY, throwError, TimeoutError, Subscription } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
-import { catchError, timeout, map, } from 'rxjs/operators';
+import { catchError, timeout, map, filter} from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { GraphComponent } from '../graph/graph.component';
 import { AuthService } from '../auth_services/auth.service';
 import { ThemeHandlerService } from '../theme_handler/theme-handler.service'
+import { ActivatedRoute } from '@angular/router';
+import * as devices_json from '../../assets/json/map_devices.json';
+import { Router } from '@angular/router'; 
+
 
 export interface box_info {
   No: number, 
@@ -65,12 +70,13 @@ export interface user_informations {
 })
 
 export class DevicesTableComponent implements OnInit {
-  constructor(
-    private httpClient: HttpClient,
-    private language: LanguageService, 
-    private auth: AuthService,
-    public theme_handler: ThemeHandlerService
-  ) {
+  constructor(private httpClient: HttpClient,
+              private language: LanguageService, 
+              private auth: AuthService,
+              public theme_handler: ThemeHandlerService,
+              private route: ActivatedRoute,
+              private router:Router,
+              private location:Location) {
     this.user_info_subscription = this.auth.log_user_info_change.subscribe((user_info:user_informations) => {
       this.login_information = user_info;
       this.user_role = user_info.role;
@@ -137,7 +143,20 @@ export class DevicesTableComponent implements OnInit {
   graphs_group_form = new FormControl();
   graphs_box_form = new FormControl();
   
+  navigation (group_name: string, box: string, metric: Array<string>): void{
+
+    let group: box_info;
+    this.BOX_DATA.forEach((device, index) => {
+      if ( device.group_name == group_name ) {
+        group = this.BOX_DATA[index];
+      }
+    })
+    this.get_group_info(group)
+    this.Visualize_url(group_name, box, metric);
+  }
+
   ngOnInit(): void {
+
     this._is_dark_mode_enabled = localStorage.getItem('theme') === 'Dark' ? true : false;
     this.theme_subscription = this.theme_handler.theme_changes.subscribe((theme) => {
       this._is_dark_mode_enabled = theme === 'Dark' ? true : false;
@@ -147,12 +166,20 @@ export class DevicesTableComponent implements OnInit {
     if ( !isDevMode() ) {
       this.get_devices();
     } else {
-      this.httpClient.get("assets/json/map_devices.json").subscribe(json_data =>{
-        this.JSON_data = json_data;
-        this.data_formating();
-      });
+      this.JSON_data = (devices_json as any).default;
+      this.data_formating();
     }
     this.columnsToDisplayKeys = this.columnsToDisplay.map(col => col.key);
+
+    let group = this.route.queryParams['_value']['group_name'];
+    let metric = this.route.queryParams['_value']['metric'];
+    let box = this.route.queryParams['_value']['box_name'];
+    console.log(this.route.queryParams['_value']);
+    if (group && box != null && metric) {
+      this.navigation(group, box, metric);
+    } else {
+      this.location.replaceState(this.location.path().split('?')[0], '');
+    }
   }
  
   ngAfterViewInit(): void {
@@ -238,12 +265,12 @@ export class DevicesTableComponent implements OnInit {
         this.http_request_ok = false;
         console.log(err);
       });
-    row.highlighted = !row.highlighted;
   }
 
   get_group_info(group:any): void {
     this._disabled_visualize_group_form = true;
-    this._disabled_visualize_group_form = true;
+    this._disabled_visualize_box_form = true;
+    console.log (group);
     if ( isDevMode() ) { //
       this.getRecord(group, '');
     } else {
@@ -254,19 +281,48 @@ export class DevicesTableComponent implements OnInit {
   Visualize(group_name:any, box_name:string, _box_mode:boolean): void {
     let informations: Array<any> = [];
     let checked;
+    let url: string = '';
     if ( _box_mode == false ) {
       informations.push([group_name, this.password]);
       checked = this.graphs_group_form.value;
+      box_name = '';
     } else {
-      informations.push([group_name, this.password, box_name,]);
+      informations.push([group_name, this.password, box_name]);
       checked = this.graphs_box_form.value;
     }
+
     checked.forEach(metric => {
       informations.push(metric);
     });
 
     if ( isDevMode() ) {
+      console.log('....... information passed .......');
       console.log(informations);
+      console.log('..................................');
+    }
+    this._show_graph = true;
+    this.information_dad = informations;
+    
+    this.router.navigate(['graph/'], { queryParams: { group_name: group_name, box_name:box_name, metric:checked } });
+  }
+
+  Visualize_url(group_name:any, box_name:string, metric: Array<string>): void {
+    let informations: Array<any> = [];
+    
+    if ( box_name ) {
+      informations.push([group_name, this.password, box_name]);
+    } else {
+      informations.push([group_name, this.password]);
+    }
+
+    metric.forEach(metric => {
+      informations.push(metric);
+    });
+
+    if ( isDevMode() ) {
+      console.log('....... information passed thanks to uri.......');
+      console.log(informations);
+      console.log('..................................');
     }
     this._show_graph = true;
     this.information_dad = informations;
@@ -318,7 +374,7 @@ export class DevicesTableComponent implements OnInit {
         this.password = password;
         this.getRecord(group, password);
       });
-    }
+  }
 
   refresh(): void {
     this.dataSource.data = this.dataSource.data;
@@ -359,4 +415,5 @@ export class DevicesTableComponent implements OnInit {
       this._disabled_visualize_group_form = true;
     }
   }
+
 }
