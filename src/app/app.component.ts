@@ -56,6 +56,12 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    if( window.matchMedia('(prefers-color-scheme: dark)').matches && this.theme_handler.get_theme() == 'Dark') {
+      this.is_dark_mode_enabled = true;
+      this.store_theme_selection();
+    }
+
     this.language_list = this.language.language_list;
     this.is_dev_mode = isDevMode();
     this.is_logged = this.auth.is_auth;
