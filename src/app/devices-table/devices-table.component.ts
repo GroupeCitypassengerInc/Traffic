@@ -153,8 +153,9 @@ export class DevicesTableComponent implements OnInit {
       this.get_devices();
     } else {
       this.JSON_data = (devices_json as any).default;
-      this.data_formating();
     }
+    this.data_formating();
+
     this.columnsToDisplayKeys = this.columnsToDisplay.map(col => col.key);
 
     if ( this.route.snapshot.paramMap.get('group') && this.route.queryParams['_value']['metric'] )  {
@@ -358,7 +359,6 @@ export class DevicesTableComponent implements OnInit {
           console.log(response);
         }
         this.JSON_data = response;
-        this.data_formating();
     });
   }
 
