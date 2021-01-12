@@ -17,10 +17,10 @@ export class GuardService implements CanActivate {
     if ( isDevMode() ){
       return true;
     } else {
-      if (this.auth.is_logged() == true) {
+      if (this.auth.is_auth) {
         return true;
       } else {
-        this.router.navigateByUrl('/loggin')
+        this.router.navigate(['/loggin'], {queryParams: { returnUrl: state.url }})
       }
     }
   }

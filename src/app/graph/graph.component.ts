@@ -122,8 +122,6 @@ export class GraphComponent implements OnInit {
 
     if (isDevMode()){
       this.user_role = 'Support'
-    } else {
-      this.auth.is_logged();
     }
   }
   

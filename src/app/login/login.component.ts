@@ -12,6 +12,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AuthService } from '../auth_services/auth.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { BrowserModule } from '@angular/platform-browser';
+import { Router, ActivatedRoute } from '@angular/router';
 
 export interface user_informations {
   id : number,
@@ -36,12 +37,15 @@ export class LoginComponent implements OnInit {
   base_api_url : string = environment.city_url_api;
   user_info : user_informations;
   isChecked : boolean = true;
+  return_url: string;
 
-  constructor(private form_builder: FormBuilder, private auth: AuthService ) { }
+  constructor(private form_builder: FormBuilder, private auth: AuthService, private route: ActivatedRoute,
+    private router: Router ) { }
   
   ngOnInit(): void {
     this.auth.is_logged();
     this.is_logged = this.auth.is_auth;
+    this.return_url = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
   getError(field_name): string {
@@ -69,6 +73,6 @@ export class LoginComponent implements OnInit {
     let username = encodeURIComponent(form.controls['username'].value);
     let password = encodeURIComponent(form.controls['password'].value);
     let url_login = this.base_api_url + '/ws/User/Login?login=' + username + '&password=' + password;
-    this.auth.login(url_login);
+    this.auth.login(url_login, this.return_url);
   }
 }

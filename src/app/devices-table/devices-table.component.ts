@@ -85,7 +85,9 @@ export class DevicesTableComponent implements OnInit {
     if (isDevMode()){
       this.user_role = 'Support'
     } else {
-      this.auth.is_logged();
+      if ( this.auth.is_logged() == false) {
+        this.auth.redirect('/login');
+      }
       this.user_role = this.auth.user_info.role;
     }
   }

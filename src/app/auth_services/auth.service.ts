@@ -23,7 +23,7 @@ export class AuthService {
 
   constructor(private httpClient: HttpClient, private router: Router) { }
   
-  login(url:string): void { 
+  login(url:string, old_url: string): void { 
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json');
     this.httpClient.request('GET', url, {headers}).pipe(
@@ -50,7 +50,8 @@ export class AuthService {
       };
       this.update_user_info(user_info);
       this.update_log_status(true);
-      this.redirect('/graph');
+      this.router.navigateByUrl(old_url);
+      //this.redirect('/graph');
     });
   }
 
@@ -103,24 +104,21 @@ export class AuthService {
       //console.log(response);
       if ( response == null ) {
         this.update_log_status(false);
-        is_logged = false;
         this.redirect('/login');
-        return is_logged;
+        return false;
       }
       let user_info = {
         id : response['id'],
         role : response['role'],
         username : response['username']
       };
-      is_logged = true;
       //console.log('Logged ? -> yes');
       this.update_user_info(user_info);
       this.update_log_status(true);
       if (window.location.pathname.split('/')[1] != 'graph'){
         this.redirect('/graph');
       } else {
-        is_logged = true;
-        return is_logged;
+        return true;
       }
     });
   }
