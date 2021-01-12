@@ -85,7 +85,6 @@ export class DevicesTableComponent implements OnInit {
     if (isDevMode()){
       this.user_role = 'Support'
     } else {
-      this.auth.is_logged();
       this.user_role = this.auth.user_info.role;
     }
   }
@@ -185,6 +184,7 @@ export class DevicesTableComponent implements OnInit {
   }
 
   navigation (group_name: string, box: string, metric: Array<string>): void{
+    console.log ('navigation')
     let group: box_info;
 
     let metric_array: Array<string>;
@@ -197,14 +197,16 @@ export class DevicesTableComponent implements OnInit {
     this.BOX_DATA.forEach((device, index) => {
       if ( device.group_name == group_name ) {
         group = this.BOX_DATA[index];
+        console.log(group)
+        console.log(this.BOX_DATA)
       }
     })
-
     this.get_group_info(group)
     this.Visualize_url(group_name, box, metric_array);
   }
 
   data_formating(): void {
+    console.log('formating data')
     let index = 0;
     for ( let group of this.JSON_data.groups ) {
       for ( let sites of group.sites ) {
