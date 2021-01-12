@@ -92,8 +92,9 @@ export class GraphComponent implements OnInit {
   unit_select = new FormControl(false);
 
   _is_dark_mode_enabled: boolean = false;
-  theme_subscription : Subscription;
+  theme_subscription: Subscription;
 
+  CRC_table:Array<number> = [];
   time_input_form_control: FormControl = new FormControl('',[
     Validators.required,
     Validators.min(1)
@@ -349,7 +350,7 @@ export class GraphComponent implements OnInit {
         label: label,
         data: metric_value_list,
         pointRadius: 1,
-        borderColor : this.get_random_color(),
+        borderColor : '#' + this.crc32(label),
       };
       datasets.push(dataset);
     }
@@ -360,23 +361,34 @@ export class GraphComponent implements OnInit {
     return parsed_data;
   }
 
-  get_random_color(): string {
-    var HEX = '0123456789ABCDEF'.split('');
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-      color += HEX[Math.floor(Math.random() * 16)];
+  makeCRCTable(): Array<any> {
+    var c;
+    var crcTable = [];
+    for(var n =0; n < 256; n++){
+      c = n;
+        for(var k =0; k < 8; k++){
+          c = ((c&1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1));
+      }
+      crcTable[n] = c;
     }
-    return color;
+    this.CRC_table = crcTable;
+    return crcTable;
   }
 
-  get_random_color_2(string_to_convert: string): string {
-    var hash = 0;
-    for (var i = 0; i < string_to_convert.length; i++) {
-      hash = string_to_convert.charCodeAt(i) + ((hash << 5) - hash);
+  crc32(str: string): string {
+    var crcTable;
+    if ( this.CRC_table = [] ) {
+      crcTable = this.makeCRCTable();
+    } else {
+      crcTable = this.CRC_table
     }
-    var c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
-    var color = "00000".substring(0, 6 - c.length) + c;
-    return '#' + color; 
+    
+    var crc = 0 ^ (-1);
+
+    for (var i = 0; i < str.length; i++ ) {
+      crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i)) & 0xFF];
+    }
+    return ((crc ^ (-1)) >>> 0).toString(16).slice(0, -2);
   }
 
   // Compute a step for range_query (interval between 2 points in second)
@@ -407,8 +419,10 @@ export class GraphComponent implements OnInit {
       throw new Error('An error as occured. Can\'t get id ok : ' + metric);
     }
     let tension = 0;
+    let min = 0;
     if (  metric in this.metrics_config ) {
       tension = this.metrics_config[metric]['tension'];
+      
     }
     console.log(tension)
     var chart = new Chart(ctx, {
@@ -432,6 +446,11 @@ export class GraphComponent implements OnInit {
               //   second: 'YYYY MM D hh:mm:ss a'
               // },
               stepSize : 4,
+            }
+          }],
+          yAxes: [{
+            ticks: {
+              //suggestedMin: undefined,    // minimum will be 0, unless there is a lower value.
             }
           }]
         }
