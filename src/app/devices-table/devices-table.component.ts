@@ -143,28 +143,7 @@ export class DevicesTableComponent implements OnInit {
   graphs_group_form = new FormControl();
   graphs_box_form = new FormControl();
   
-  navigation (group_name: string, box: string, metric: Array<string>): void{
-    let group: box_info;
-
-    let metric_array: Array<string>;
-    if ( typeof metric == 'string' ) {
-      metric_array = [metric]
-    } else {
-      metric_array = metric
-    }
-    
-    this.BOX_DATA.forEach((device, index) => {
-      if ( device.group_name == group_name ) {
-        group = this.BOX_DATA[index];
-      }
-    })
-
-    this.get_group_info(group)
-    this.Visualize_url(group_name, box, metric_array);
-  }
-
   ngOnInit(): void {
-
     this._is_dark_mode_enabled = localStorage.getItem('theme') === 'Dark' ? true : false;
     this.theme_subscription = this.theme_handler.theme_changes.subscribe((theme) => {
       this._is_dark_mode_enabled = theme === 'Dark' ? true : false;
@@ -203,6 +182,26 @@ export class DevicesTableComponent implements OnInit {
   ngOnDestroy(): void {
     this.user_info_subscription.unsubscribe();
     this.theme_subscription.unsubscribe();
+  }
+
+  navigation (group_name: string, box: string, metric: Array<string>): void{
+    let group: box_info;
+
+    let metric_array: Array<string>;
+    if ( typeof metric == 'string' ) {
+      metric_array = [metric]
+    } else {
+      metric_array = metric
+    }
+    
+    this.BOX_DATA.forEach((device, index) => {
+      if ( device.group_name == group_name ) {
+        group = this.BOX_DATA[index];
+      }
+    })
+
+    this.get_group_info(group)
+    this.Visualize_url(group_name, box, metric_array);
   }
 
   data_formating(): void {
@@ -349,22 +348,15 @@ export class DevicesTableComponent implements OnInit {
     if ( isDevMode() ) {
       headers = headers.set('Accept-Encoding:', 'application/json');
     }
-    this.httpClient.request('GET', url, {headers}).pipe(
-      timeout(10000), 
-      map(res => {
-        return res;
-      }
-    ),catchError(
-      err => {
-        throw err;
-      }
-    )).subscribe(response  =>{
-      if ( isDevMode() ) {
-        console.log('map -> ok');
-        console.log(response);
-      }
-      this.JSON_data = response;
-      this.data_formating();
+    this.httpClient.request('GET', url, {headers})
+      .toPromise()
+      .then(response => {
+        if ( isDevMode() ) {
+          console.log('map -> ok');
+          console.log(response);
+        }
+        this.JSON_data = response;
+        this.data_formating();
     });
   }
 
