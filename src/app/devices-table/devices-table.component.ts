@@ -153,22 +153,9 @@ export class DevicesTableComponent implements OnInit {
       this.get_devices();
     } else {
       this.JSON_data = (devices_json as any).default;
+      this.data_formating();
     }
-    this.data_formating();
-
     this.columnsToDisplayKeys = this.columnsToDisplay.map(col => col.key);
-
-    if ( this.route.snapshot.paramMap.get('group') && this.route.queryParams['_value']['metric'] )  {
-      let group = this.route.snapshot.paramMap.get('group').toString();
-      let metric = this.route.queryParams['_value']['metric'];
-      let box: string;
-      if (this.route.snapshot.paramMap.get('box')) {
-        box = this.route.snapshot.paramMap.get('box').toString();
-      }
-      this.navigation(group, box, metric);
-    } else {
-      this.location.replaceState(this.location.path().split('?')[0], '');
-    }
   }
  
   ngAfterViewInit(): void {
@@ -225,6 +212,17 @@ export class DevicesTableComponent implements OnInit {
       }
     }
     this.refresh();
+    if ( this.route.snapshot.paramMap.get('group') && this.route.queryParams['_value']['metric'] )  {
+      let group = this.route.snapshot.paramMap.get('group').toString();
+      let metric = this.route.queryParams['_value']['metric'];
+      let box: string;
+      if (this.route.snapshot.paramMap.get('box')) {
+        box = this.route.snapshot.paramMap.get('box').toString();
+      }
+      this.navigation(group, box, metric);
+    } else {
+      this.location.replaceState(this.location.path().split('?')[0], '');
+    }
   }
 
   applyFilter(event: Event): void {
@@ -359,6 +357,7 @@ export class DevicesTableComponent implements OnInit {
           console.log(response);
         }
         this.JSON_data = response;
+        this.data_formating();
     });
   }
 
