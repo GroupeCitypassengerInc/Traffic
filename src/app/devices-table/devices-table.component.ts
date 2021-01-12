@@ -144,15 +144,23 @@ export class DevicesTableComponent implements OnInit {
   graphs_box_form = new FormControl();
   
   navigation (group_name: string, box: string, metric: Array<string>): void{
-
     let group: box_info;
+
+    let metric_array: Array<string>;
+    if ( typeof metric == 'string' ) {
+      metric_array = [metric]
+    } else {
+      metric_array = metric
+    }
+    
     this.BOX_DATA.forEach((device, index) => {
       if ( device.group_name == group_name ) {
         group = this.BOX_DATA[index];
       }
     })
+
     this.get_group_info(group)
-    this.Visualize_url(group_name, box, metric);
+    this.Visualize_url(group_name, box, metric_array);
   }
 
   ngOnInit(): void {
@@ -171,11 +179,13 @@ export class DevicesTableComponent implements OnInit {
     }
     this.columnsToDisplayKeys = this.columnsToDisplay.map(col => col.key);
 
-    let group = this.route.queryParams['_value']['group_name'];
-    let metric = this.route.queryParams['_value']['metric'];
-    let box = this.route.queryParams['_value']['box_name'];
-    console.log(this.route.queryParams['_value']);
-    if (group && box != null && metric) {
+    if ( this.route.snapshot.paramMap.get('group') && this.route.queryParams['_value']['metric'] )  {
+      let group = this.route.snapshot.paramMap.get('group').toString();
+      let metric = this.route.queryParams['_value']['metric'];
+      let box: string;
+      if (this.route.snapshot.paramMap.get('box')) {
+        box = this.route.snapshot.paramMap.get('box').toString();
+      }
       this.navigation(group, box, metric);
     } else {
       this.location.replaceState(this.location.path().split('?')[0], '');
@@ -270,7 +280,6 @@ export class DevicesTableComponent implements OnInit {
   get_group_info(group:any): void {
     this._disabled_visualize_group_form = true;
     this._disabled_visualize_box_form = true;
-    console.log (group);
     if ( isDevMode() ) { //
       this.getRecord(group, '');
     } else {
@@ -281,40 +290,42 @@ export class DevicesTableComponent implements OnInit {
   Visualize(group_name:any, box_name:string, _box_mode:boolean): void {
     let informations: Array<any> = [];
     let checked;
-    let url: string = '';
+    let url: Array<string> = ['graph/', group_name];
+
+
     if ( _box_mode == false ) {
       informations.push([group_name, this.password]);
       checked = this.graphs_group_form.value;
-      box_name = '';
+
     } else {
       informations.push([group_name, this.password, box_name]);
       checked = this.graphs_box_form.value;
+      url.push(box_name);
     }
 
+    url.push('metric');
     checked.forEach(metric => {
       informations.push(metric);
     });
-
+    
     if ( isDevMode() ) {
       console.log('....... information passed .......');
       console.log(informations);
       console.log('..................................');
     }
+    
     this._show_graph = true;
     this.information_dad = informations;
-    
-    this.router.navigate(['graph/'], { queryParams: { group_name: group_name, box_name:box_name, metric:checked } });
+    this.router.navigate(url, { queryParams: {metric: checked} });
   }
 
-  Visualize_url(group_name:any, box_name:string, metric: Array<string>): void {
+  Visualize_url(group_name:any, box_name:string, metric: Array<any>): void {
     let informations: Array<any> = [];
-    
     if ( box_name ) {
       informations.push([group_name, this.password, box_name]);
     } else {
       informations.push([group_name, this.password]);
     }
-
     metric.forEach(metric => {
       informations.push(metric);
     });
@@ -415,5 +426,4 @@ export class DevicesTableComponent implements OnInit {
       this._disabled_visualize_group_form = true;
     }
   }
-
 }

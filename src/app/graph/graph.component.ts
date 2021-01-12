@@ -25,7 +25,7 @@ import { LanguageService } from '../lingual_service/language.service';
 import { AuthService } from '../auth_services/auth.service';
 import { NotificationServiceService } from '../notification/notification-service.service'
 import { ThemeHandlerService } from '../theme_handler/theme-handler.service'
-import * as metric_to_transform from '../../assets/json/metric_to_transform.json';
+import * as metrics_config from '../../assets/json/config.metrics.json';
 
 export interface unit_conversion {
   minute : number,
@@ -55,7 +55,7 @@ export class GraphComponent implements OnInit {
   query_list: any = [];
   _lang: string;
   metric_alternative_name: any = this.lingual.metric_alternative_name;
-  metric_to_transform: any = (metric_to_transform as any).default;
+  metrics_config: any = (metrics_config as any).default;
   is_dev: boolean = false;
 
   // Request : /prometheus/api/v1/query_range?query=up&start=1604584181.313&end=1604670581.313&step=9250
@@ -118,8 +118,6 @@ export class GraphComponent implements OnInit {
       this._is_dark_mode_enabled = theme === 'Dark' ? true : false;
       this.change_theme(this._is_dark_mode_enabled);
     });
-
-    this._lang = this.lingual.get_language();
 
     if (isDevMode()){
       this.user_role = 'Support'
@@ -258,10 +256,14 @@ export class GraphComponent implements OnInit {
     }
     let scrape_interval = 2; //scrape interval => 2min
     let range = scrape_interval * 4; //safe 
-    if (  metric_name in this.metric_to_transform['range_vectors'] ) {
-      query = this.metric_to_transform['range_vectors'][metric_name] + '(' + query + '[' + range + 'm])';
-    } else if ( metric_name in this.metric_to_transform['instant_vectors'] ) {
-      query = this.metric_to_transform['instant_vectors'][metric_name] + '(' + query + ')';
+    console.log(this.metrics_config)
+    if (  metric_name in this.metrics_config ) {
+      if ( this.metrics_config[metric_name]['type'] == "range_vectors" ) {
+        query = this.metrics_config[metric_name]['promql'] + '(' + query + '[' + range + 'm])';
+  
+      } else if ( this.metrics_config[metric_name]['type'] == "instant_vectors" ) {
+        query = this.metrics_config[metric_name]['promql'] + '(' + query + ')';
+      }
     }
     return query;
   }
@@ -405,8 +407,8 @@ export class GraphComponent implements OnInit {
       throw new Error('An error as occured. Can\'t get id ok : ' + metric);
     }
     let tension = 0;
-    if (  metric in this.metric_to_transform['tension'] ) {
-      tension = this.metric_to_transform['tension'][metric];
+    if (  metric in this.metrics_config ) {
+      tension = this.metrics_config[metric]['tension'];
     }
     console.log(tension)
     var chart = new Chart(ctx, {
