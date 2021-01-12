@@ -85,6 +85,7 @@ export class DevicesTableComponent implements OnInit {
     if (isDevMode()){
       this.user_role = 'Support'
     } else {
+      this.auth.is_logged();
       this.user_role = this.auth.user_info.role;
     }
   }
@@ -152,10 +153,13 @@ export class DevicesTableComponent implements OnInit {
     if ( !isDevMode() ) {
       this.get_devices();
     } else {
+      console.log('init')
       this.JSON_data = (devices_json as any).default;
       this.data_formating();
     }
     this.columnsToDisplayKeys = this.columnsToDisplay.map(col => col.key);
+
+   
   }
  
   ngAfterViewInit(): void {
@@ -181,7 +185,6 @@ export class DevicesTableComponent implements OnInit {
     } else {
       metric_array = metric
     }
-    
     this.BOX_DATA.forEach((device, index) => {
       if ( device.group_name == group_name ) {
         group = this.BOX_DATA[index];
@@ -212,17 +215,7 @@ export class DevicesTableComponent implements OnInit {
       }
     }
     this.refresh();
-    if ( this.route.snapshot.paramMap.get('group') && this.route.queryParams['_value']['metric'] )  {
-      let group = this.route.snapshot.paramMap.get('group').toString();
-      let metric = this.route.queryParams['_value']['metric'];
-      let box: string;
-      if (this.route.snapshot.paramMap.get('box')) {
-        box = this.route.snapshot.paramMap.get('box').toString();
-      }
-      this.navigation(group, box, metric);
-    } else {
-      this.location.replaceState(this.location.path().split('?')[0], '');
-    }
+
   }
 
   applyFilter(event: Event): void {
@@ -291,8 +284,8 @@ export class DevicesTableComponent implements OnInit {
     let informations: Array<any> = [];
     let checked;
     let url: Array<string> = ['graph/', group_name];
-
-
+    let uri = '/graph/' + group_name +'/';
+    // /graph/citypassenger-infra-prod/metric?metric=scrape_duration_seconds&metric=scrape_samples_post_metric_relabeling&metric=scrape_series_added
     if ( _box_mode == false ) {
       informations.push([group_name, this.password]);
       checked = this.graphs_group_form.value;
@@ -301,22 +294,21 @@ export class DevicesTableComponent implements OnInit {
       informations.push([group_name, this.password, box_name]);
       checked = this.graphs_box_form.value;
       url.push(box_name);
+      uri = uri + box_name + '/'
     }
 
     url.push('metric');
+    uri = uri + 'metric?'
     checked.forEach(metric => {
       informations.push(metric);
+      uri = uri + 'metric=' + metric + '&';
     });
-    
-    if ( isDevMode() ) {
-      console.log('....... information passed .......');
-      console.log(informations);
-      console.log('..................................');
-    }
+    uri = uri.slice(0, -1);
     
     this._show_graph = true;
     this.information_dad = informations;
-    this.router.navigate(url, { queryParams: {metric: checked} });
+    //this.router.navigate(url, { queryParams: {metric: checked}} );
+    this.location.replaceState(uri);
   }
 
   Visualize_url(group_name:any, box_name:string, metric: Array<any>): void {
@@ -358,6 +350,18 @@ export class DevicesTableComponent implements OnInit {
         }
         this.JSON_data = response;
         this.data_formating();
+        
+        if ( this.route.snapshot.paramMap.get('group') && this.route.queryParams['_value']['metric'] )  {
+          let group = this.route.snapshot.paramMap.get('group').toString();
+          let metric = this.route.queryParams['_value']['metric'];
+          let box: string;
+          if (this.route.snapshot.paramMap.get('box')) {
+            box = this.route.snapshot.paramMap.get('box').toString();
+          }
+          this.navigation(group, box, metric);
+        } else {
+          this.location.replaceState(this.location.path().split('?')[0], '');
+        }
     });
   }
 

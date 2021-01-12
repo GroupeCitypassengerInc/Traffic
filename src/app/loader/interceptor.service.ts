@@ -13,7 +13,6 @@ export class InterceptorService implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.loaderService.isLoading.next(true);
-    console.log('HTTP REQUEST INTERCEPTED');
     return next.handle(req).pipe(
       finalize(
         () => {

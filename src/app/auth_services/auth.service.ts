@@ -113,7 +113,7 @@ export class AuthService {
         username : response['username']
       };
       is_logged = true;
-      console.log('Logged ? -> yes');
+      //console.log('Logged ? -> yes');
       this.update_user_info(user_info);
       this.update_log_status(true);
       if (window.location.pathname.split('/')[1] != 'graph'){
