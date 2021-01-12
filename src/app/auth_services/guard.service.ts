@@ -17,7 +17,7 @@ export class GuardService implements CanActivate {
     if ( isDevMode() ){
       return true;
     } else {
-      if( this.auth.is_auth ) {
+      if (this.auth.is_logged() == true) {
         return true;
       } else {
         this.router.navigateByUrl('/loggin')
