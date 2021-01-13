@@ -197,7 +197,6 @@ export class DevicesTableComponent implements OnInit {
       }
     })
     this.get_group_info(group);
-    this.Visualize_url(group_name, box, metric_array);
   }
 
   data_formating(): void {
@@ -326,13 +325,13 @@ export class DevicesTableComponent implements OnInit {
     this.location.replaceState(uri);
   }
 
-  Visualize_url(group_name:any, box_name:string, metric: Array<any>): void {
+  Visualize_url(group_name:any, box_name:string, metric: Array<any>, password:string): void {
     console.log('url');
     let informations: Array<any> = [];
     if ( box_name ) {
-      informations.push([group_name, this.password, box_name]);
+      informations.push([group_name, password, box_name]);
     } else {
-      informations.push([group_name, this.password]);
+      informations.push([group_name, password]);
     }
     metric.forEach(metric => {
       informations.push(metric);
@@ -388,7 +387,7 @@ export class DevicesTableComponent implements OnInit {
         this.password = password;
         this.getRecord(group, password);
         if ( this.graph_from_uri ) {
-          this.Visualize_url(this.group_name_from_uri, this.box_from_uri, this.metric_array_from_uri);
+          this.Visualize_url(this.group_name_from_uri, this.box_from_uri, this.metric_array_from_uri, password);
           this.graph_from_uri = false;
         }
       });
