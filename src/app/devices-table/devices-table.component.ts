@@ -84,12 +84,8 @@ export class DevicesTableComponent implements OnInit {
     this.site_language = this.language.get_language();
     if (isDevMode()){
       this.user_role = 'Support'
-    } else {
-      if ( this.auth.is_logged() == false) {
-        this.auth.redirect('/login');
-      }
-      this.user_role = this.auth.user_info.role;
     }
+    this.user_role = this.auth.user_info.role;
   }
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -150,12 +146,11 @@ export class DevicesTableComponent implements OnInit {
     this.theme_subscription = this.theme_handler.theme_changes.subscribe((theme) => {
       this._is_dark_mode_enabled = theme === 'Dark' ? true : false;
     });
-
+    console.log('init');
     this.login_information = history.state;
     if ( !isDevMode() ) {
       this.get_devices();
     } else {
-      console.log('init')
       this.JSON_data = (devices_json as any).default;
       this.data_formating();
     }
