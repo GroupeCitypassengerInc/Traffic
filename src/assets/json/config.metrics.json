@@ -23,6 +23,17 @@
     "promql": "deriv",
     "tension": 0.5
   },
+  "input": {
+    "x": {
+    },
+    "y": {
+      "unit": "",
+      "min": 0
+    },
+    "type": "range_vectors",
+    "promql": "deriv",
+    "tension": 0.5
+  },
   "go_goroutines": {
     "x": {
     },
