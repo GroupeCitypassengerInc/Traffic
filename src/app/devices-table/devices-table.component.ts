@@ -84,8 +84,9 @@ export class DevicesTableComponent implements OnInit {
     this.site_language = this.language.get_language();
     if (isDevMode()){
       this.user_role = 'Support'
+    } else {
+      this.user_role = this.auth.user_info.role;
     }
-    this.user_role = this.auth.user_info.role;
   }
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -140,6 +141,11 @@ export class DevicesTableComponent implements OnInit {
   dataSource = new MatTableDataSource(this.BOX_DATA);
   graphs_group_form = new FormControl();
   graphs_box_form = new FormControl();
+
+  graph_from_uri: boolean = false;
+  group_name_from_uri: string;
+  box_from_uri: string;
+  metric_array_from_uri: Array<any>
   
   ngOnInit(): void {
     this._is_dark_mode_enabled = localStorage.getItem('theme') === 'Dark' ? true : false;
@@ -155,6 +161,9 @@ export class DevicesTableComponent implements OnInit {
       this.data_formating();
     }
     this.columnsToDisplayKeys = this.columnsToDisplay.map(col => col.key);
+    if ( this.route.snapshot.paramMap.get('group') && this.route.queryParams['_value']['metric'] ) {
+      this.graph_from_uri = true;
+    }
   }
  
   ngAfterViewInit(): void {
@@ -187,7 +196,7 @@ export class DevicesTableComponent implements OnInit {
         console.log(this.BOX_DATA)
       }
     })
-    this.get_group_info(group)
+    this.get_group_info(group);
     this.Visualize_url(group_name, box, metric_array);
   }
 
@@ -378,6 +387,10 @@ export class DevicesTableComponent implements OnInit {
         }
         this.password = password;
         this.getRecord(group, password);
+        if ( this.graph_from_uri ) {
+          this.Visualize_url(this.group_name_from_uri, this.box_from_uri, this.metric_array_from_uri);
+          this.graph_from_uri = false;
+        }
       });
   }
 
