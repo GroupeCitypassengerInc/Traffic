@@ -17,11 +17,11 @@
       "fr":"KVM_files_count"
     },
     "cpustats_cpu_usage_percent":{
-      "en":"cpustats_cpu_usage_percentt",
+      "en":"cpustats_cpu_usage_percent",
       "fr":"cpustats_cpu_usage_percent"
     },
     "memstats_memory_usage_percent":{
-      "en":"memstats_memory_usage_percent)",
+      "en":"memstats_memory_usage_percent",
       "fr":"memstats_memory_usage_percent"
     },
     "memstats_total_memory_bytes":{

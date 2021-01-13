@@ -425,15 +425,32 @@ export class GraphComponent implements OnInit {
     }
     let tension = 0;
     let min = 0;
+    let unit: string = ' ';
     if (  metric in this.metrics_config ) {
       tension = this.metrics_config[metric]['tension'];
-      
+      unit += this.metrics_config[metric]['x']['unit'][this._lang];
+      if ( unit == undefined ) {
+        unit = '';
+      }
     }
     var chart = new Chart(ctx, {
       type: 'line',
       data: data,
       options: {
         responsive : true,
+        tooltips: {
+          callbacks: {
+            label: function(tooltipItem, data) {
+              var label = data.datasets[tooltipItem.datasetIndex].label || '';
+              if (label) {
+                label += ': ';
+              }
+              label += Math.round(tooltipItem.yLabel * 100) / 100;
+              label += unit;
+              return label;
+            }
+          }
+        },
         tension : tension,
         animation: {
           duration: 1

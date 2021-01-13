@@ -14,9 +14,12 @@
   },
   "output": {
     "x": {
+      "unit": {
+        "fr":"o/s",
+        "en":"B/s"
+      }
     },
     "y": {
-      "unit": "",
       "min": 0
     },
     "type": "range_vectors",
@@ -25,9 +28,12 @@
   },
   "input": {
     "x": {
+      "unit": {
+        "fr":"o/s",
+        "en":"B/s"
+      }
     },
     "y": {
-      "unit": "",
       "min": 0
     },
     "type": "range_vectors",
@@ -36,13 +42,170 @@
   },
   "go_goroutines": {
     "x": {
+      "unit": {
+        "fr":"",
+        "en":""
+      }
     },
     "y": {
-      "unit": "",
       "min": 0
     },
     "type": "range_vectors",
     "promql": "deriv",
+    "tension": 0.5
+  },
+  "Devices_on_lan_gauge": {
+    "x": {
+      "unit": {
+        "fr":"",
+        "en":""
+      }
+    },
+    "y": {
+      "min": 0
+    },
+    "type": "",
+    "promql": "",
+    "tension": 0.5
+  },
+  "KVM_files_count": {
+    "x": {
+      "unit": {
+        "fr":"",
+        "en":""
+      }
+    },
+    "y": {
+      "min": 0
+    },
+    "type": "",
+    "promql": "",
+    "tension": 0.5
+  },
+  "cpustats_cpu_usage_percent": {
+    "x": {
+      "unit": {
+        "fr":"%",
+        "en":"µ"
+      }
+    },
+    "y": {
+      "min": 0
+    },
+    "type": "",
+    "promql": "",
+    "tension": 0.5
+  },
+  "memstats_memory_usage_percent": {
+    "x": {
+      "unit": {
+        "fr":"%",
+        "en":"%"
+      }
+    },
+    "y": {
+      "min": 0
+    },
+    "type": "",
+    "promql": "",
+    "tension": 0.5
+  },
+  "memstats_total_memory_bytes": {
+    "x": {
+      "unit": {
+        "fr":"o",
+        "en":"B"
+      }
+    },
+    "y": {
+      "min": 0
+    },
+    "type": "",
+    "promql": "",
+    "tension": 0.5
+  },
+  "memstats_used_memory_bytes": {
+    "x": {
+      "unit": {
+        "fr":"o",
+        "en":"B"
+      }
+    },
+    "y": {
+      "min": 0
+    },
+    "type": "",
+    "promql": "",
+    "tension": 0.5
+  },
+  "scrape_duration_seconds": {
+    "x": {
+      "unit": {
+        "fr":"s",
+        "en":"s"
+      }
+    },
+    "y": {
+      "min": 0
+    },
+    "type": "",
+    "promql": "",
+    "tension": 0.5
+  },
+  "scrape_samples_post_metric_relabeling": {
+    "x": {
+      "unit": {
+        "fr":"",
+        "en":""
+      }
+    },
+    "y": {
+      "min": 0
+    },
+    "type": "",
+    "promql": "",
+    "tension": 0.5
+  },
+  "scrape_samples_scraped": {
+    "x": {
+      "unit": {
+        "fr":"",
+        "en":""
+      }
+    },
+    "y": {
+      "min": 0
+    },
+    "type": "",
+    "promql": "",
+    "tension": 0.5
+  },
+  "scrape_series_added": {
+    "x": {
+      "unit": {
+        "fr":"",
+        "en":""
+      }
+    },
+    "y": {
+      "min": 0
+    },
+    "type": "",
+    "promql": "",
+    "tension": 0.5
+  },
+  "up": {
+    "x": {
+      "unit": {
+        "fr":"",
+        "en":""
+      }
+    },
+    "y": {
+      "min": 0
+    },
+    "type": "",
+    "promql": "",
     "tension": 0.5
   }
 }
