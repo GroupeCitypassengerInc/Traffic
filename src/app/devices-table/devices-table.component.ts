@@ -154,6 +154,9 @@ export class DevicesTableComponent implements OnInit {
     });
     console.log('init');
     this.login_information = history.state;
+    if ( this.route.snapshot.paramMap.get('group') && this.route.queryParams['_value']['metric'] ) {
+      this.graph_from_uri = true;
+    }
     if ( !isDevMode() ) {
       this.get_devices();
     } else {
@@ -161,9 +164,6 @@ export class DevicesTableComponent implements OnInit {
       this.data_formating();
     }
     this.columnsToDisplayKeys = this.columnsToDisplay.map(col => col.key);
-    if ( this.route.snapshot.paramMap.get('group') && this.route.queryParams['_value']['metric'] ) {
-      this.graph_from_uri = true;
-    }
   }
  
   ngAfterViewInit(): void {
@@ -189,6 +189,7 @@ export class DevicesTableComponent implements OnInit {
     } else {
       metric_array = metric
     }
+    
     this.BOX_DATA.forEach((device, index) => {
       if ( device.group_name == group_name ) {
         group = this.BOX_DATA[index];
@@ -196,6 +197,11 @@ export class DevicesTableComponent implements OnInit {
         console.log(this.BOX_DATA)
       }
     })
+
+    this.group_name_from_uri = group_name;
+    this.metric_array_from_uri = metric_array;
+    this.box_from_uri = box;
+
     this.get_group_info(group);
   }
 
@@ -289,6 +295,10 @@ export class DevicesTableComponent implements OnInit {
     this._disabled_visualize_box_form = true;
     if ( isDevMode() ) { //
       this.getRecord(group, '');
+      if ( this.graph_from_uri ) {
+        this.Visualize_url(this.group_name_from_uri, this.box_from_uri, this.metric_array_from_uri, '');
+        this.graph_from_uri = false;
+      }
     } else {
       this.get_password(group);
     }

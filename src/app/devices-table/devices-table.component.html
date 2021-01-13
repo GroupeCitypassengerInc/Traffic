@@ -38,7 +38,7 @@
                           Graph available</mat-label>
                         <mat-select [formControl]='graphs_group_form' (selectionChange)='onChangeGroupForm($event)'
                           (openedChange)=clearfilterGroupForm() multiple>
-                          <mat-form-field class="full-width">
+                          <mat-form-field class="input_metric">
                             <mat-label
                               i18n='text for search metric|text used in search metric input@@search_metric_input_devices_table'>
                               search for metric</mat-label>
@@ -64,7 +64,7 @@
                           Graph available</mat-label>
                         <mat-select [formControl]='graphs_box_form' (selectionChange)='onChangeBoxForm($event)'
                           (openedChange)=clearfilterBoxForm() multiple>
-                          <mat-form-field class="full-width">
+                          <mat-form-field class="input_metric">
                             <mat-label
                               i18n='text for search metric|text used in search metric input@@search_metric_input_devices_table'>
                               search for metric</mat-label>

@@ -89,9 +89,9 @@ tr.element-row:not(.expanded-row):active {
   margin: 1% 1% 2%;
 }
 
-.full-width {
-  width: 100%;
+.input_metric {
   margin-top: 1%;
+  margin-left: 2%;
 }
 
 .content {
