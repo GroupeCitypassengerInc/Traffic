@@ -226,8 +226,6 @@ export class DevicesTableComponent implements OnInit {
         box = this.route.snapshot.paramMap.get('box').toString();
       }
       this.navigation(group, box, metric);
-    } else {
-      this.location.replaceState(this.location.path().split('?')[0], '');
     }
   }
 
@@ -325,6 +323,7 @@ export class DevicesTableComponent implements OnInit {
   }
 
   Visualize_url(group_name:any, box_name:string, metric: Array<any>): void {
+    console.log('url');
     let informations: Array<any> = [];
     if ( box_name ) {
       informations.push([group_name, this.password, box_name]);
@@ -335,6 +334,7 @@ export class DevicesTableComponent implements OnInit {
       informations.push(metric);
     });
 
+    console.log(informations);
     if ( isDevMode() ) {
       console.log('....... information passed thanks to uri.......');
       console.log(informations);
@@ -363,11 +363,11 @@ export class DevicesTableComponent implements OnInit {
         }
         this.JSON_data = response;
         this.data_formating();
-        
     });
   }
 
   get_password(group): any {
+    console.log('Getting password')
     let group_id = group['group_id'];
     let box_name = group['box_name'];
     let url = this.base_api_url + '/ws/Group/Info/' + group_id;
