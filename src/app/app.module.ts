@@ -36,6 +36,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { InterceptorService } from './loader/interceptor.service';
 import { AuthService } from './auth_services/auth.service';
@@ -84,11 +85,12 @@ import { NotificationComponent } from './notification/notification.component';
     MatTooltipModule,
     MatSlideToggleModule,
     MatMenuModule,
+    MatExpansionModule,
     AppRoutingModule,
     OverlayModule,
   ],
   exports:[
-
+    MatExpansionModule
   ],
   providers: [
     { provide:HTTP_INTERCEPTORS, useClass:InterceptorService, multi:true },

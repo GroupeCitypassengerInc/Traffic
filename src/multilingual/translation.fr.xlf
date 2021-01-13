@@ -79,6 +79,10 @@
         <target>Rafraîchir</target>
       </trans-unit>
 
+      <trans-unit id="tootip_expand/collapse_devices_table">
+        <target>Cliquez ici pour agrandir/réduire</target>
+      </trans-unit>
+
       <trans-unit id="title_metric_selection_devices_table">
         <target>Graphique disponible</target>
       </trans-unit>

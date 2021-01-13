@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { LoaderService } from '../loader/loader.service';
 import { LanguageService } from '../lingual_service/language.service'
 import { ThemePalette } from '@angular/material/core';
@@ -92,6 +93,8 @@ export class DevicesTableComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   
+  panelOpenState: boolean;
+
   site_language: string;
   metric_alternative_name: any = this.language.metric_alternative_name;
   user_role: string = 'Support';
@@ -152,10 +155,12 @@ export class DevicesTableComponent implements OnInit {
     this.theme_subscription = this.theme_handler.theme_changes.subscribe((theme) => {
       this._is_dark_mode_enabled = theme === 'Dark' ? true : false;
     });
-    console.log('init');
     this.login_information = history.state;
     if ( this.route.snapshot.paramMap.get('group') && this.route.queryParams['_value']['metric'] ) {
       this.graph_from_uri = true;
+      this.panelOpenState = false
+    } else {
+      this.panelOpenState = true;
     }
     if ( !isDevMode() ) {
       this.get_devices();
@@ -309,7 +314,6 @@ export class DevicesTableComponent implements OnInit {
     let checked;
     let url: Array<string> = ['graph/', group_name];
     let uri = '/graph/' + group_name +'/';
-    // /graph/citypassenger-infra-prod/metric?metric=scrape_duration_seconds&metric=scrape_samples_post_metric_relabeling&metric=scrape_series_added
     if ( _box_mode == false ) {
       informations.push([group_name, this.password]);
       checked = this.graphs_group_form.value;
