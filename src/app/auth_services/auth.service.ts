@@ -50,8 +50,8 @@ export class AuthService {
       };
       this.update_user_info(user_info);
       this.update_log_status(true);
-      this.router.navigateByUrl(old_url);
-      //this.redirect('/graph');
+      //this.router.navigateByUrl(old_url);
+      this.redirect('/graph');
     });
   }
 
@@ -84,7 +84,7 @@ export class AuthService {
     return is_logged;
   }
 
-  is_logged(): void | boolean {
+  is_logged(url?:string): void | boolean {
     let is_logged : boolean = false;
     let logged_api_url = this.base_api_url + '/ws/User/Logged';
     let headers = new HttpHeaders();
@@ -115,6 +115,9 @@ export class AuthService {
       //console.log('Logged ? -> yes');
       this.update_user_info(user_info);
       this.update_log_status(true);
+      if( url != undefined ) {
+        this.router.navigateByUrl(url);
+      }
       if (window.location.pathname.split('/')[1] != 'graph'){
         this.redirect('/graph');
       } else {

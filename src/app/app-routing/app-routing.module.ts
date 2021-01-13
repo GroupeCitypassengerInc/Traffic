@@ -18,7 +18,6 @@ const routes: Routes = [
   { path: '**', redirectTo: '/login', pathMatch: 'full' },  // Wildcard route for a 404 page
 ]; // sets up routes constant where you define your routes
 
-
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]

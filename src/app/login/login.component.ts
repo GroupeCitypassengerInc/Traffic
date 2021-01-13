@@ -43,9 +43,10 @@ export class LoginComponent implements OnInit {
     private router: Router ) { }
   
   ngOnInit(): void {
-    this.auth.is_logged();
+    this.return_url = this.route.snapshot.queryParams['returnUrl'] || '/graph';
+    console.log(this.return_url)
+    this.auth.is_logged(this.return_url);
     this.is_logged = this.auth.is_auth;
-    this.return_url = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
   getError(field_name): string {

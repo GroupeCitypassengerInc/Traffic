@@ -14,13 +14,14 @@ export class GuardService implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    if ( isDevMode() ){
+    if ( !isDevMode() ){
       return true;
     } else {
       if (this.auth.is_auth) {
         return true;
       } else {
-        this.router.navigate(['/loggin'], {queryParams: { returnUrl: state.url }})
+        console.log(state.url)
+        this.router.navigate(['/login'], {queryParams: { returnUrl: state.url }})
       }
     }
   }
