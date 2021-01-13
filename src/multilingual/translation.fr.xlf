@@ -75,6 +75,10 @@
         <target>Pour consulter les données collectées, sélectionnez les données que vous souhaitez consulter, puis cliquez sur le bouton Visualiser</target>
       </trans-unit>
 
+      <trans-unit id="tooltip_refresh_time_selection_graph">
+        <target>Rafraîchir</target>
+      </trans-unit>
+
       <trans-unit id="title_metric_selection_devices_table">
         <target>Graphique disponible</target>
       </trans-unit>

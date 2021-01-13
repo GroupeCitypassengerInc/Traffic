@@ -60,22 +60,32 @@
         (change)='on_slide_toggle_change($event, query)' color="primary"
         i18n='"now" text|"now" text in time range selection@@text_now_time_selection_graph'>Now</mat-slide-toggle>
 
-      <!-- Reset -->
+      <!-- Refresh -->
+      <button mat-button i18n-matTooltip='tooltip refresh chart @@tooltip_refresh_time_selection_graph' matTooltip='Refresh' class='icon_button'
+        (click)='regenerate(query)'>
+        <mat-icon>cached</mat-icon>
+      </button>
+
+      <!-- Reset settings -->
       <button mat-button
         i18n-matTooltip='tooltip restore default|tooltip of button which restore default settings@@tooltip_restore_default_time_selection_graph'
         matTooltip='Restore default values' class='icon_button' (click)='set_default_settings(query)'>
         <mat-icon>restore</mat-icon>
       </button>
-      <button *ngIf='is_dev' mat-button i18n-matTooltip='@@' matTooltip='Refresh' class='icon_button'
+
+      <!--  -->
+      <button *ngIf='is_dev' mat-button i18n-matTooltip='@@' matTooltip='unkwn' class='icon_button'
         (click)='chart_update(query)'>
         <mat-icon>update</mat-icon>
       </button>
 
-      <!-- Reset -->
-      <button *ngIf='is_dev' mat-button matTooltip='Restore default values' class='icon_button'
+      <!-- Hide lines -->
+      <button *ngIf='is_dev' mat-button matTooltip='Hide all curves' class='icon_button'
         (click)='hide_lines(query)'>
         <mat-icon>visibility_off</mat-icon>
       </button>
+
+
     </div>
   </div>
   <div class='graph'>
