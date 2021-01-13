@@ -185,7 +185,6 @@ export class DevicesTableComponent implements OnInit {
   }
 
   navigation (group_name: string, box: string, metric: Array<string>): void{
-    console.log ('navigation')
     let group: box_info;
 
     let metric_array: Array<string>;
@@ -198,8 +197,7 @@ export class DevicesTableComponent implements OnInit {
     this.BOX_DATA.forEach((device, index) => {
       if ( device.group_name == group_name ) {
         group = this.BOX_DATA[index];
-        console.log(group)
-        console.log(this.BOX_DATA)
+        if ( isDevMode() ) console.log(group);
       }
     })
 
@@ -211,7 +209,6 @@ export class DevicesTableComponent implements OnInit {
   }
 
   data_formating(): void {
-    console.log('formating data')
     let index = 0;
     for ( let group of this.JSON_data.groups ) {
       for ( let sites of group.sites ) {
@@ -229,9 +226,7 @@ export class DevicesTableComponent implements OnInit {
       }
     }
     this.refresh();
-    console.log(this.route.snapshot.paramMap.get('group'))
-    console.log(this.route.snapshot.paramMap.get('metric'))
-    console.log(this.route.queryParams['_value']['metric'])
+
     if ( this.route.snapshot.paramMap.get('group') && this.route.queryParams['_value']['metric'] )  {
       let group = this.route.snapshot.paramMap.get('group').toString();
       let metric = this.route.queryParams['_value']['metric'];
@@ -340,7 +335,6 @@ export class DevicesTableComponent implements OnInit {
   }
 
   Visualize_url(group_name:any, box_name:string, metric: Array<any>, password:string): void {
-    console.log('url');
     let informations: Array<any> = [];
     if ( box_name ) {
       informations.push([group_name, password, box_name]);
@@ -351,12 +345,8 @@ export class DevicesTableComponent implements OnInit {
       informations.push(metric);
     });
 
-    console.log(informations);
-    if ( isDevMode() ) {
-      console.log('....... information passed thanks to uri.......');
-      console.log(informations);
-      console.log('..................................');
-    }
+    if ( isDevMode() ) console.log(informations);
+
     this._show_graph = true;
     this.information_dad = informations;
   }
@@ -368,9 +358,7 @@ export class DevicesTableComponent implements OnInit {
   get_devices(): void{
     let url = this.base_api_url + '/ws/Map/Devices';
     let headers = new HttpHeaders();
-    if ( isDevMode() ) {
-      headers = headers.set('Accept-Encoding:', 'application/json');
-    }
+    if ( isDevMode() ) headers = headers.set('Accept-Encoding:', 'application/json');
     this.httpClient.request('GET', url, {headers})
       .toPromise()
       .then(response => {
@@ -384,7 +372,6 @@ export class DevicesTableComponent implements OnInit {
   }
 
   get_password(group): any {
-    console.log('Getting password')
     let group_id = group['group_id'];
     let box_name = group['box_name'];
     let url = this.base_api_url + '/ws/Group/Info/' + group_id;
@@ -394,10 +381,7 @@ export class DevicesTableComponent implements OnInit {
       .toPromise()
       .then(response => {
         let password = response['group']['ienaDevices'][box_name]['localinterface_passwords']['user'];
-        if ( isDevMode() ) {
-          console.log(response);
-          console.log(password);
-        }
+
         this.password = password;
         this.getRecord(group, password);
         if ( this.graph_from_uri ) {
@@ -426,9 +410,8 @@ export class DevicesTableComponent implements OnInit {
   }
   
   onChangeBoxForm (event: Event): void {
-    if ( isDevMode() ) {
-      console.log (event);
-    }
+    if ( isDevMode() ) console.log (event);
+
     if ( this.graphs_box_form.value.length > 0 && this.http_request_ok == true ) {
       this._disabled_visualize_box_form = false;
     } else {
@@ -437,9 +420,8 @@ export class DevicesTableComponent implements OnInit {
   }
 
   onChangeGroupForm (event: Event): void {
-    if ( isDevMode() ) {
-      console.log (event);
-    }
+    if ( isDevMode() ) console.log (event);
+
     if ( this.graphs_group_form.value.length > 0 && this.http_request_ok == true ) {
       this._disabled_visualize_group_form = false;
     } else {

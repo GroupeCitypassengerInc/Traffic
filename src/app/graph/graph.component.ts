@@ -61,6 +61,7 @@ export class GraphComponent implements OnInit {
   // Request : /prometheus/api/v1/query_range?query=up&start=1604584181.313&end=1604670581.313&step=9250
   prometheus_api_url : string = environment.prometheus_base_api_url;
   base_url : string = '';
+  base_url_buffer: string = '';
   box_selected : string = '';
 
   group_name : string;
@@ -120,9 +121,7 @@ export class GraphComponent implements OnInit {
       this.change_theme(this._is_dark_mode_enabled);
     });
 
-    if (isDevMode()){
-      this.user_role = 'Support'
-    }
+    if ( isDevMode() ) this.user_role = 'Support';
   }
   
   ngOnInit(): void {
@@ -144,14 +143,15 @@ export class GraphComponent implements OnInit {
     this.group_name = this.options[0];
     if ( isDevMode() ) {
       console.log(this._lang)
-      console.log('options');
       console.log(this.options);
     }
     if ( this.options.length == 2 ) {
       this.base_url = '/' + this.options[1] + '/prometheus/' + this.options[0] + '/api/v1';
+      this.base_url_buffer = '/' + this.options[1] + '/prombuffer/' + this.options[0] + '/api/v1';
       this.box_selected = null;
     } else {
       this.base_url = '/' + this.options[1] + '/prometheus/' + this.options[0] + '/api/v1';
+      this.base_url_buffer = '/' + this.options[1] + '/prombuffer/' + this.options[0] + '/api/v1';
       this.box_selected = this.options[2]
     }
     this.query_list = this.information;
@@ -243,9 +243,7 @@ export class GraphComponent implements OnInit {
       console.log ('re-building ' + id + ' chart');
     }
     this.graphs_records[id]['m_chart'] = this.get_metric_from_prometheus(id);
-    if ( isDevMode() ) {
-      console.log(this.graphs_records[id]['m_chart'])
-    }
+    if ( isDevMode() )  console.log(this.graphs_records[id]['m_chart']);
   }
 
   transform_metric_query(metric_name:string, box:string): string{
@@ -255,7 +253,9 @@ export class GraphComponent implements OnInit {
     }
     let scrape_interval = 2; //scrape interval => 2min
     let range = scrape_interval * 4; //safe 
-    console.log(this.metrics_config)
+
+    if ( isDevMode() ) console.log(this.metrics_config);
+
     if (  metric_name in this.metrics_config ) {
       if ( this.metrics_config[metric_name]['type'] == "range_vectors" ) {
         query = this.metrics_config[metric_name]['promql'] + '(' + query + '[' + range + 'm])';
@@ -272,7 +272,7 @@ export class GraphComponent implements OnInit {
     const timestamp = currentDate.getTime();
     let start_time = ( timestamp + this.up_start_time ) / 1000;
     let end_time = ( timestamp + this.end_time ) / 1000;
-    console.log(end_time + ' ' + start_time)
+    if ( isDevMode() ) console.log(end_time + ' ' + start_time);
     let step = this.get_prometheus_step(start_time, end_time);
 
     let selected_box = this.box_selected
@@ -282,19 +282,28 @@ export class GraphComponent implements OnInit {
     let query = ''; 
     query = '/query_range?query=' + metric + '&start=' + start_time + '&end=' + end_time + '&step=' + step;
 
-    if ( isDevMode() ) {
-      console.log ('dev mode detected');
-      this.base_url = '/api/v1';
+    if ( isDevMode() ) this.base_url = '/api/v1';
+
+    let url: string;
+    if( timestamp / 1000 - 3600 * 6 >= start_time || timestamp / 1000 - 3600 * 6  >= end_time) {
+      if (isDevMode()) {
+        url = this.prometheus_api_url + this.base_url + query;
+        console.log('>= 6h');
+      } else {
+        url = this.prometheus_api_url + this.base_url_buffer + query;
+      }
+    } else {
+      if (isDevMode()) console.log('< 6h');
+      url = this.prometheus_api_url + this.base_url + query;
     }
-    let url = this.prometheus_api_url + this.base_url + query;
+
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json');
     this.httpClient.request('GET', url, {headers})
       .toPromise()
       .then(response => {
-        if ( isDevMode() ) {
-          console.log(response);
-        }
+        if ( isDevMode() ) console.log(response);
+
         if ( response['status'] != 'success' ) {
           this.notification.show_notification('An error occurred while communicating with prometheus.','Close','error');
           throw new Error ('Request to prom : not successful');
@@ -313,9 +322,7 @@ export class GraphComponent implements OnInit {
   }
 
   parse_response(data_to_parse : any, metric:string): Object {
-    if ( isDevMode() ) {
-      console.log(data_to_parse);
-    }
+    if ( isDevMode() ) console.log(data_to_parse);
     let datasets = [];
     let metric_timestamp_list = [];
     for ( const key in data_to_parse ) {
@@ -422,7 +429,6 @@ export class GraphComponent implements OnInit {
       tension = this.metrics_config[metric]['tension'];
       
     }
-    console.log(tension)
     var chart = new Chart(ctx, {
       type: 'line',
       data: data,
