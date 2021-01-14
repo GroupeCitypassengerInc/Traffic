@@ -109,7 +109,7 @@ export class GraphComponent implements OnInit {
               private notification: NotificationServiceService,
               public theme_handler: ThemeHandlerService) {
     this.form_group = this._formBuilder.group({
-      default_date: [{ value: '', disabled: true }, Validators.required]
+      default_date: [{value: '', disabled: true }, Validators.required]
     });
 
     this.user_info_subscription = this.auth.log_user_info_change.subscribe((user_info:user_informations) => {
@@ -156,11 +156,8 @@ export class GraphComponent implements OnInit {
     }
     this.query_list = this.information;
     this.get_records();
-    this.form_group.valueChanges.subscribe(date => {
-      this.date_changes(date);
-    });
   }
-  //demo.robustperception.io:
+
   ngAfterViewInit(): void {
     this.set_charts();
   }
@@ -197,6 +194,15 @@ export class GraphComponent implements OnInit {
           t_now : this._now,
         }
         this.form_group.addControl(query, this.graphs_records[query]['t_date']);
+        this.form_group.controls[query].valueChanges.subscribe(date => {
+          if( isDevMode() ) {
+            console.log('Date changes :')
+            console.log(date)
+            console.log(query)
+            console.log(this.form_group.controls[query])
+          }
+          this.date_changes(date, query);
+        });
       }
     );
   }
@@ -303,9 +309,12 @@ export class GraphComponent implements OnInit {
       .toPromise()
       .then(response => {
         if ( isDevMode() ) console.log(response);
-
         if ( response['status'] != 'success' ) {
-          this.notification.show_notification('An error occurred while communicating with prometheus.','Close','error');
+          if ( this._lang == 'fr' ) {
+            this.notification.show_notification('Une erreur est survenue lors de la communication avec prometheus','Fermer','error');
+          } else {
+            this.notification.show_notification('An error occurred while communicating with prometheus.','Close','error');
+          }
           throw new Error ('Request to prom : not successful');
         }
         let parsed_data = this.parse_response(response['data']['result'], raw_metric_name);
@@ -520,14 +529,13 @@ export class GraphComponent implements OnInit {
     this.regenerate(query);
   }
 
-  date_changes(date: Date): void {
-    let query = Object.keys(date).toString();
+  date_changes(date: Date, query: string): void {
     this.default_date = new Date();
     let current_timestamp = this.default_date.getTime();
-    let selected_date_timestamp = date[query].getTime();
-
+    let selected_date_timestamp = date.getTime();
+    
     this.end_time = (current_timestamp - selected_date_timestamp) * -1;
-
+    
     let t_value = this.graphs_records[query]['t_value'];
     let t_unit = this.graphs_records[query]['t_unit'];
 
@@ -540,16 +548,16 @@ export class GraphComponent implements OnInit {
       if ( this._lang == 'fr' ) {
         this.notification.show_notification(
           'La date choisie ne doit pas se situer dans le futur. Date sélectionnée : ' 
-          + date[query].toLocaleDateString('fr-FR') + ' ' 
-          + date[query].toLocaleTimeString('fr-FR'), 
+          + date.toLocaleDateString('fr-FR') + ' ' 
+          + date.toLocaleTimeString('fr-FR'), 
           'Ok', 
           'error'
         );
       } else {
         this.notification.show_notification(
           'The selected date must not be in the future. Selected date : ' 
-          + date[query].toLocaleDateString('en-US') + ' ' 
-          + date[query].toLocaleTimeString('en-US'), 
+          + date.toLocaleDateString('en-US') + ' ' 
+          + date.toLocaleTimeString('en-US'), 
           'Ok', 
           'error'
         );
