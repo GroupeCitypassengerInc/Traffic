@@ -258,7 +258,7 @@ export class DevicesTableComponent implements OnInit {
     this.graphs_available_list = [];
     metrics_available.forEach(metric_name => {
       if ( metric_name in this.metric_alternative_name[this.user_role] ){
-        this.graphs_available_list.push(metric_name); //////////
+        this.graphs_available_list.push(metric_name); 
         this.box_info[box_name]['metric'].push(metric_name)
       }
     });

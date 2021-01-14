@@ -274,8 +274,7 @@ export class GraphComponent implements OnInit {
   }
 
   get_metric_from_prometheus(metric:string): void {
-    const currentDate = new Date();
-    const timestamp = currentDate.getTime();
+    const timestamp = new Date().getTime();
     let start_time = ( timestamp + this.up_start_time ) / 1000;
     let end_time = ( timestamp + this.end_time ) / 1000;
     if ( isDevMode() ) console.log(end_time + ' ' + start_time);
@@ -292,16 +291,14 @@ export class GraphComponent implements OnInit {
 
     let url: string;
     if( timestamp / 1000 - 3600 * 6 >= start_time || timestamp / 1000 - 3600 * 6  >= end_time) {
-      if ( isDevMode() ) {
-        url = this.prometheus_api_url + this.base_url + query;
-        console.log('>= 6h');
-      } else {
-        url = this.prometheus_api_url + this.base_url_buffer + query;
-      }
+      if ( isDevMode() ) console.log('>= 6h');
+      url = this.prometheus_api_url + this.base_url + query;
     } else {
       if ( isDevMode() ) console.log('< 6h');
-      url = this.prometheus_api_url + this.base_url + query;
+      url = this.prometheus_api_url + this.base_url_buffer + query;
     }
+
+    if ( isDevMode() )  url = this.prometheus_api_url + this.base_url + query;
 
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json');
@@ -409,9 +406,14 @@ export class GraphComponent implements OnInit {
   // Min step: 1s
   // Default: 1 step every 10px
   get_prometheus_step( start: number, end: number ): number {
+    const timestamp = new Date().getTime();
     const second_duration = ( end - start );
     let chart_width = window.innerWidth;
-    let step = Math.floor( second_duration / chart_width ) * 10;
+    let step: number;
+    step = Math.floor( second_duration / chart_width ) * 10;
+
+    if( timestamp / 1000 - 3600 * 6 >= start || timestamp / 1000 - 3600 * 6  >= end) {
+    }
     if ( isDevMode() ) {
       console.log (end + ' ' + start + ' ' + second_duration + ' ' + chart_width)
       console.log(step);
