@@ -73,11 +73,7 @@
         <mat-icon>restore</mat-icon>
       </button>
 
-      <!--  -->
-      <button *ngIf='is_dev' mat-button i18n-matTooltip='@@' matTooltip='unkwn' class='icon_button'
-        (click)='chart_update(query)'>
-        <mat-icon>update</mat-icon>
-      </button>
+      
 
       <!-- Hide curves -->
       <button *ngIf='!this.graphs_records[query]["m_chart"]["m_hidden"]'
@@ -93,6 +89,11 @@
         <mat-icon>visibility</mat-icon>
       </button>
 
+      <!-- remove metric -->
+      <button *ngIf='is_dev' mat-button i18n-matTooltip='tooltip Remove this metric@@tooltip_remove_this_metric_time_selection_graph' matTooltip='Remove this chart' class='icon_button'
+        (click)='delete(query)'>
+        <mat-icon>delete</mat-icon>
+      </button>
 
     </div>
   </div>

@@ -107,6 +107,10 @@
         <target>Afficher toutes les courbes</target>
       </trans-unit>
 
+      <trans-unit id="tooltip_remove_this_metric_time_selection_graph">
+        <target>Supprimer ce graphique</target>
+      </trans-unit>
+
       <trans-unit id="username_placeholder">
         <target>Nom d'utilisateur</target>
       </trans-unit>

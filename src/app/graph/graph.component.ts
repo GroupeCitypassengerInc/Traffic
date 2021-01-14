@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, SimpleChanges, ChangeDetectorRef, ApplicationRef, isDevMode } from '@angular/core';
 import { HttpClientModule, HttpClient, HttpHeaders }    from '@angular/common/http';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 import { catchError, timeout, map } from 'rxjs/operators';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { BrowserModule } from '@angular/platform-browser';
@@ -107,7 +109,9 @@ export class GraphComponent implements OnInit {
               public lingual: LanguageService, 
               private auth: AuthService,
               private notification: NotificationServiceService,
-              public theme_handler: ThemeHandlerService) {
+              public theme_handler: ThemeHandlerService,
+              private router: Router,
+              private location:Location) {
     this.form_group = this._formBuilder.group({
       default_date: [{value: '', disabled: true }, Validators.required]
     });
@@ -608,10 +612,6 @@ export class GraphComponent implements OnInit {
     this.graphs_records[metric]['m_chart'].update();
   }
 
-  chart_update(metric:string): void {
-    this.graphs_records[metric]['m_chart'].update();
-  }
-
   change_theme(dark_theme:boolean): void {
     if ( dark_theme ) {
       Chart.defaults.global.defaultFontColor = 'white';
@@ -621,5 +621,22 @@ export class GraphComponent implements OnInit {
     Chart.helpers.each(Chart.instances, function(instance){
       instance.chart.update();
     });
+  }
+
+  delete(query: string){
+    if ( isDevMode() ) console.log('Deleting : ' + query + ' chart');
+
+    delete this.graphs_records[query];
+    if ( Object.keys(this.graphs_records).length == 0 ) {
+      this.router.navigateByUrl('/graph');
+    } else {
+      let uri: string = this.router.url;
+      let str = 'metric=' + query + '&'
+      uri = uri.replace(str, '')
+      if (uri.includes(query)){
+        uri = uri.replace('&metric=' + query, '')
+      }
+      this.router.navigateByUrl(uri)
+    }
   }
 }
