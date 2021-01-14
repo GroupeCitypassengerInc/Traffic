@@ -99,6 +99,14 @@
         <target>Restaurer les valeurs par défauts</target>
       </trans-unit>
 
+      <trans-unit id="tooltip_hide_all_curves_time_selection_graph">
+        <target>Masquer toutes les courbes</target>
+      </trans-unit>
+
+      <trans-unit id="tooltip_show_all_curves_time_selection_graph">
+        <target>Afficher toutes les courbes</target>
+      </trans-unit>
+
       <trans-unit id="username_placeholder">
         <target>Nom d'utilisateur</target>
       </trans-unit>

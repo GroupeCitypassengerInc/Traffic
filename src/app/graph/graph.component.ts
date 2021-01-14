@@ -121,7 +121,7 @@ export class GraphComponent implements OnInit {
       this.change_theme(this._is_dark_mode_enabled);
     });
 
-    if ( isDevMode() ) this.user_role = 'Support';
+    if ( isDevMode ) this.user_role = 'Support';
   }
   
   ngOnInit(): void {
@@ -131,7 +131,7 @@ export class GraphComponent implements OnInit {
       this.change_theme(this._is_dark_mode_enabled);
     }
 
-    if (!isDevMode()){
+    if (!isDevMode){
       this.user_role = this.auth.user_info.role;
     } else {
       this.user_role = 'Support';
@@ -141,7 +141,7 @@ export class GraphComponent implements OnInit {
     this.default_date.setHours(this.default_date.getHours());
     this.options = this.information.shift();
     this.group_name = this.options[0];
-    if ( isDevMode() ) {
+    if ( isDevMode ) {
       console.log(this._lang)
       console.log(this.options);
     }
@@ -164,7 +164,7 @@ export class GraphComponent implements OnInit {
 
   ngOnChanges(changes: any): void {
     if ( !changes['information'].isFirstChange() ) {
-      if ( isDevMode() ) {
+      if ( isDevMode ) {
         console.log('changes catch: ');
         console.log(this.information);
       }
@@ -186,16 +186,17 @@ export class GraphComponent implements OnInit {
       query => {
         this.graphs_records[query] = {
           m_chart : "chart",
+          m_hidden: false,
           t_value : this.default_value,
           t_unit : this.default_unit,
           t_date : this._formBuilder.control({
             value: this.default_date, disabled: false
           }),
-          t_now : this._now,
+          t_now : this._now
         }
         this.form_group.addControl(query, this.graphs_records[query]['t_date']);
         this.form_group.controls[query].valueChanges.subscribe(date => {
-          if( isDevMode() ) {
+          if( isDevMode ) {
             console.log('Date changes :')
             console.log(date)
             console.log(query)
@@ -208,7 +209,7 @@ export class GraphComponent implements OnInit {
   }
 
   set_charts(): void {
-    if ( isDevMode() ) {
+    if ( isDevMode ) {
       console.log('set charts')
       console.log(this.query_list)
     }
@@ -243,13 +244,12 @@ export class GraphComponent implements OnInit {
 
   regenerate(id:string): void {
     this.graphs_records[id]['m_chart'].destroy();
-    if ( isDevMode() ) {
+    if ( isDevMode ) {
       console.log ('destroying ' + id + ' chart');
       console.log(this.graphs_records);
       console.log ('re-building ' + id + ' chart');
     }
     this.graphs_records[id]['m_chart'] = this.get_metric_from_prometheus(id);
-    if ( isDevMode() )  console.log(this.graphs_records[id]['m_chart']);
   }
 
   transform_metric_query(metric_name:string, box:string): string{
@@ -260,7 +260,7 @@ export class GraphComponent implements OnInit {
     let scrape_interval = 2; //scrape interval => 2min
     let range = scrape_interval * 4; //safe 
 
-    if ( isDevMode() ) console.log(this.metrics_config);
+    if ( isDevMode ) console.log(this.metrics_config);
 
     if (  metric_name in this.metrics_config ) {
       if ( this.metrics_config[metric_name]['type'] == "range_vectors" ) {
@@ -278,7 +278,7 @@ export class GraphComponent implements OnInit {
     const timestamp = currentDate.getTime();
     let start_time = ( timestamp + this.up_start_time ) / 1000;
     let end_time = ( timestamp + this.end_time ) / 1000;
-    if ( isDevMode() ) console.log(end_time + ' ' + start_time);
+    if ( isDevMode ) console.log(end_time + ' ' + start_time);
     let step = this.get_prometheus_step(start_time, end_time);
 
     let selected_box = this.box_selected
@@ -288,18 +288,18 @@ export class GraphComponent implements OnInit {
     let query = ''; 
     query = '/query_range?query=' + metric + '&start=' + start_time + '&end=' + end_time + '&step=' + step;
 
-    if ( isDevMode() ) this.base_url = '/api/v1';
+    if ( isDevMode ) this.base_url = '/api/v1';
 
     let url: string;
     if( timestamp / 1000 - 3600 * 6 >= start_time || timestamp / 1000 - 3600 * 6  >= end_time) {
-      if (isDevMode()) {
+      if (isDevMode) {
         url = this.prometheus_api_url + this.base_url + query;
         console.log('>= 6h');
       } else {
         url = this.prometheus_api_url + this.base_url_buffer + query;
       }
     } else {
-      if (isDevMode()) console.log('< 6h');
+      if (isDevMode) console.log('< 6h');
       url = this.prometheus_api_url + this.base_url + query;
     }
 
@@ -308,7 +308,7 @@ export class GraphComponent implements OnInit {
     this.httpClient.request('GET', url, {headers})
       .toPromise()
       .then(response => {
-        if ( isDevMode() ) console.log(response);
+        if ( isDevMode ) console.log(response);
         if ( response['status'] != 'success' ) {
           if ( this._lang == 'fr' ) {
             this.notification.show_notification('Une erreur est survenue lors de la communication avec prometheus','Fermer','error');
@@ -331,13 +331,13 @@ export class GraphComponent implements OnInit {
   }
 
   parse_response(data_to_parse : any, metric:string): Object {
-    if ( isDevMode() ) console.log(data_to_parse);
+    if ( isDevMode ) console.log(data_to_parse);
     let datasets = [];
     let metric_timestamp_list = [];
     for ( const key in data_to_parse ) {
 
       let instance;
-      if ( isDevMode() ) {
+      if ( isDevMode ) {
         instance = data_to_parse[key]['metric']['instance'];
       } else {
         instance = data_to_parse[key]['metric']['job'];
@@ -412,7 +412,7 @@ export class GraphComponent implements OnInit {
     const second_duration = ( end - start );
     let chart_width = window.innerWidth;
     let step = Math.floor( second_duration / chart_width ) * 10;
-    if ( isDevMode() ) {
+    if ( isDevMode ) {
       console.log (end + ' ' + start + ' ' + second_duration + ' ' + chart_width)
       console.log(step);
     }
@@ -424,7 +424,7 @@ export class GraphComponent implements OnInit {
   }
   
   chart_builder(metric:string, data): Chart {
-    if ( isDevMode() ) {
+    if ( isDevMode ) {
       console.log('building : ' + metric + ' chart');
       console.log(data);
     }
@@ -533,7 +533,7 @@ export class GraphComponent implements OnInit {
     this.default_date = new Date();
     let current_timestamp = this.default_date.getTime();
     let selected_date_timestamp = date.getTime();
-    
+
     this.end_time = (current_timestamp - selected_date_timestamp) * -1;
     
     let t_value = this.graphs_records[query]['t_value'];
@@ -544,7 +544,7 @@ export class GraphComponent implements OnInit {
     if ( current_timestamp < selected_date_timestamp ) {
       this.end_time = 0;
       this.up_start_time = -1 * t_value * this._unit[t_unit]
-
+      this.form_group.controls[query].setValue(this.default_date);
       if ( this._lang == 'fr' ) {
         this.notification.show_notification(
           'La date choisie ne doit pas se situer dans le futur. Date sélectionnée : ' 
@@ -594,15 +594,16 @@ export class GraphComponent implements OnInit {
   }
 
   hide_lines(metric:string): void {
-    console.log(Chart.helpers);
-    console.log(".......................")
-    console.log(this.graphs_records[metric]['m_chart']['data']);
-    console.log(this.graphs_records[metric]['m_chart']['options']);
-    Object.entries(this.graphs_records[metric]['m_chart']['data']).forEach(
-      ([key, value]) => console.log(value)
-    );
+    let _is_disabled: boolean = this.graphs_records[metric]["m_chart"]["m_hidden"];
+    this.graphs_records[metric]['m_chart'].data.datasets.forEach((dataSet, i) => {
+      var meta = this.graphs_records[metric]['m_chart'].getDatasetMeta(i);
+      if (meta.hidden == null){
+        meta.hidden = _is_disabled
+      }
+      meta.hidden = !_is_disabled;
+    });
+    this.graphs_records[metric]["m_chart"]["m_hidden"] = !_is_disabled
     this.graphs_records[metric]['m_chart'].update();
-
   }
 
   chart_update(metric:string): void {

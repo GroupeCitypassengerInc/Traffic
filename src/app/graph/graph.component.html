@@ -61,8 +61,8 @@
         i18n='"now" text|"now" text in time range selection@@text_now_time_selection_graph'>Now</mat-slide-toggle>
 
       <!-- Refresh -->
-      <button mat-button i18n-matTooltip='tooltip refresh chart @@tooltip_refresh_time_selection_graph' matTooltip='Refresh' class='icon_button'
-        (click)='regenerate(query)'>
+      <button mat-button i18n-matTooltip='tooltip refresh chart @@tooltip_refresh_time_selection_graph'
+        matTooltip='Refresh' class='icon_button' (click)='regenerate(query)'>
         <mat-icon>cached</mat-icon>
       </button>
 
@@ -79,10 +79,18 @@
         <mat-icon>update</mat-icon>
       </button>
 
-      <!-- Hide lines -->
-      <button *ngIf='is_dev' mat-button matTooltip='Hide all curves' class='icon_button'
-        (click)='hide_lines(query)'>
+      <!-- Hide curves -->
+      <button *ngIf='!this.graphs_records[query]["m_chart"]["m_hidden"]'
+        i18n-matTooltip='tooltip Hide all curves@@tooltip_hide_all_curves_time_selection_graph'
+        mat-button matTooltip='Hide all curves' class='icon_button' (click)='hide_lines(query)'>
         <mat-icon>visibility_off</mat-icon>
+      </button>
+
+      <!-- Show curves -->
+      <button *ngIf='this.graphs_records[query]["m_chart"]["m_hidden"]'
+        i18n-matTooltip='tooltip Show all curves@@tooltip_show_all_curves_time_selection_graph'
+        mat-button matTooltip='Show all curves' class='icon_button' (click)='hide_lines(query)'>
+        <mat-icon>visibility</mat-icon>
       </button>
 
 
