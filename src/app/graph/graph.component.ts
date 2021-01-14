@@ -288,9 +288,7 @@ export class GraphComponent implements OnInit {
     let query = ''; 
     query = '/query_range?query=' + metric + '&start=' + start_time + '&end=' + end_time + '&step=' + step;
 
-    if ( isDevMode() ) {
-      this.base_url = '/api/v1';
-    }
+    if ( isDevMode() ) this.base_url = '/api/v1';
 
     let url: string;
     if( timestamp / 1000 - 3600 * 6 >= start_time || timestamp / 1000 - 3600 * 6  >= end_time) {
@@ -301,9 +299,7 @@ export class GraphComponent implements OnInit {
         url = this.prometheus_api_url + this.base_url_buffer + query;
       }
     } else {
-      if ( isDevMode() ) {
-        console.log('< 6h');
-      }
+      if ( isDevMode() ) console.log('< 6h');
       url = this.prometheus_api_url + this.base_url + query;
     }
 
