@@ -35,6 +35,7 @@ import { ActivatedRoute } from '@angular/router';
 import * as devices_json from '../../assets/json/map_devices.json';
 import { Router } from '@angular/router'; 
 
+
 export interface boxes {
   [key: string]: any
 }
@@ -342,6 +343,7 @@ export class DevicesTableComponent implements OnInit {
     
     this._show_graph = true;
     this.information_dad = informations;
+    this.router.navigateByUrl(uri)
     this.location.replaceState(uri);
   }
 

@@ -1,12 +1,14 @@
 import { Component, Output, EventEmitter, HostListener, OnInit, Inject, isDevMode, HostBinding  } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { NavigationEnd, NavigationStart, Router, RoutesRecognized } from '@angular/router'; 
 import { GraphComponent } from './graph/graph.component';
 import { LoaderService } from './loader/loader.service';
 import { environment } from '../environments/environment';
 import { AuthService } from './auth_services/auth.service';
 import { LanguageService } from './lingual_service/language.service'
 import { ThemeHandlerService } from './theme_handler/theme-handler.service'
-import { Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from "@angular/platform-browser";
@@ -18,7 +20,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { LogOutDialogComponent } from './dialog/log-out-dialog/log-out-dialog.component';
 import { NotificationServiceService } from './notification/notification-service.service'
-import { OverlayContainer } from '@angular/cdk/overlay';
+import { HistoryServiceService } from './history/history-service.service'
 
 @Component({
   selector: 'app-root',
@@ -36,6 +38,9 @@ export class AppComponent implements OnInit {
   language_list: Array<any>;
   _theme: string;
 
+  previousUrl$ = new BehaviorSubject<string>(null);
+  currentUrl$ = new BehaviorSubject<string>(null);
+  
   constructor(
     private auth: AuthService, 
     public dialog: MatDialog, 
@@ -43,7 +48,9 @@ export class AppComponent implements OnInit {
     private matIconRegistry: MatIconRegistry, 
     private domSanitizer: DomSanitizer,
     public overlayContainer: OverlayContainer,
-    public theme_handler: ThemeHandlerService
+    public theme_handler: ThemeHandlerService,
+    private routerHistoryService: HistoryServiceService,
+    private router: Router
   ) {    
     this.matIconRegistry.addSvgIcon(
       'fr_flag',
