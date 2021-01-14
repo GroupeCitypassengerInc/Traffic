@@ -35,6 +35,9 @@ import { ActivatedRoute } from '@angular/router';
 import * as devices_json from '../../assets/json/map_devices.json';
 import { Router } from '@angular/router'; 
 
+export interface boxes {
+  [key: string]: any
+}
 
 export interface box_info {
   No: number, 
@@ -127,6 +130,7 @@ export class DevicesTableComponent implements OnInit {
   ];
   columnsToDisplayKeys: string[];
   BOX_DATA: box_info[] = [];
+  box_info: boxes = {};
   JSON_data: any = [];
   filterNameBox = '';
   filterNameGroup = '';
@@ -193,7 +197,7 @@ export class DevicesTableComponent implements OnInit {
     } else {
       metric_array = metric
     }
-    
+
     this.BOX_DATA.forEach((device, index) => {
       if ( device.group_name == group_name ) {
         group = this.BOX_DATA[index];
@@ -219,9 +223,13 @@ export class DevicesTableComponent implements OnInit {
           display_name: group.displayName, 
           box_name: sites.siteName, 
           address: sites.datas.address, 
-          site_refer:sites.siteReferer,
-          password:''
+          site_refer: sites.siteReferer,
+          password: '',
         });
+        this.box_info[sites.siteName] = {
+          group_name: group.groupName, 
+          metric: []
+        }
         index ++;
       }
     }
@@ -246,11 +254,12 @@ export class DevicesTableComponent implements OnInit {
     }
   }
 
-  graph_avialable_catcher(metrics_available): void {
+  graph_avialable_catcher(metrics_available, box_name: string): void {
     this.graphs_available_list = [];
     metrics_available.forEach(metric_name => {
       if ( metric_name in this.metric_alternative_name[this.user_role] ){
-        this.graphs_available_list.push(metric_name);
+        this.graphs_available_list.push(metric_name); //////////
+        this.box_info[box_name]['metric'].push(metric_name)
       }
     });
     this.graphs_available_list_backup = this.graphs_available_list;
@@ -263,31 +272,34 @@ export class DevicesTableComponent implements OnInit {
     if ( !isDevMode() ) {
       api_prometheus = this.prometheus_api + '/' + password + '/prometheus/'  + selected.group_name + '/api/v1/label/__name__/values';
     } else {
-      console.log(selected)
       api_prometheus = this.prometheus_api + '/api/v1/label/__name__/values';
     }
     
     this.graphs_group_form = new FormControl();
     this.graphs_box_form = new FormControl();
     let headers = new HttpHeaders();
-    headers = headers.set('accept', 'application/json');
-    this.httpClient.request('GET', api_prometheus, {headers}).pipe(
-      timeout(10000), 
-      map(res => {
-        return res;
-      }
-    ),catchError(
-      err => {
-        throw err;
-      }
-      )).subscribe(prometheus_metrics =>{
-        this.graph_avialable_catcher(prometheus_metrics['data']);
-        this.selection = row;
-        this.http_request_ok = true;
-      },err => {
-        this.http_request_ok = false;
-        console.log(err);
-      });
+
+    let metric_array: Array<any> = this.box_info[selected.box_name]['metric']
+    if (  metric_array.length == 0 ){
+      headers = headers.set('accept', 'application/json');
+      this.httpClient.request('GET', api_prometheus, {headers}).pipe(
+        timeout(10000), 
+        map(res => {
+          return res;
+        }
+      ),catchError(
+        err => {
+          throw err;
+        }
+        )).subscribe(prometheus_metrics =>{
+          this.graph_avialable_catcher(prometheus_metrics['data'], selected.box_name);
+          this.selection = row;
+          this.http_request_ok = true;
+        },err => {
+          this.http_request_ok = false;
+          console.log(err);
+        });
+    }
   }
 
   get_group_info(group:any): void {
@@ -330,7 +342,6 @@ export class DevicesTableComponent implements OnInit {
     
     this._show_graph = true;
     this.information_dad = informations;
-    //this.router.navigate(url, { queryParams: {metric: checked}} );
     this.location.replaceState(uri);
   }
 
