@@ -4,13 +4,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { GraphComponent } from '../graph/graph.component';
 import { DevicesTableComponent } from '../devices-table/devices-table.component';
+import { DevicesListComponent } from '../devices-list/devices-list.component';
 import { LoginComponent } from '../login/login.component';
 import { GuardService } from '../auth_services/guard.service';
 import { environment } from '../../environments/environment';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  //{ path: 'graph', component: DevicesTableComponent },
+  { path: 'select', canActivate: [GuardService], component: DevicesListComponent },
   { path: 'graph', canActivate: [GuardService], component: DevicesTableComponent },
   { path: 'graph/:group/:metric', canActivate: [GuardService], component: DevicesTableComponent },
   { path: 'graph/:group/:box/:metric', canActivate: [GuardService], component: DevicesTableComponent },

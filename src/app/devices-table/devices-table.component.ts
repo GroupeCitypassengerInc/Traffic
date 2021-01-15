@@ -175,6 +175,7 @@ export class DevicesTableComponent implements OnInit {
       this.data_formating();
     }
     this.columnsToDisplayKeys = this.columnsToDisplay.map(col => col.key);
+    console.log(this.columnsToDisplayKeys)
   }
  
   ngAfterViewInit(): void {
@@ -313,10 +314,20 @@ export class DevicesTableComponent implements OnInit {
     }
   }
 
+  get_group_info_row(group:any): void {
+    if ( this.expandedElement != null ) {
+      this._disabled_visualize_group_form = true;
+      this._disabled_visualize_box_form = true;
+      if ( isDevMode() ) { 
+        this.getRecord(group, '');
+      } else {
+        this.get_password(group);
+      }
+    }
+  }
+
   get_group_info(group:any): void {
-    this._disabled_visualize_group_form = true;
-    this._disabled_visualize_box_form = true;
-    if ( isDevMode() ) { //
+    if ( isDevMode() ) { 
       this.getRecord(group, '');
       if ( this.graph_from_uri ) {
         this.Visualize_url(group, this.group_name_from_uri, this.box_from_uri, this.metric_array_from_uri, '');

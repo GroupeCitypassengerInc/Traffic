@@ -112,7 +112,7 @@
             <tr mat-row *matRowDef='let box; columns: columnsToDisplayKeys;'
               [class.element-row-dark]='_is_dark_mode_enabled' [class.element-row]='!_is_dark_mode_enabled'
               [class.expanded-row]='expandedElement === box'
-              (click)='expandedElement = expandedElement === box ? null : box ' (click)='get_group_info(box)'>
+              (click)='expandedElement = expandedElement === box ? null : box ' (click)='get_group_info_row(box)'>
             </tr>
             <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class='detail-row'></tr>
           </table>

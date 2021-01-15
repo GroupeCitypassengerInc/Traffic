@@ -1,0 +1,99 @@
+table {
+  width: 100%;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 80%;
+  align-content: center;
+}
+
+.selection {
+  margin-top: 1%;
+  width: 100%;
+  max-height: 1%;
+}
+
+.grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 50% 50%;
+}
+
+.btn{
+  margin : 5px;
+}
+
+.graph_list{
+  list-style-type: none;
+}
+
+.button{
+  margin: 1%;
+}
+
+.mat-row.hovered {
+  background:#cfd7fe;
+}
+
+.mat-row.highlighted {
+  background: #8094fb;
+}
+
+tr.detail-row {
+  height: 0;
+}
+
+tr.element-row:not(.expanded-row):hover {
+  background: whitesmoke;
+}
+
+tr.element-row-dark:not(.expanded-row):hover {
+  background: #565656;
+}
+
+
+tr.element-row:not(.expanded-row):active {
+  background: #efefef;
+}
+
+.element-row td {
+  border-bottom-width: 0;
+}
+
+.element-detail {
+  overflow: hidden;
+  display: flex;
+}
+.element-description {
+  padding: 5px;
+  min-width: 100%;
+}
+
+.radio {
+  text-align: left;
+  align-content: left;
+  padding: 1%;
+}
+
+.additional-selection {
+  opacity: 0.75;
+  font-size: 0.75em;
+}
+
+.row {
+  text-align: center;
+}
+
+.visualize_btn {
+  margin: 1% 1% 2%;
+}
+
+.input_metric {
+  margin-top: 1%;
+  margin-left: 2%;
+}
+
+.content {
+  margin: 1%;
+}

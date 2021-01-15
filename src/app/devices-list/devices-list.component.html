@@ -1,0 +1,104 @@
+<div class='mat-app-background'>
+  <div style='margin: 1%;'>
+    <h1> /!\ Under Construction /!\ </h1>
+    <h2 i18n='welcome text|welcome text device table component@@welcome_devices_table'>
+      Welcome to baggage {{user_information['username']}} !</h2>
+    <h4 style='max-width: 60%;' i18n='short description@@short_description_devices_table'>
+      Baggage allows you to visualize the performance data of your devices. Select a device in the table
+      below, once the device is selected choose the data you wish to view and then click on the "view" button.
+    </h4>
+
+    <h2 i18n='title your devices|@@title_your_devices_table'>Your devices </h2>
+    <div class='table_container'>
+      <mat-form-field>
+        <mat-label i18n='search text|tip text for seach input in device table@@search_tip_devices_table'>Type here
+          to
+          search for a specific device</mat-label>
+        <input matInput (keyup)='apply_filter($event)' placeholder='Ex. Citybox' #input>
+      </mat-form-field>
+
+      <table mat-table [dataSource]='datasource' multiTemplateDataRows class='mat-elevation-z1' matSort>
+        <ng-container matColumnDef='{{column.key}}' *ngFor='let column of columnsToDisplay; let colIndex = index'>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class='row'> {{column[_lang]}} </th>
+          <td mat-cell *matCellDef='let box' class='row'> {{box[column.key]}} </td>
+        </ng-container>
+        <ng-container matColumnDef='expandedDetail'>
+          <td mat-cell *matCellDef='let box' [attr.colspan]='columnsToDisplay.length'>
+            <div class='element-detail' [@detailExpand]="box == expandedElement ? 'expanded' : 'collapsed'">
+              <div class='element-description'>
+                <mat-grid-list cols='5' rowHeight='100px'>
+                  <mat-grid-tile colspan='3' [style.background]='green'
+                    i18n='tip text|tip text wich explain how the table work@@tip_text_description_devices_table'>
+                    In order to consult the collected data , select the data you wish to consult and then click on
+                    the
+                    "Visualize" button.
+                  </mat-grid-tile>
+                  <!-- (GROUP) Graph selection -->
+                  <mat-grid-tile colspan='1' rowspan='1' [style.background]='blue'>
+                    <md-content style="text-align: center;">
+                      <mat-form-field appearance='legacy' style='width:100%;'>
+                        <mat-label
+                          i18n='title of metric selection|title of metric selection@@title_metric_selection_devices_table'>
+                          Graph available</mat-label>
+                        <mat-select [formControl]='graphs_group_form' (selectionChange)='onChangeGroupForm($event)'
+                          [disabled]='!http_request_ok' (openedChange)=clearfilterGroupForm() multiple>
+                          <mat-form-field class="input_metric">
+                            <mat-label
+                              i18n='text for search metric|text used in search metric input@@search_metric_input_devices_table'>
+                              search for metric</mat-label>
+                            <input class='input' [(ngModel)]="filterNameGroup" matInput type="text"
+                              (keyup)="filterListCareUnit($event.target.value)">
+                          </mat-form-field>
+                          <mat-option *ngFor='let graph_available of graphs_available_list' value='{{graph_available}}'>
+                            {{metric_alternative_name[user_role][graph_available][_lang]}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <br /><button mat-flat-button [disabled]='_disabled_visualize_group_form' color='primary'
+                        (click)='Visualize(box["group_name"], box["box_name"], false)' class='visualize_btn'
+                        i18n='text visualize button|text used in visualize button in devices table@@button_visualize_devices_table'>Visualize</button>
+                    </md-content>
+                  </mat-grid-tile>
+
+                  <!-- (BOX) Graph selection -->
+                  <mat-grid-tile colspan='1' rowspan='1' [style.background]='blue'>
+                    <md-content style="text-align: center;">
+                      <mat-form-field appearance='legacy' style='width:100%;'>
+                        <mat-label
+                          i18n='title of metric selection|title of metric selection@@title_metric_selection_devices_table'>
+                          Graph available</mat-label>
+                        <mat-select [formControl]='graphs_box_form' (selectionChange)='onChangeBoxForm($event)'
+                          [disabled]='!http_request_ok' (openedChange)=clearfilterBoxForm() multiple>
+                          <mat-form-field class="input_metric">
+                            <mat-label
+                              i18n='text for search metric|text used in search metric input@@search_metric_input_devices_table'>
+                              search for metric</mat-label>
+                            <input class='input' [(ngModel)]="filterNameBox" matInput type="text"
+                              (keyup)="filterListCareUnit($event.target.value)">
+                          </mat-form-field>
+                          <mat-option *ngFor='let graph_available of graphs_available_list' value='{{graph_available}}'>
+                            {{metric_alternative_name[user_role][graph_available][_lang]}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <br /><button mat-flat-button [disabled]='_disabled_visualize_box_form' color='primary'
+                        (click)='Visualize(box["group_name"], box["box_name"], true)' class='visualize_btn'
+                        i18n='text visualize button|text used in visualize button in devices table@@button_visualize_devices_table'>Visualize</button>
+                    </md-content>
+                  </mat-grid-tile>
+                </mat-grid-list>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef='columnsToDisplayKeys'></tr>
+        <tr mat-row *matRowDef='let box; columns: columnsToDisplayKeys;'
+          [class.element-row-dark]='_is_dark_mode_enabled' [class.element-row]='!_is_dark_mode_enabled'
+          [class.expanded-row]='expandedElement === box'
+          (click)='expandedElement = expandedElement === box ? null : box ' (click)='on_row_click(box)'>
+        </tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class='detail-row'></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]='[10, 25, 50, 75, 100]'></mat-paginator>
+    </div>
+  </div>
+</div>
