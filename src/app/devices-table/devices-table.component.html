@@ -10,8 +10,7 @@
     <mat-accordion>
       <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
         [expanded]='panelOpenState' class="mat-elevation-z0" style="background-color: transparent;"
-        [matTooltipDisabled]="panelOpenState"
-        matTooltip='Click here to expand/collapse'
+        [matTooltipDisabled]="panelOpenState" matTooltip='Click here to expand/collapse'
         i18n-matTooltip='tootip expand/collapse table in devices table@@tootip_expand/collapse_devices_table'>
         <mat-expansion-panel-header style="padding-left: 0;">
           <mat-panel-title>
@@ -58,7 +57,7 @@
                               i18n='title of metric selection|title of metric selection@@title_metric_selection_devices_table'>
                               Graph available</mat-label>
                             <mat-select [formControl]='graphs_group_form' (selectionChange)='onChangeGroupForm($event)'
-                              (openedChange)=clearfilterGroupForm() multiple>
+                              [disabled]='!http_request_ok' (openedChange)=clearfilterGroupForm() multiple>
                               <mat-form-field class="input_metric">
                                 <mat-label
                                   i18n='text for search metric|text used in search metric input@@search_metric_input_devices_table'>
@@ -85,7 +84,7 @@
                               i18n='title of metric selection|title of metric selection@@title_metric_selection_devices_table'>
                               Graph available</mat-label>
                             <mat-select [formControl]='graphs_box_form' (selectionChange)='onChangeBoxForm($event)'
-                              (openedChange)=clearfilterBoxForm() multiple>
+                              [disabled]='!http_request_ok' (openedChange)=clearfilterBoxForm() multiple>
                               <mat-form-field class="input_metric">
                                 <mat-label
                                   i18n='text for search metric|text used in search metric input@@search_metric_input_devices_table'>

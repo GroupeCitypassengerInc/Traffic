@@ -142,6 +142,7 @@ export class DevicesTableComponent implements OnInit {
   expandedElement: box_info | null;
   _disabled_visualize_box_form: boolean = true;
   _disabled_visualize_group_form: boolean = true;
+  _disabled_metric_list: boolean = true;
   http_request_ok: boolean = false
   option: 'group'|'box' = "group";
   password: string = '';
