@@ -191,6 +191,7 @@ export class DevicesListComponent implements OnInit {
         }
       }
     }
+    this.refresh_table();
     return devices_informations;
   }
 
@@ -203,15 +204,16 @@ export class DevicesListComponent implements OnInit {
   }
 
   on_row_click(row:table_devices_info): void {
-
   }
 
   get_metric_list(): void {
-    
   }
   
   get_box_password(): void {
+  }
 
+  refresh_table(): void {
+    this.datasource.data = this.datasource.data
   }
   
 }
