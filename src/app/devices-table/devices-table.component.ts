@@ -274,7 +274,7 @@ export class DevicesTableComponent implements OnInit {
     let selected  = row;
     let api_prometheus : string = '';
     this.box_info[selected.box_name]['password'] = password;
-    this.box_info[selected.box_name]['citynet_url'] += '/' + password
+    this.box_info[selected.box_name]['citynet_url'] = this.box_info[selected.box_name]['citynet_url'] + '/' + password
     if ( !isDevMode() ) {
       api_prometheus = this.box_info[selected.box_name]['citynet_url'] + '/prombuffer/'  + selected.group_name + '/api/v1/label/__name__/values';
     } else {
