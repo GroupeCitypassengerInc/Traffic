@@ -54,6 +54,7 @@ export class GraphComponent implements OnInit {
 
   user_role: string;
   user_info_subscription : Subscription;
+  form_group_controls_subscription: Subscription;
 
   query_list: any = [];
   _lang: string;
@@ -183,6 +184,8 @@ export class GraphComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.user_info_subscription.unsubscribe();
+    this.theme_subscription.unsubscribe();
+    this.form_group_controls_subscription.unsubscribe();
   }
 
   get_records(): void {
@@ -200,7 +203,7 @@ export class GraphComponent implements OnInit {
           t_now : this._now
         }
         this.form_group.addControl(query, this.graphs_records[query]['t_date']);
-        this.form_group.controls[query].valueChanges.subscribe(date => {
+        this.form_group_controls_subscription = this.form_group.controls[query].valueChanges.subscribe(date => {
           if( isDevMode() ) {
             console.log('Date changes :')
             console.log(date)

@@ -3,6 +3,9 @@ import { Location } from '@angular/common';
 import { animate, AnimationEvent, group, state, style, transition, trigger } from '@angular/animations';
 import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
 import { SelectionModel } from '@angular/cdk/collections';
+import { ActivatedRoute, Router } from '@angular/router';
+import { EMPTY, throwError, TimeoutError, Subscription } from 'rxjs';
+import { catchError, timeout, map, filter, take, takeUntil} from 'rxjs/operators';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -24,17 +27,12 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { FormControl, SelectControlValueAccessor } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { EMPTY, throwError, TimeoutError, Subscription } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
-import { catchError, timeout, map, filter} from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { GraphComponent } from '../graph/graph.component';
 import { AuthService } from '../auth_services/auth.service';
+import { NotificationServiceService } from '../notification/notification-service.service'
 import { ThemeHandlerService } from '../theme_handler/theme-handler.service'
-import { ActivatedRoute } from '@angular/router';
 import * as devices_json from '../../assets/json/map_devices.json';
-import { Router } from '@angular/router'; 
-
 
 export interface boxes {
   [key: string]: any
@@ -81,7 +79,8 @@ export class DevicesTableComponent implements OnInit {
               public theme_handler: ThemeHandlerService,
               private route: ActivatedRoute,
               private router:Router,
-              private location:Location) {
+              private location:Location,
+              private notification: NotificationServiceService,) {
     this.user_info_subscription = this.auth.log_user_info_change.subscribe((user_info:user_informations) => {
       this.login_information = user_info;
       this.user_role = user_info.role;
@@ -297,13 +296,19 @@ export class DevicesTableComponent implements OnInit {
         err => {
           throw err;
         }
-        )).subscribe(prometheus_metrics =>{
+        )).pipe(take(1))
+        .subscribe(prometheus_metrics =>{
           this.graph_avialable_catcher(prometheus_metrics['data'], selected.box_name);
           this.selection = row;
           this.http_request_ok = true;
         },err => {
           this.http_request_ok = false;
           console.log(err);
+          if ( this.site_language == 'fr' ) {
+            this.notification.show_notification('Une erreur est survenue lors de la communication avec prometheus, veuillez réessayer plus tard','Fermer','error');
+          } else {
+            this.notification.show_notification('An error occurred while communicating with prometheus, please try again later.','Close','error');
+          }
         });
     }
   }

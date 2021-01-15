@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, timeout, map } from 'rxjs/operators';
+import { catchError, timeout, map, take } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -40,7 +40,8 @@ export class AuthService {
         }
         throw err;
       }
-    )).subscribe(response  =>{
+    )).pipe(take(1))
+    .subscribe(response  =>{
       console.log('Login -> ok');
       //console.log(response);
       let user_info = {
@@ -79,7 +80,8 @@ export class AuthService {
         console.log('an error occured please try again');
         throw err;
       }
-    )).subscribe(response  =>{
+    )).pipe(take(1))
+    .subscribe(response  =>{
       console.log('Successfully logged out');
       this.redirect('/login')
       this.update_log_status(false);
@@ -104,7 +106,8 @@ export class AuthService {
         console.log('user not logged');
         throw err;
       }
-    )).subscribe(response  =>{
+    )).pipe(take(1))
+    .subscribe(response  =>{
       if ( response == null ) {
         this.update_log_status(false);
         this.redirect('/login');

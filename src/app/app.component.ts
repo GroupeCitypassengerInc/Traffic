@@ -31,7 +31,8 @@ export class AppComponent implements OnInit {
   _show_graph: boolean = false;
   is_logged: boolean = false;
   currentApplicationVersion = environment.appVersion;
-  auth_status_subscription : Subscription;
+  auth_status_subscription: Subscription;
+  dialog_ref_subscription: Subscription;
   is_dev_mode: boolean = false;
   is_dark_mode_enabled: boolean = false;
   site_locale: string;
@@ -89,11 +90,12 @@ export class AppComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.auth_status_subscription.unsubscribe();
+    this.dialog_ref_subscription.unsubscribe();
   }
 
   logout(): void  {
     const dialogRef = this.dialog.open(LogOutDialogComponent)
-    dialogRef.afterClosed().subscribe(result => {
+    this.dialog_ref_subscription = dialogRef.afterClosed().subscribe(result => {
     });
   }
 
