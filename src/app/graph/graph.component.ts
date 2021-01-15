@@ -29,6 +29,7 @@ import { NotificationServiceService } from '../notification/notification-service
 import { ThemeHandlerService } from '../theme_handler/theme-handler.service'
 import * as metrics_config from '../../assets/json/config.metrics.json';
 
+
 export interface unit_conversion {
   minute : number,
   hour : number,
@@ -150,12 +151,12 @@ export class GraphComponent implements OnInit {
       console.log(this.options);
     }
     if ( this.options.length == 2 ) {
-      this.base_url = '/' + this.options[1] + '/prometheus/' + this.options[0] + '/api/v1';
-      this.base_url_buffer = '/' + this.options[1] + '/prombuffer/' + this.options[0] + '/api/v1';
+      this.base_url = this.options[1] + '/prometheus/' + this.options[0] + '/api/v1';
+      this.base_url_buffer = this.options[1] + '/prombuffer/' + this.options[0] + '/api/v1';
       this.box_selected = null;
     } else {
-      this.base_url = '/' + this.options[1] + '/prometheus/' + this.options[0] + '/api/v1';
-      this.base_url_buffer = '/' + this.options[1] + '/prombuffer/' + this.options[0] + '/api/v1';
+      this.base_url = this.options[1] + '/prometheus/' + this.options[0] + '/api/v1';
+      this.base_url_buffer = this.options[1] + '/prombuffer/' + this.options[0] + '/api/v1';
       this.box_selected = this.options[2]
     }
     this.query_list = this.information;
@@ -296,10 +297,10 @@ export class GraphComponent implements OnInit {
     let url: string;
     if( timestamp / 1000 - 3600 * 6 >= start_time || timestamp / 1000 - 3600 * 6  >= end_time) {
       if ( isDevMode() ) console.log('>= 6h');
-      url = this.prometheus_api_url + this.base_url + query;
+      url = this.base_url + query;
     } else {
       if ( isDevMode() ) console.log('< 6h');
-      url = this.prometheus_api_url + this.base_url_buffer + query;
+      url = this.base_url_buffer + query;
     }
 
     if ( isDevMode() )  url = this.prometheus_api_url + this.base_url + query;
@@ -438,6 +439,7 @@ export class GraphComponent implements OnInit {
     if ( ctx === null ) {
       throw new Error('An error as occured. Can\'t get id ok : ' + metric);
     }
+
     let tension = 0;
     let min = 0;
     let unit: string = ' ';
@@ -448,11 +450,18 @@ export class GraphComponent implements OnInit {
         unit = '';
       }
     }
+
+    let color: string = '#E1E1E1'; //default value
+    if( this._is_dark_mode_enabled ) {
+      color = '#4d4d4d'
+    }
+
     var chart = new Chart(ctx, {
       type: 'line',
       data: data,
       options: {
         responsive : true,
+        
         tooltips: {
           callbacks: {
             label: function(tooltipItem, data) {
@@ -476,6 +485,9 @@ export class GraphComponent implements OnInit {
         },
         scales: {
           xAxes: [{
+            gridLines : {
+              color : color
+            },
             type: 'time',
             time: {
               // displayFormats: {
@@ -485,8 +497,11 @@ export class GraphComponent implements OnInit {
             }
           }],
           yAxes: [{
+            gridLines : {
+              color : color
+            },
             ticks: {
-              //suggestedMin: undefined,    // minimum will be 0, unless there is a lower value.
+              suggestedMin: min,    // minimum will be 0, unless there is a lower value.
             }
           }]
         }

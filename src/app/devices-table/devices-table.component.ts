@@ -229,7 +229,9 @@ export class DevicesTableComponent implements OnInit {
         });
         this.box_info[sites.siteName] = {
           group_name: group.groupName, 
-          metric: []
+          metric: [],
+          router: group.router,
+          citynet_url: this.prometheus_api.replace('XXXX', group.router)
         }
         index ++;
       }
@@ -269,9 +271,11 @@ export class DevicesTableComponent implements OnInit {
   getRecord(row:any, password:string): void {
     let selected  = row;
     let api_prometheus : string = '';
-
+    this.box_info[selected.box_name]['password'] = password;
+    this.box_info[selected.box_name]['citynet_url'] += '/' + password
+    console.log(this.box_info)
     if ( !isDevMode() ) {
-      api_prometheus = this.prometheus_api + '/' + password + '/prometheus/'  + selected.group_name + '/api/v1/label/__name__/values';
+      api_prometheus = this.box_info[selected.box_name]['citynet_url'] + '/prometheus/'  + selected.group_name + '/api/v1/label/__name__/values';
     } else {
       api_prometheus = this.prometheus_api + '/api/v1/label/__name__/values';
     }
@@ -323,11 +327,11 @@ export class DevicesTableComponent implements OnInit {
     let url: Array<string> = ['graph/', group_name];
     let uri = '/graph/' + group_name +'/';
     if ( _box_mode == false ) {
-      informations.push([group_name, this.password]);
+      informations.push([group_name, this.box_info[box_name]['citynet_url']]);
       checked = this.graphs_group_form.value;
 
     } else {
-      informations.push([group_name, this.password, box_name]);
+      informations.push([group_name, this.box_info[box_name]['citynet_url'], box_name]);
       checked = this.graphs_box_form.value;
       url.push(box_name);
       uri = uri + box_name + '/'
