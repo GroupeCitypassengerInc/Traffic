@@ -275,7 +275,7 @@ export class DevicesTableComponent implements OnInit {
     let api_prometheus : string = '';
     this.box_info[selected.box_name]['password'] = password;
     if ( !isDevMode() ) {
-      api_prometheus = this.box_info[selected.box_name]['citynet_url'] + '/' + password + '/prombuffer/'  + selected.group_name + '/api/v1/label/__name__/values';
+      api_prometheus = this.box_info[selected.box_name]['citynet_url'] + '/' + password + '/prometheus/'  + selected.group_name + '/api/v1/label/__name__/values';
     } else {
       api_prometheus = this.prometheus_api + '/api/v1/label/__name__/values';
     }
@@ -305,7 +305,7 @@ export class DevicesTableComponent implements OnInit {
           this.http_request_ok = false;
           console.log(err);
           if ( this.site_language == 'fr' ) {
-            this.notification.show_notification('Une erreur est survenue lors de la communication avec prometheus, veuillez réessayer plus tard','Fermer','error');
+            this.notification.show_notification('Une erreur est survenue lors de la communication avec prometheus, veuillez réessayer plus tard.','Fermer','error');
           } else {
             this.notification.show_notification('An error occurred while communicating with prometheus, please try again later.','Close','error');
           }
@@ -332,13 +332,14 @@ export class DevicesTableComponent implements OnInit {
     let checked;
     let url: Array<string> = ['graph/', group_name];
     let uri = '/graph/' + group_name +'/';
-    let password = this.box_info[box_name]['password']
+    let password = this.box_info[box_name]['password'];
+    let citynet_url = this.box_info[box_name]['citynet_url'] + '/' + password;
     if ( _box_mode == false ) {
-      informations.push([group_name, this.box_info[box_name]['citynet_url'] + '/' + password]);
+      informations.push([group_name, citynet_url]);
       checked = this.graphs_group_form.value;
 
     } else {
-      informations.push([group_name, this.box_info[box_name]['citynet_url'] + '/' + password, box_name]);
+      informations.push([group_name, citynet_url, box_name]);
       checked = this.graphs_box_form.value;
       url.push(box_name);
       uri = uri + box_name + '/'
