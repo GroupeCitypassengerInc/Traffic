@@ -46,7 +46,8 @@ export interface box_info {
   box_name: string,  
   address: string, 
   site_refer: string, 
-  password: string,
+  router: string,
+  password: string
 }
 export interface checkbox {
   name: string;
@@ -189,7 +190,7 @@ export class DevicesTableComponent implements OnInit {
     this.theme_subscription.unsubscribe();
   }
 
-  navigation (group_name: string, box: string, metric: Array<string>): void{
+  navigation(group_name: string, box: string, metric: Array<string>): void{
     let group: box_info;
 
     let metric_array: Array<string>;
@@ -225,6 +226,7 @@ export class DevicesTableComponent implements OnInit {
           box_name: sites.siteName, 
           address: sites.datas.address, 
           site_refer: sites.siteReferer,
+          router: group.router,
           password: '',
         });
         this.box_info[sites.siteName] = {
@@ -273,9 +275,8 @@ export class DevicesTableComponent implements OnInit {
     let api_prometheus : string = '';
     this.box_info[selected.box_name]['password'] = password;
     this.box_info[selected.box_name]['citynet_url'] += '/' + password
-    console.log(this.box_info)
     if ( !isDevMode() ) {
-      api_prometheus = this.box_info[selected.box_name]['citynet_url'] + '/prometheus/'  + selected.group_name + '/api/v1/label/__name__/values';
+      api_prometheus = this.box_info[selected.box_name]['citynet_url'] + '/prombuffer/'  + selected.group_name + '/api/v1/label/__name__/values';
     } else {
       api_prometheus = this.prometheus_api + '/api/v1/label/__name__/values';
     }
@@ -319,7 +320,7 @@ export class DevicesTableComponent implements OnInit {
     if ( isDevMode() ) { //
       this.getRecord(group, '');
       if ( this.graph_from_uri ) {
-        this.Visualize_url(this.group_name_from_uri, this.box_from_uri, this.metric_array_from_uri, '');
+        this.Visualize_url(group, this.group_name_from_uri, this.box_from_uri, this.metric_array_from_uri, '');
         this.graph_from_uri = false;
       }
     } else {
@@ -357,12 +358,19 @@ export class DevicesTableComponent implements OnInit {
     this.location.replaceState(uri);
   }
 
-  Visualize_url(group_name:any, box_name:string, metric: Array<any>, password:string): void {
+  Visualize_url(group:any, group_name:string, box_name:string, metric: Array<any>, password:string): void {
     let informations: Array<any> = [];
-    if ( box_name ) {
-      informations.push([group_name, password, box_name]);
+    let citynet_url: string;
+    
+    if ( !isDevMode() ) {
+      citynet_url = this.prometheus_api.replace('XXXX', group.router) + '/' + password;
     } else {
-      informations.push([group_name, password]);
+      citynet_url = this.prometheus_api
+    }
+    if ( box_name ) {
+      informations.push([group_name, citynet_url, box_name]);
+    } else {
+      informations.push([group_name, citynet_url]);
     }
     metric.forEach(metric => {
       informations.push(metric);
@@ -408,7 +416,7 @@ export class DevicesTableComponent implements OnInit {
         this.password = password;
         this.getRecord(group, password);
         if ( this.graph_from_uri ) {
-          this.Visualize_url(this.group_name_from_uri, this.box_from_uri, this.metric_array_from_uri, password);
+          this.Visualize_url(group, this.group_name_from_uri, this.box_from_uri, this.metric_array_from_uri, password);
           this.graph_from_uri = false;
         }
       });
