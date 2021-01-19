@@ -139,11 +139,11 @@ export class GraphComponent implements OnInit {
     let box_name: string = this.route.snapshot.paramMap.get('box_name');
     this.group_name = this.route.snapshot.paramMap.get('group_name');
     this.query_list = this.route.queryParams['_value']['metric'];
+    let router = this.route.snapshot.paramMap.get('router');
+
     if ( typeof this.query_list == 'string' ) {
       this.query_list = [this.query_list];
     }
-    console.log(this.query_list)
-    console.log("this.query_list")
 
     if ( password == null || this.group_name == null || this.query_list == undefined ) {
       if ( this._lang == 'fr' ) {
@@ -151,13 +151,16 @@ export class GraphComponent implements OnInit {
       } else {
         this.notification.show_notification('Please select data to visualize.','Ok','error');
       }
-      console.log('need to redirect !')
       this.router.navigate(['/select']);
     }
 
-    this.base_url = password + '/prometheus/' + this.group_name + '/api/v1';
-    this.base_url_buffer = password + '/prombuffer/' + this.group_name + '/api/v1';
+    this.base_url = '/' + password + '/prometheus/' + this.group_name + '/api/v1';
+    this.base_url_buffer = '/' +  password + '/prombuffer/' + this.group_name + '/api/v1';
     this.box_selected = box_name;
+
+    if ( !isDevMode() ) {
+      this.prometheus_api_url = this.prometheus_api_url.replace('XXXX', router);
+    }
     
     this.get_records(this.query_list);
   }
@@ -299,7 +302,7 @@ export class GraphComponent implements OnInit {
       url = this.base_url_buffer + query;
     }
 
-    if ( isDevMode() )  url = this.prometheus_api_url + this.base_url + query;
+    url = this.prometheus_api_url + this.base_url + query;
 
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json');
@@ -415,7 +418,7 @@ export class GraphComponent implements OnInit {
 
     if( timestamp / 1000 - 3600 * 6 >= start || timestamp / 1000 - 3600 * 6  >= end) {
     }
-    
+
     if ( step == 0 ) {
       step = 50;
     }

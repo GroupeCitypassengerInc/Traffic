@@ -352,9 +352,10 @@ export class DevicesListComponent implements OnInit {
     let password: string;
     let metric_checked: Array<string>;
     let group_id: number = devices_informations[group_name]['group_id'];
-
+    let router: string = devices_informations[group_name]['router'];
+    if ( isDevMode() ) router = 'router';
     let citynet_url: string = devices_informations[group_name]['citynet_url'];
-    let redirect_url: string = '/graph/' + group_name + '/' ; 
+    let redirect_url: string = '/graph/' + group_name + '/' + router + '/'; 
 
     if ( box_name == undefined ) {
       let key: string = Object.keys(devices_informations[group_name]).pop();

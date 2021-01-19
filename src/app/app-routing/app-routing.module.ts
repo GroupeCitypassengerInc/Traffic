@@ -12,8 +12,8 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'select', canActivate: [GuardService], component: DevicesListComponent },
   { path: 'graph', canActivate: [GuardService], component: GraphComponent },
-  { path: 'graph/:group_name/:password/:metric', canActivate: [GuardService], component: GraphComponent },
-  { path: 'graph/:group_name/:password/:box_name/:metric', canActivate: [GuardService], component: GraphComponent },
+  { path: 'graph/:group_name/:router/:password/:metric', canActivate: [GuardService], component: GraphComponent },
+  { path: 'graph/:group_name/:router/:password/:box_name/:metric', canActivate: [GuardService], component: GraphComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },  // Wildcard route for a 404 page
   { path: '**', redirectTo: '/login', pathMatch: 'full' },  // Wildcard route for a 404 page
 ]; // sets up routes constant where you define your routes
