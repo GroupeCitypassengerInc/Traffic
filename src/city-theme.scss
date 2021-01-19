@@ -73,7 +73,6 @@ $city-baggage-light-theme-primary: mat-palette($md-cityblue);
 $city-baggage-light-theme-secondary: mat-palette($md-citygreen);
 $city-baggage-light-theme-warn: mat-palette($md-cityblue);
 $city-baggage-light-theme-accent: mat-palette($md-cityblue);
-//$city-baggage-light-theme: mat-light-theme($city-baggage-light-theme-primary, $city-baggage-light-theme-accent, $city-baggage-light-theme-warn);
 
 $city-baggage-light-theme: mat-light-theme((
   color: (
@@ -84,10 +83,6 @@ $city-baggage-light-theme: mat-light-theme((
   )
 ));
 @include angular-material-theme($city-baggage-light-theme);
-
-.light-theme-mode {
-  @include angular-material-theme($city-baggage-light-theme);
-}
 
 // dark theme
 $city-baggage-dark-theme-primary: mat-palette($md-cityblue, 500);
@@ -106,6 +101,5 @@ $city-baggage-dark-theme: mat-dark-theme((
 ));
 
 .dark-theme-mode {
-  @include angular-material-theme($city-baggage-dark-theme);
-  
+  @include angular-material-color($city-baggage-dark-theme);
 }
