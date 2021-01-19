@@ -1,6 +1,5 @@
 <div class='mat-app-background'>
   <div style='margin: 1%;'>
-    <h1> /!\ Under Construction /!\ </h1>
     <h2 i18n='welcome text|welcome text device table component@@welcome_devices_table'>
       Welcome to baggage {{user_information['username']}} !</h2>
     <h4 style='max-width: 60%;' i18n='short description@@short_description_devices_table'>
@@ -40,8 +39,8 @@
                         <mat-label
                           i18n='title of metric selection|title of metric selection@@title_metric_selection_devices_table'>
                           Graph available</mat-label>
-                        <mat-select [formControl]='graphs_group_form' (selectionChange)='onChangeGroupForm($event)'
-                          [disabled]='!http_request_ok' (openedChange)=clearfilterGroupForm() multiple>
+                        <mat-select [formControl]='devices_informations[box["group_name"]]["form_control"]' (selectionChange)='onChangeGroupForm($event, box)'
+                          [disabled]='devices_informations[box["group_name"]]["form_disabled"]' multiple>
                           <mat-form-field class="input_metric">
                             <mat-label
                               i18n='text for search metric|text used in search metric input@@search_metric_input_devices_table'>
@@ -49,12 +48,12 @@
                             <input class='input' [(ngModel)]="filterNameGroup" matInput type="text"
                               (keyup)="filterListCareUnit($event.target.value)">
                           </mat-form-field>
-                          <mat-option *ngFor='let graph_available of graphs_available_list' value='{{graph_available}}'>
-                            {{metric_alternative_name[user_role][graph_available][_lang]}}</mat-option>
+                          <mat-option *ngFor='let graph_available of devices_informations[box["group_name"]]["group_metric"]' value='{{graph_available}}'>
+                            {{metric_alternative_name[user_information.role][graph_available][_lang]}}</mat-option>
                         </mat-select>
                       </mat-form-field>
-                      <br /><button mat-flat-button [disabled]='_disabled_visualize_group_form' color='primary'
-                        (click)='Visualize(box["group_name"], box["box_name"], false)' class='visualize_btn'
+                      <br /><button mat-flat-button [disabled]='devices_informations[box["group_name"]]["visualize_disabled"]' color='primary'
+                        (click)='visualize(box["group_name"])' class='visualize_btn'
                         i18n='text visualize button|text used in visualize button in devices table@@button_visualize_devices_table'>Visualize</button>
                     </md-content>
                   </mat-grid-tile>
@@ -66,8 +65,8 @@
                         <mat-label
                           i18n='title of metric selection|title of metric selection@@title_metric_selection_devices_table'>
                           Graph available</mat-label>
-                        <mat-select [formControl]='graphs_box_form' (selectionChange)='onChangeBoxForm($event)'
-                          [disabled]='!http_request_ok' (openedChange)=clearfilterBoxForm() multiple>
+                        <mat-select [formControl]='devices_informations[box["group_name"]][box["box_name"]]["form_control"]' (selectionChange)='onChangeBoxForm($event, box)'
+                          [disabled]='devices_informations[box["group_name"]][box["box_name"]]["form_disabled"]' multiple>
                           <mat-form-field class="input_metric">
                             <mat-label
                               i18n='text for search metric|text used in search metric input@@search_metric_input_devices_table'>
@@ -75,12 +74,12 @@
                             <input class='input' [(ngModel)]="filterNameBox" matInput type="text"
                               (keyup)="filterListCareUnit($event.target.value)">
                           </mat-form-field>
-                          <mat-option *ngFor='let graph_available of graphs_available_list' value='{{graph_available}}'>
-                            {{metric_alternative_name[user_role][graph_available][_lang]}}</mat-option>
+                          <mat-option *ngFor='let graph_available of devices_informations[box["group_name"]]["group_metric"]' value='{{graph_available}}'>
+                            {{metric_alternative_name[user_information.role][graph_available][_lang]}}</mat-option>
                         </mat-select>
                       </mat-form-field>
-                      <br /><button mat-flat-button [disabled]='_disabled_visualize_box_form' color='primary'
-                        (click)='Visualize(box["group_name"], box["box_name"], true)' class='visualize_btn'
+                      <br /><button mat-flat-button [disabled]='devices_informations[box["group_name"]][box["box_name"]]["visualize_disabled"]' color='primary'
+                        (click)='visualize(box["group_name"], box["box_name"])' class='visualize_btn'
                         i18n='text visualize button|text used in visualize button in devices table@@button_visualize_devices_table'>Visualize</button>
                     </md-content>
                   </mat-grid-tile>

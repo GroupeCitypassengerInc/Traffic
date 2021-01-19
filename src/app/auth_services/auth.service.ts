@@ -34,7 +34,7 @@ export class AuthService {
     ),catchError(
       err => {
          if ( err.error.message == 'alreadyLogged' ) {
-          this.redirect('/graph');
+          this.redirect('/select');
         } else {
           console.error(err.error.message);
         }
@@ -54,7 +54,7 @@ export class AuthService {
       if ( old_url != undefined ) {
         this.router.navigateByUrl(old_url);
       } else {
-        this.router.navigateByUrl('/graph');
+        this.router.navigateByUrl('/select');
       }
     });
   }
@@ -92,7 +92,7 @@ export class AuthService {
   is_logged(url?:string): void | boolean {
     let logged_api_url = this.base_api_url + '/ws/User/Logged';
     let headers = new HttpHeaders();
-    console.log(url)
+    //console.log(url)
     
     headers = headers.set('accept', 'application/json');
     this.httpClient.request('GET', logged_api_url, {headers}).pipe(
@@ -123,7 +123,7 @@ export class AuthService {
       this.update_log_status(true);
 
       if( url == undefined ) {
-        url = '/graph'
+        url = '/select'
       }
       this.router.navigateByUrl(url);
       return true;

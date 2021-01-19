@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { GraphComponent } from './graph/graph.component';
-import { DevicesTableComponent } from './devices-table/devices-table.component';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
@@ -49,7 +48,6 @@ import { DevicesListComponent } from './devices-list/devices-list.component';
   declarations: [
     AppComponent,
     GraphComponent,
-    DevicesTableComponent,
     SpinnerComponent,
     LoginComponent,
     routingComponents,

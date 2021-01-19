@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, SimpleChanges, ChangeDetectorRef, ApplicationRef, isDevMode } from '@angular/core';
 import { HttpClientModule, HttpClient, HttpHeaders }    from '@angular/common/http';
 import { Location } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, timeout, map } from 'rxjs/operators';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { BrowserModule } from '@angular/platform-browser';
@@ -49,21 +49,20 @@ export interface user_informations {
 
 export class GraphComponent implements OnInit {
 
-  @Input() information: Array<string>;
-  Object = Object;
-
   user_role: string;
   user_info_subscription : Subscription;
   form_group_controls_subscription: Subscription;
 
-  query_list: any = [];
-  _lang: string;
+  query_list: Array<string> = [];
+  _lang: string = this.lingual.get_language();
   metric_alternative_name: any = this.lingual.metric_alternative_name;
   metrics_config: any = (metrics_config as any).default;
-  is_dev: boolean = false;
+  is_dev: boolean = isDevMode();
 
   // Request : /prometheus/api/v1/query_range?query=up&start=1604584181.313&end=1604670581.313&step=9250
   prometheus_api_url : string = environment.prometheus_base_api_url;
+  base_api_url: string = environment.city_url_api;
+
   base_url : string = '';
   base_url_buffer: string = '';
   box_selected : string = '';
@@ -78,7 +77,7 @@ export class GraphComponent implements OnInit {
   options : any;
 
   form_group: FormGroup;
-  graphs_records : any = {};
+  graphs_records : Object = {};
   default_value: number = 1;
   default_date: Date = new Date();
 
@@ -100,10 +99,6 @@ export class GraphComponent implements OnInit {
   theme_subscription: Subscription;
 
   CRC_table:Array<number> = [];
-  time_input_form_control: FormControl = new FormControl('',[
-    Validators.required,
-    Validators.min(1)
-  ]); //To change
 
   constructor(private appRef: ChangeDetectorRef,  
               private _formBuilder: FormBuilder, 
@@ -113,84 +108,82 @@ export class GraphComponent implements OnInit {
               private notification: NotificationServiceService,
               public theme_handler: ThemeHandlerService,
               private router: Router,
+              private route: ActivatedRoute,
               private location:Location) {
     this.form_group = this._formBuilder.group({
       default_date: [{value: '', disabled: true }, Validators.required]
     });
-
     this.user_info_subscription = this.auth.log_user_info_change.subscribe((user_info:user_informations) => {
       this.user_role = user_info.role;
     });
-
     this.theme_subscription = this.theme_handler.theme_changes.subscribe((theme) => {
       this._is_dark_mode_enabled = theme === 'Dark' ? true : false;
       this.change_theme(this._is_dark_mode_enabled);
+      this.regenerate_all_graph();
     });
+    this._is_dark_mode_enabled = this.theme_handler.get_theme() === 'Dark' ? true : false;
 
     if ( isDevMode() ) this.user_role = 'Support';
   }
   
   ngOnInit(): void {
-    this.is_dev = isDevMode();
-    if ( this.theme_handler.get_theme() == 'Dark' ) {
-      this._is_dark_mode_enabled = true;
-      this.change_theme(this._is_dark_mode_enabled);
-    }
-
     if (!isDevMode()){
       this.user_role = this.auth.user_info.role;
     } else {
       this.user_role = 'Support';
-    }
-    
-    this._lang = this.lingual.get_language();
-    this.default_date.setHours(this.default_date.getHours());
-    this.options = this.information.shift();
-    this.group_name = this.options[0];
-    if ( isDevMode() ) {
       console.log(this._lang)
-      console.log(this.options);
     }
-    if ( this.options.length == 2 ) {
-      this.base_url = this.options[1] + '/prometheus/' + this.options[0] + '/api/v1';
-      this.base_url_buffer = this.options[1] + '/prombuffer/' + this.options[0] + '/api/v1';
-      this.box_selected = null;
-    } else {
-      this.base_url = this.options[1] + '/prometheus/' + this.options[0] + '/api/v1';
-      this.base_url_buffer = this.options[1] + '/prombuffer/' + this.options[0] + '/api/v1';
-      this.box_selected = this.options[2]
+    this.default_date.setHours(this.default_date.getHours());
+
+    let password: string = this.route.snapshot.paramMap.get('password');
+    let box_name: string = this.route.snapshot.paramMap.get('box_name');
+    this.group_name = this.route.snapshot.paramMap.get('group_name');
+    this.query_list = this.route.queryParams['_value']['metric'];
+    if ( typeof this.query_list == 'string' ) {
+      this.query_list = [this.query_list];
     }
-    this.query_list = this.information;
-    this.get_records();
+    console.log(this.query_list)
+    console.log("this.query_list")
+
+    if ( password == null || this.group_name == null || this.query_list == undefined ) {
+      if ( this._lang == 'fr' ) {
+        this.notification.show_notification('Veuillez sélectionner des données à visualiser.','Ok','error');
+      } else {
+        this.notification.show_notification('Please select data to visualize.','Ok','error');
+      }
+      console.log('need to redirect !')
+      this.router.navigate(['/select']);
+    }
+
+    this.base_url = password + '/prometheus/' + this.group_name + '/api/v1';
+    this.base_url_buffer = password + '/prombuffer/' + this.group_name + '/api/v1';
+    this.box_selected = box_name;
+    
+    this.get_records(this.query_list);
   }
 
   ngAfterViewInit(): void {
     this.set_charts();
   }
 
-  ngOnChanges(changes: any): void {
-    if ( !changes['information'].isFirstChange() ) {
-      if ( isDevMode() ) {
-        console.log('changes catch: ');
-        console.log(this.information);
-      }
-      this.destroy_all()
-      this.ngOnInit();
-      this.get_records();
-      this.appRef.detectChanges();
-      this.generate_all_graph();
-    } 
+  ngOnChanges(): void {
+    this.destroy_all()
+    this.ngOnInit();
+    this.get_records(this.query_list);
+    this.appRef.detectChanges();
+    this.generate_all_graph();
   }
 
   ngOnDestroy(): void {
     this.user_info_subscription.unsubscribe();
     this.theme_subscription.unsubscribe();
-    this.form_group_controls_subscription.unsubscribe();
+    if ( this.form_group_controls_subscription != undefined ) {
+      this.form_group_controls_subscription.unsubscribe();
+    }
   }
 
-  get_records(): void {
-    this.graphs_records = {};
-    this.query_list.forEach(
+  get_records(query_list: Array<string>): void {
+    query_list.forEach(
       query => {
         this.graphs_records[query] = {
           m_chart : "chart",
@@ -229,8 +222,8 @@ export class GraphComponent implements OnInit {
   }
 
   generate_all_graph(): void {
-    this.get_records (); 
-    this.set_charts ();
+    this.get_records(this.query_list); 
+    this.set_charts();
   }
 
   destroy_all(): void {
@@ -422,10 +415,7 @@ export class GraphComponent implements OnInit {
 
     if( timestamp / 1000 - 3600 * 6 >= start || timestamp / 1000 - 3600 * 6  >= end) {
     }
-    if ( isDevMode() ) {
-      console.log (end + ' ' + start + ' ' + second_duration + ' ' + chart_width)
-      console.log(step);
-    }
+    
     if ( step == 0 ) {
       step = 50;
     }
@@ -436,7 +426,6 @@ export class GraphComponent implements OnInit {
   chart_builder(metric:string, data): Chart {
     if ( isDevMode() ) {
       console.log('building : ' + metric + ' chart');
-      console.log(data);
     }
     let ctx = document.getElementById(metric);
     if ( ctx === null ) {
@@ -453,10 +442,10 @@ export class GraphComponent implements OnInit {
         unit = '';
       }
     }
-
-    let color: string = '#E1E1E1'; //default value
+    
+    let color: string = '#000000'; //default value
     if( this._is_dark_mode_enabled ) {
-      color = '#4d4d4d'
+      color = '#e2e2e2'
     }
 
     var chart = new Chart(ctx, {
@@ -484,12 +473,18 @@ export class GraphComponent implements OnInit {
         }, 
         legend: {
           position: 'bottom',
-          align: 'start'
+          align: 'start',
+          labels: {
+            fontColor: color,
+          }
         },
         scales: {
           xAxes: [{
+            ticks:{
+              fontColor: color
+            },
             gridLines : {
-              color : color
+              //color : color
             },
             type: 'time',
             time: {
@@ -501,9 +496,10 @@ export class GraphComponent implements OnInit {
           }],
           yAxes: [{
             gridLines : {
-              color : color
+              //color : color
             },
             ticks: {
+              fontColor: color,
               suggestedMin: min,    // minimum will be 0, unless there is a lower value.
             }
           }]
@@ -641,20 +637,25 @@ export class GraphComponent implements OnInit {
     });
   }
 
-  delete(query: string){
+  delete(query: string): void{
     if ( isDevMode() ) console.log('Deleting : ' + query + ' chart');
 
     delete this.graphs_records[query];
     if ( Object.keys(this.graphs_records).length == 0 ) {
-      this.router.navigateByUrl('/graph');
+      this.router.navigateByUrl('/select');
     } else {
       let uri: string = this.router.url;
       let str = 'metric=' + query + '&'
       uri = uri.replace(str, '')
-      if (uri.includes(query)){
+      if ( uri.includes(query) ) {
         uri = uri.replace('&metric=' + query, '')
       }
-      this.router.navigateByUrl(uri)
+      this.auth.redirect(uri)
+      //this.router.navigateByUrl(uri);
     }
+  }
+
+  back_to_selection(): void{
+    this.router.navigate(['/select'])
   }
 }

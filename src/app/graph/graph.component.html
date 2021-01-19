@@ -1,103 +1,118 @@
-<h2 i18n='title Graph@@Title_graph' style='margin-top: 1%;'>Graphs</h2>
-<h4 *ngIf=' box_selected == null ' i18n='description graph group@@description_graph_group'>You are currently viewing the
-  data of the <strong>{{group_name}}</strong> group boxes.</h4>
-<h4 *ngIf=' box_selected != null ' i18n='description graph box@@description_graph_box'>You are currently viewing the
-  data of <strong>{{box_selected}}</strong> device.</h4>
-<div class='container' *ngFor='let query of Object.keys(graphs_records)'>
-  <div>
-    <h3>{{metric_alternative_name[user_role][query][_lang]}}</h3>
-    <div id='increment' class='time_opt'>
-      <!-- increment section -->
-      <mat-form-field class='form'>
-        <button mat-button mat-icon-button matPrefix aria-label='Remove' [color]='primary'
-          (click)='incrementValue(-_step, query)' [disabled]='shouldDisableDecrement(_value)'>
-          <mat-icon>remove</mat-icon>
-        </button>
-        <input matInput type='number' class='counter' [(ngModel)]='graphs_records[query]["t_value"]'
-          (ngModelChange)='time_value_changes(query)' (focus)='setColor("primary")' (blur)='setColor("default")' />
-        <button mat-button mat-icon-button matSuffix aria-label='Add' [color]='primary'
-          (click)='incrementValue(_step, query)' [disabled]='shouldDisableIncrement(_value)'>
-          <mat-icon>add</mat-icon>
-        </button>
-      </mat-form-field>
+<div class='mat-app-background'>
+  <div class='container'>
+    <h2 i18n='title Graph@@Title_graph' style='margin-top: 1%;'>Graphs</h2>
 
-      <!-- Unit section -->
-      <mat-form-field appearance='legacy' class='form'>
-        <mat-label i18n='title unit options|title unit options@@title_unit_options_time_selection_graph'>Unit options
-        </mat-label>
-        <mat-select [(ngModel)]='graphs_records[query]["t_unit"]' placeholder='Unit' [disabled]='unit_select.value'
-          (ngModelChange)="unit_selection_changes(query)">
-          <mat-option value='minute'
-            i18n='minute unit option|minute unit option for time range selection@@minute_unit_time_selection_graph'>
-            minute</mat-option>
-          <mat-option value='hour'
-            i18n='hour unit option|hour unit option for time range selection@@hour_unit_time_selection_graph'>hour
-          </mat-option>
-          <mat-option value='day'
-            i18n='day unit option|day unit option for time range selection@@day_unit_time_selection_graph'>day
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <p class='form_text' i18n='"until" text|"until" text in time range selection@@text_until_time_selection_graph'>
-        Until </p>
+    <button mat-button mat-icon-button matPrefix aria-label='Back' 
+      (click)='back_to_selection()' >
+      <mat-icon>keyboard_return</mat-icon>
+      <span>Go back to selection</span>
+    </button>
 
-      <!-- Date time section -->
-      <form novalidate [formGroup]='form_group' class='form' id='datetime' *ngIf='!graphs_records[query]["t_now"]'>
-        <mat-form-field>
-          <mat-placeholder
-            i18n='"until" text date selection|"until" text in time range selection@@text_until_date_selection_time_selection_graph'>
-            Until</mat-placeholder>
-          <input matInput formControlName={{query}} [matDatetimepicker]='dts' required autocomplete='false'
-            [disabled]='graphs_records[query]["t_now"]'>
-          <mat-datetimepicker-toggle [for]='dts' matSuffix></mat-datetimepicker-toggle>
-          <mat-datetimepicker #dts type='datetime' openOnFocus='true' timeInterval='5'></mat-datetimepicker>
-        </mat-form-field>
-      </form>
-
-      <!-- Now slide toggle -->
-      <!-- The value is updating correctly BUT w/o visual changes (still unchecked) -->
-      <mat-slide-toggle [(ngModel)]='graphs_records[query]["t_now"]' class='form_text'
-        (change)='on_slide_toggle_change($event, query)' color="primary"
-        i18n='"now" text|"now" text in time range selection@@text_now_time_selection_graph'>Now</mat-slide-toggle>
-
-      <!-- Refresh -->
-      <button mat-button i18n-matTooltip='tooltip refresh chart @@tooltip_refresh_time_selection_graph'
-        matTooltip='Refresh' class='icon_button' (click)='regenerate(query)'>
-        <mat-icon>cached</mat-icon>
-      </button>
-
-      <!-- Reset settings -->
-      <button mat-button
-        i18n-matTooltip='tooltip restore default|tooltip of button which restore default settings@@tooltip_restore_default_time_selection_graph'
-        matTooltip='Restore default values' class='icon_button' (click)='set_default_settings(query)'>
-        <mat-icon>restore</mat-icon>
-      </button>
-
-      
-
-      <!-- Hide curves -->
-      <button *ngIf='!this.graphs_records[query]["m_chart"]["m_hidden"]'
-        i18n-matTooltip='tooltip Hide all curves@@tooltip_hide_all_curves_time_selection_graph'
-        mat-button matTooltip='Hide all curves' class='icon_button' (click)='hide_lines(query)'>
-        <mat-icon>visibility_off</mat-icon>
-      </button>
-
-      <!-- Show curves -->
-      <button *ngIf='this.graphs_records[query]["m_chart"]["m_hidden"]'
-        i18n-matTooltip='tooltip Show all curves@@tooltip_show_all_curves_time_selection_graph'
-        mat-button matTooltip='Show all curves' class='icon_button' (click)='hide_lines(query)'>
-        <mat-icon>visibility</mat-icon>
-      </button>
-
-      <!-- remove metric -->
-      <button mat-button i18n-matTooltip='tooltip Remove this metric@@tooltip_remove_this_metric_time_selection_graph' matTooltip='Remove this chart' class='icon_button'
-        (click)='delete(query)'>
-        <mat-icon>delete</mat-icon>
-      </button>
-
+    <h4 *ngIf=' box_selected == null ' i18n='description graph group@@description_graph_group'>You are currently viewing
+      the
+      data of the <strong>{{group_name}}</strong> group boxes.</h4>
+    <h4 *ngIf=' box_selected != null ' i18n='description graph box@@description_graph_box'>You are currently viewing the
+      data of <strong>{{box_selected}}</strong> device.</h4>
+    <div class='container' *ngFor='let query of query_list'>
+      <div *ngIf='graphs_records.hasOwnProperty(query)'>
+        <div>
+          <h3>{{metric_alternative_name[user_role][query][_lang]}}</h3>
+          <div id='increment' class='time_opt'>
+            <!-- increment section -->
+            <mat-form-field class='form'>
+              <button mat-button mat-icon-button matPrefix aria-label='Remove' [color]='primary'
+                (click)='incrementValue(-_step, query)' [disabled]='shouldDisableDecrement(_value)'>
+                <mat-icon>remove</mat-icon>
+              </button>
+              <input matInput type='number' class='counter' [(ngModel)]='graphs_records[query]["t_value"]'
+                (ngModelChange)='time_value_changes(query)' (focus)='setColor("primary")' (blur)='setColor("default")' />
+              <button mat-button mat-icon-button matSuffix aria-label='Add' [color]='primary'
+                (click)='incrementValue(_step, query)' [disabled]='shouldDisableIncrement(_value)'>
+                <mat-icon>add</mat-icon>
+              </button>
+            </mat-form-field>
+  
+            <!-- Unit section -->
+            <mat-form-field appearance='legacy' class='form'>
+              <mat-label i18n='title unit options|title unit options@@title_unit_options_time_selection_graph'>Unit
+                options
+              </mat-label>
+              <mat-select [(ngModel)]='graphs_records[query]["t_unit"]' placeholder='Unit' [disabled]='unit_select.value'
+                (ngModelChange)="unit_selection_changes(query)">
+                <mat-option value='minute'
+                  i18n='minute unit option|minute unit option for time range selection@@minute_unit_time_selection_graph'>
+                  minute</mat-option>
+                <mat-option value='hour'
+                  i18n='hour unit option|hour unit option for time range selection@@hour_unit_time_selection_graph'>hour
+                </mat-option>
+                <mat-option value='day'
+                  i18n='day unit option|day unit option for time range selection@@day_unit_time_selection_graph'>day
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p class='form_text'
+              i18n='"until" text|"until" text in time range selection@@text_until_time_selection_graph'>
+              Until </p>
+  
+            <!-- Date time section -->
+            <form novalidate [formGroup]='form_group' class='form' id='datetime' *ngIf='!graphs_records[query]["t_now"]'>
+              <mat-form-field>
+                <mat-placeholder
+                  i18n='"until" text date selection|"until" text in time range selection@@text_until_date_selection_time_selection_graph'>
+                  Until</mat-placeholder>
+                <input matInput formControlName={{query}} [matDatetimepicker]='dts' required autocomplete='false'
+                  [disabled]='graphs_records[query]["t_now"]'>
+                <mat-datetimepicker-toggle [for]='dts' matSuffix></mat-datetimepicker-toggle>
+                <mat-datetimepicker #dts type='datetime' openOnFocus='true' timeInterval='5'></mat-datetimepicker>
+              </mat-form-field>
+            </form>
+  
+            <!-- Now slide toggle -->
+            <!-- The value is updating correctly BUT w/o visual changes (still unchecked) -->
+            <mat-slide-toggle [(ngModel)]='graphs_records[query]["t_now"]' class='form_text'
+              (change)='on_slide_toggle_change($event, query)' color="primary"
+              i18n='"now" text|"now" text in time range selection@@text_now_time_selection_graph'>Now</mat-slide-toggle>
+  
+            <!-- Refresh -->
+            <button mat-button i18n-matTooltip='tooltip refresh chart @@tooltip_refresh_time_selection_graph'
+              matTooltip='Refresh' class='icon_button' (click)='regenerate(query)'>
+              <mat-icon>cached</mat-icon>
+            </button>
+  
+            <!-- Reset settings -->
+            <button mat-button
+              i18n-matTooltip='tooltip restore default|tooltip of button which restore default settings@@tooltip_restore_default_time_selection_graph'
+              matTooltip='Restore default values' class='icon_button' (click)='set_default_settings(query)'>
+              <mat-icon>restore</mat-icon>
+            </button>
+  
+            <!-- Hide curves -->
+            <button *ngIf='!this.graphs_records[query]["m_chart"]["m_hidden"]'
+              i18n-matTooltip='tooltip Hide all curves@@tooltip_hide_all_curves_time_selection_graph' mat-button
+              matTooltip='Hide all curves' class='icon_button' (click)='hide_lines(query)'>
+              <mat-icon>visibility_off</mat-icon>
+            </button>
+  
+            <!-- Show curves -->
+            <button *ngIf='this.graphs_records[query]["m_chart"]["m_hidden"]'
+              i18n-matTooltip='tooltip Show all curves@@tooltip_show_all_curves_time_selection_graph' mat-button
+              matTooltip='Show all curves' class='icon_button' (click)='hide_lines(query)'>
+              <mat-icon>visibility</mat-icon>
+            </button>
+  
+            <!-- remove metric -->
+            <button mat-button 
+              i18n-matTooltip='tooltip Remove this metric@@tooltip_remove_this_metric_time_selection_graph'
+              matTooltip='Remove this chart' class='icon_button' (click)='delete(query)'>
+              <mat-icon>delete</mat-icon>
+            </button>
+  
+          </div>
+        </div>
+        <div class='graph'>
+          <canvas class='graph' id={{query}} width="4" height="1"></canvas>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class='graph'>
-    <canvas class='graph' id={{query}} width="4" height="1"></canvas>
   </div>
 </div>

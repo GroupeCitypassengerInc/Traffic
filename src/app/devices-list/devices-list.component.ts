@@ -66,8 +66,10 @@ export class DevicesListComponent implements OnInit {
   _lang: 'fr' | 'en' | string;
   _is_dark_mode_enabled: boolean;
   theme_subscription : Subscription;
+  metric_alternative_name: any = this.language.metric_alternative_name;
 
   base_api_url: string = environment.city_url_api;
+  prometheus_base_api_url = environment.prometheus_base_api_url;
 
   devices_informations: devices_informations = {};
   table_devices_informations: table_devices_info[] = [];
@@ -104,7 +106,7 @@ export class DevicesListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   
-  constructor(private httpClient: HttpClient,
+  constructor (private httpClient: HttpClient,
     private language: LanguageService, 
     private auth: AuthService,
     public theme_handler: ThemeHandlerService,
@@ -129,22 +131,22 @@ export class DevicesListComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  ngOnInit (): void {
     let map_devices;    
     if ( isDevMode() ) {
       map_devices = (devices_json as any).default;
+      this.devices_informations = this.parse_map_devices(map_devices);
     } else {
-      map_devices = this.get_map_devices();
+      this.devices_informations = this.get_map_devices();
     }
-    this.devices_informations = this.parse_map_devices(map_devices);
     this.datasource = new MatTableDataSource<any>(this.table_devices_informations);
   }
   
-  ngOnDestroy(): void {
+  ngOnDestroy (): void {
     this.theme_subscription.unsubscribe();
   }
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit (): void {
     if ( this._lang == 'fr' ) {
       this.paginator = this.language.translate_paginator(this.paginator);
     }
@@ -152,13 +154,14 @@ export class DevicesListComponent implements OnInit {
     this.datasource.sort = this.sort;
   }
 
-  get_map_devices(): any {
+  get_map_devices (): any {
     let map_devices_api_url = this.base_api_url + '/ws/Map/Devices';
     let map_device: any = this.httpClient.request('GET', map_devices_api_url, {})
       .toPromise()
       .then(response => {
         if ( 'groups' in response ) {
-          return response;
+          let parsed_response = this.parse_map_devices(response)
+          return parsed_response;
         } else {
           throw new Error ('Can get map device. Requested URI : ' + map_devices_api_url);
         }
@@ -166,9 +169,20 @@ export class DevicesListComponent implements OnInit {
     return map_device;
   }
 
-  parse_map_devices(map_devices: any): devices_informations {
+  parse_map_devices (map_devices: any): devices_informations {
     let devices_informations: devices_informations = {};
+
     for ( let group of map_devices.groups ) {
+      devices_informations[group.groupName] = {
+        group_id: group.groupId, 
+        display_name: group.displayName,
+        router: group.router,
+        group_metric: new Array(),
+        citynet_url: this.prometheus_base_api_url.replace('XXXX', group.router),
+        form_control: new FormControl(''),
+        form_disabled: true,
+        visualize_disabled: true,
+      }
       for ( let sites of group.sites ) {
         this.table_devices_informations.push({
           group_name: group.groupName, 
@@ -177,25 +191,22 @@ export class DevicesListComponent implements OnInit {
           box_display_name: sites.datas.displayedName,
           address: sites.datas.address, 
         });
-        devices_informations[group.groupName] = {
-          group_id: group.groupId, 
-          display_name: group.displayName,
-          router: group.router,
-          group_metric: []
-        }
-        devices_informations[group.groupName][sites.siteName] = {
+        let group_name = group.groupName
+        devices_informations[group_name][sites.siteName] = {
           box_name: sites.siteName, 
           box_address: sites.datas.address, 
           site_refer: sites.siteReferer,
           box_password: null,
+          visualize_disabled: true,
+          form_control: new FormControl(''),
         }
       }
     }
-    this.refresh_table();
+    console.log(devices_informations)
     return devices_informations;
   }
 
-  apply_filter(event: Event): void {
+  apply_filter (event :Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.datasource.filter = filterValue.trim().toLowerCase();
     if ( this.datasource.paginator ) {
@@ -203,17 +214,168 @@ export class DevicesListComponent implements OnInit {
     }
   }
 
-  on_row_click(row:table_devices_info): void {
+  on_row_click (row: table_devices_info): void {
+    if ( this.devices_informations[row.group_name]['group_metric'] == 0 ) {
+      this.devices_informations[row.group_name]['form_disabled'] = true;
+    } else {
+      this.devices_informations[row.group_name]['form_disabled'] = false;
+    }
+
+    if ( this.expandedElement != null ) {
+      if ( isDevMode() ) {
+        if ( this.devices_informations[row.group_name]['group_metric'] == 0 ) {
+          this.get_metric_list(row);
+        } else {
+          this.devices_informations[row.group_name]['form_disabled'] = false;
+        }
+      } else {
+        if ( this.devices_informations[row.group_name][row.box_name]['box_password'] == null && !isDevMode()) {
+          this.get_box_password(row);
+        } else if ( this.devices_informations[row.group_name]['group_metric'] == 0 ) {
+          this.get_metric_list(row);
+        } else {
+          this.devices_informations[row.group_name]['form_disabled'] = false;
+        }
+      }
+    }
+    if ( isDevMode() ) console.log(this.devices_informations);
+    console.log (row)
   }
 
-  get_metric_list(): void {
+  get_metric_list (row: table_devices_info): void {
+    let group_name: string = row.group_name;
+    let box_name: string = row.box_name;
+   
+    let prometheus_api_url: string;
+    if ( isDevMode() ) {
+      prometheus_api_url = this.prometheus_base_api_url + '/api/v1/label/__name__/values';
+    } else {
+      let box_password: string = this.devices_informations[group_name][box_name]['box_password'];
+      let citynet_url: string = this.devices_informations[group_name]['citynet_url']
+      prometheus_api_url = citynet_url + '/' + box_password + '/prometheus/'  + group_name + '/api/v1/label/__name__/values';
+    }
+
+    let headers = new HttpHeaders();
+    headers = headers.set('accept', 'application/json');
+    this.httpClient.request('GET', prometheus_api_url, {headers}).pipe(
+      timeout(10000), 
+      map(res => {
+        return res;
+      }
+    ),catchError(
+      err => {
+        throw err;
+      }
+      )).pipe(take(1))
+      .subscribe(response =>{
+        let prometheus_metrics: Array<any> = response['data'];
+        this.parse_get_metric(prometheus_metrics, group_name);
+        this.devices_informations[row.group_name]['form_disabled'] = false;
+      },err => {
+        this.devices_informations[row.group_name]['form_disabled'] = true;
+        if ( this._lang == 'fr' ) {
+          this.notification.show_notification('Une erreur est survenue lors de la communication avec prometheus, veuillez réessayer plus tard.','Fermer','error');
+        } else {
+          this.notification.show_notification('An error occurred while communicating with prometheus, please try again later.','Close','error');
+        }
+        console.error(err);
+      });
+    let group_metric: Array<string>
+  }
+
+  parse_get_metric (prometheus_metrics: Array<any>, group_name: string): void {
+    let metric_list: Array<string> = [];
+    prometheus_metrics.forEach(metric_name => {
+      if ( metric_name in this.metric_alternative_name[this.user_information.role] ) {
+        metric_list.push(metric_name);
+      }
+    })
+    this.devices_informations[group_name]['group_metric'] = metric_list;
   }
   
-  get_box_password(): void {
+  get_box_password (row: table_devices_info): void {
+    let group_id: number = this.devices_informations[row.group_name]['group_id'];
+    let group_name: string = row.group_name;
+    let group_info_api_url: string = this.base_api_url + '/ws/Group/Info/' + group_id;
+
+    let headers: HttpHeaders = new HttpHeaders();
+    headers = headers.set('accept', 'application/json');
+    this.httpClient.request('GET', group_info_api_url, {headers})
+      .toPromise()
+      .then(response => {
+        if ( !('group' in response) ) {
+          throw new Error ('Can get group info Requested URI : ' + group_info_api_url);
+        }
+        Object.keys(response['group']['ienaDevices']).forEach(box_name => {
+          this.devices_informations[group_name][box_name]['box_password'] = 
+            response['group']['ienaDevices'][box_name]['localinterface_passwords']['user'];
+        })
+        this.get_metric_list(row);
+      });
   }
 
-  refresh_table(): void {
+  refresh_table (): void {
     this.datasource.data = this.datasource.data
   }
-  
+
+  onChangeGroupForm (event: Event, row: table_devices_info): void {
+    if ( isDevMode() ) console.log (event);
+    let group_name = row['group_name'];
+    if ( this.devices_informations[group_name]['form_control'].value.length > 0 ) {
+      this.devices_informations[group_name]['visualize_disabled'] = false;
+    } else {
+      this.devices_informations[group_name]['visualize_disabled'] = true;
+    }
+  }
+
+  onChangeBoxForm (event: Event, row: any): void {
+    if ( isDevMode() ) console.log (event);
+    let group_name = row['group_name'];
+    let box_name = row['box_name'];
+    if ( this.devices_informations[group_name][box_name]['form_control'].value.length > 0 ) {
+      this.devices_informations[group_name][box_name]['visualize_disabled'] = false;
+    } else {
+      this.devices_informations[group_name][box_name]['visualize_disabled'] = true;
+    }
+  }
+
+  filterListCareUnit(val: any):void {
+    //this.graphs_available_list = this.graphs_available_list_backup.filter(unit => unit.indexOf(val) > -1);
+  }
+
+  visualize (group_name: string, box_name?: string): void  {
+    
+    let devices_informations = this.devices_informations;
+    let graph_informations: Array<any> = [];
+    let password: string;
+    let metric_checked: Array<string>;
+    let group_id: number = devices_informations[group_name]['group_id'];
+
+    let citynet_url: string = devices_informations[group_name]['citynet_url'];
+    let redirect_url: string = '/graph/' + group_name + '/' ; 
+
+    if ( box_name == undefined ) {
+      let key: string = Object.keys(devices_informations[group_name]).pop();
+      password = devices_informations[group_name][key]['box_password'];
+      metric_checked = devices_informations[group_name]['form_control'].value;
+      if ( isDevMode() ) password = 'x';
+      graph_informations.push([group_name, citynet_url]);
+      redirect_url = redirect_url + password + '/' +'metric?' ;
+    } else {
+      password = devices_informations[group_name][box_name]['box_password'];
+      if ( isDevMode() ) password = 'x';
+      metric_checked = devices_informations[group_name][box_name]['form_control'].value;
+      graph_informations.push([group_name, citynet_url, box_name]);
+      redirect_url = redirect_url + password + '/' + 'box_name=' + box_name + '/metric?' ;
+    }
+    metric_checked.forEach((metric, index) =>{
+      graph_informations.push(metric);
+      if ( metric_checked.length - 1 == index ) {
+        redirect_url = redirect_url + 'metric=' + metric;
+      } else {
+        redirect_url = redirect_url + 'metric=' + metric + '&';
+      }
+    });
+    this.router.navigateByUrl(redirect_url)
+  }
 }
