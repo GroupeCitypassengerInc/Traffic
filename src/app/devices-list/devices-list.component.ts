@@ -131,22 +131,22 @@ export class DevicesListComponent implements OnInit {
     });
   }
 
-  ngOnInit (): void {
+  ngOnInit(): void {
     let map_devices;    
     if ( isDevMode() ) {
       map_devices = (devices_json as any).default;
       this.devices_informations = this.parse_map_devices(map_devices);
     } else {
-      this.devices_informations = this.get_map_devices();
+      this.get_map_devices();
     }
     this.datasource = new MatTableDataSource<any>(this.table_devices_informations);
   }
   
-  ngOnDestroy (): void {
+  ngOnDestroy(): void {
     this.theme_subscription.unsubscribe();
   }
 
-  ngAfterViewInit (): void {
+  ngAfterViewInit(): void {
     if ( this._lang == 'fr' ) {
       this.paginator = this.language.translate_paginator(this.paginator);
     }
@@ -154,22 +154,22 @@ export class DevicesListComponent implements OnInit {
     this.datasource.sort = this.sort;
   }
 
-  get_map_devices (): any {
+  get_map_devices(): void {
     let map_devices_api_url = this.base_api_url + '/ws/Map/Devices';
-    let map_device: any = this.httpClient.request('GET', map_devices_api_url, {})
+    this.httpClient.request('GET', map_devices_api_url, {})
       .toPromise()
       .then(response => {
         if ( 'groups' in response ) {
-          let parsed_response = this.parse_map_devices(response)
-          return parsed_response;
+          let parsed_response = this.parse_map_devices(response);
+          this.devices_informations = parsed_response;
+          this.refresh_table();
         } else {
           throw new Error ('Can get map device. Requested URI : ' + map_devices_api_url);
         }
     });
-    return map_device;
   }
 
-  parse_map_devices (map_devices: any): devices_informations {
+  parse_map_devices(map_devices: any): devices_informations {
     let devices_informations: devices_informations = {};
 
     for ( let group of map_devices.groups ) {
@@ -178,6 +178,7 @@ export class DevicesListComponent implements OnInit {
         display_name: group.displayName,
         router: group.router,
         group_metric: new Array(),
+        group_metric_backup: new Array(),
         citynet_url: this.prometheus_base_api_url.replace('XXXX', group.router),
         form_control: new FormControl(''),
         form_disabled: true,
@@ -206,7 +207,7 @@ export class DevicesListComponent implements OnInit {
     return devices_informations;
   }
 
-  apply_filter (event :Event): void {
+  apply_filter(event :Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.datasource.filter = filterValue.trim().toLowerCase();
     if ( this.datasource.paginator ) {
@@ -214,7 +215,7 @@ export class DevicesListComponent implements OnInit {
     }
   }
 
-  on_row_click (row: table_devices_info): void {
+  on_row_click(row: table_devices_info): void {
     if ( this.devices_informations[row.group_name]['group_metric'] == 0 ) {
       this.devices_informations[row.group_name]['form_disabled'] = true;
     } else {
@@ -242,7 +243,7 @@ export class DevicesListComponent implements OnInit {
     console.log (row)
   }
 
-  get_metric_list (row: table_devices_info): void {
+  get_metric_list(row: table_devices_info): void {
     let group_name: string = row.group_name;
     let box_name: string = row.box_name;
    
@@ -283,7 +284,7 @@ export class DevicesListComponent implements OnInit {
     let group_metric: Array<string>
   }
 
-  parse_get_metric (prometheus_metrics: Array<any>, group_name: string): void {
+  parse_get_metric(prometheus_metrics: Array<any>, group_name: string): void {
     let metric_list: Array<string> = [];
     prometheus_metrics.forEach(metric_name => {
       if ( metric_name in this.metric_alternative_name[this.user_information.role] ) {
@@ -291,9 +292,10 @@ export class DevicesListComponent implements OnInit {
       }
     })
     this.devices_informations[group_name]['group_metric'] = metric_list;
+    this.devices_informations[group_name]['group_metric_backup'] = metric_list;
   }
   
-  get_box_password (row: table_devices_info): void {
+  get_box_password(row: table_devices_info): void {
     let group_id: number = this.devices_informations[row.group_name]['group_id'];
     let group_name: string = row.group_name;
     let group_info_api_url: string = this.base_api_url + '/ws/Group/Info/' + group_id;
@@ -314,11 +316,11 @@ export class DevicesListComponent implements OnInit {
       });
   }
 
-  refresh_table (): void {
+  refresh_table(): void {
     this.datasource.data = this.datasource.data
   }
 
-  onChangeGroupForm (event: Event, row: table_devices_info): void {
+  onChangeGroupForm(event: Event, row: table_devices_info): void {
     if ( isDevMode() ) console.log (event);
     let group_name = row['group_name'];
     if ( this.devices_informations[group_name]['form_control'].value.length > 0 ) {
@@ -328,7 +330,7 @@ export class DevicesListComponent implements OnInit {
     }
   }
 
-  onChangeBoxForm (event: Event, row: any): void {
+  onChangeBoxForm(event: Event, row: table_devices_info): void {
     if ( isDevMode() ) console.log (event);
     let group_name = row['group_name'];
     let box_name = row['box_name'];
@@ -339,11 +341,11 @@ export class DevicesListComponent implements OnInit {
     }
   }
 
-  filterListCareUnit(val: any):void {
-    //this.graphs_available_list = this.graphs_available_list_backup.filter(unit => unit.indexOf(val) > -1);
+  filterListCareUnit(val: any, group_name: string):void {
+    this.devices_informations[group_name]["group_metric"] = this.devices_informations[group_name]["group_metric_backup"].filter(unit => unit.indexOf(val) > -1);
   }
 
-  visualize (group_name: string, box_name?: string): void  {
+  visualize(group_name: string, box_name?: string): void  {
     
     let devices_informations = this.devices_informations;
     let graph_informations: Array<any> = [];
