@@ -119,12 +119,8 @@
       "fr":"État de la machine"
     },
     "go_goroutines":{
-      "en":"go goroutines en",
-      "fr":"go goroutines fr"
-    },
-    "go_goroutines_raw":{
-      "en":"go goroutines raw en",
-      "fr":"go goroutines raw fr"
+      "en":"go goroutines",
+      "fr":"go goroutines"
     }
   },
   "User":{

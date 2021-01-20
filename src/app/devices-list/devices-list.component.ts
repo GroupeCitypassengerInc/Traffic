@@ -117,9 +117,9 @@ export class DevicesListComponent implements OnInit {
   {
     if ( isDevMode() ) {
       this.user_information = {
-        id : 222,
+        id : 0,
         role : 'Support',
-        username : 'RodolpheG',
+        username : 'Dev',
       }
     } else {
       this.user_information = this.auth.user_info;
@@ -204,7 +204,7 @@ export class DevicesListComponent implements OnInit {
         }
       }
     }
-    console.log(devices_informations)
+    if ( isDevMode() ) console.log(devices_informations);
     return devices_informations;
   }
 

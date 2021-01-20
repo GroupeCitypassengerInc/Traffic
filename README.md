@@ -14,9 +14,9 @@ You can change many settings about `ng serve` and `ng build` in `angular.json` f
 You can change environnement variable in `src\environments\environment.prod.ts` for production environnement variable or `src\environments\environment.ts` for dev environnement variable.
 
 #### Run serve in dev mode
-Run `ng serve --host app.citypassenger.com --port 4200` for development mode. If you would like to change the base href you can modify it in `/src/index.html:6`.
-See [ng serve options](https://angular.io/cli/serve).
-Navigate to `http://app.citypassenger.com:4200/baggage/`. The app will automatically reload if you change any of the source files.
+Run `npm run start:fr` for development mode. If you would like to change the base href you can modify it in `/src/index.html:6`.
+
+Navigate to `http://app.citypassenger.com:4200/baggage/<fr|en>`. The app will automatically reload if you change any of the source files.
 
 #### Install in production
  ```bash
@@ -29,7 +29,7 @@ See [ng serve options](https://angular.io/cli/serve).
 Navigate to `http://app.citypassenger.com:4200/baggage/`. The app will automatically reload if you change any of the source files.
 
 ## Production build
-Run `ng build --deploy-url='/baggage' --prod` for a dev server. 
+Run `ng build --prod --localize` for a dev server. 
 
 ## Code scaffolding
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.

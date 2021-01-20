@@ -20,7 +20,6 @@ export class GuardService implements CanActivate {
       if (this.auth.is_auth) {
         return true;
       } else {
-        console.log(state.url)
         this.router.navigate(['/login'], {queryParams: { returnUrl: state.url }})
       }
     }

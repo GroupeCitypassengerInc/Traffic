@@ -78,8 +78,8 @@
     "y": {
       "min": 0
     },
-    "type": "range_vectors",
-    "promql": "deriv",
+    "type": "",
+    "promql": "",
     "tension": 0.5
   },
   "Devices_on_lan_gauge": {
