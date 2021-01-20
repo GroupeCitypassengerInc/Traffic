@@ -16,7 +16,7 @@
     <div class='container' *ngFor='let query of query_list'>
       <div *ngIf='graphs_records.hasOwnProperty(query)'>
         <div>
-          <h3>{{metric_alternative_name[user_role][query][_lang]}}</h3>
+          <h3>{{metric_alternative_name[user_informartions.role][query][_lang]}}</h3>
           <div id='increment' class='time_opt'>
             <!-- increment section -->
             <mat-form-field class='form'>

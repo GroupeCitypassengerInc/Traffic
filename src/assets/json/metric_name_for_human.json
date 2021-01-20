@@ -66,6 +66,14 @@
       "en":"input",
       "fr":"input"
     },
+    "output_raw":{
+      "en":"output raw",
+      "fr":"output raw"
+    },
+    "input_raw":{
+      "en":"input raw",
+      "fr":"input raw"
+    },
     "Devices_on_lan_gauge":{
       "en":"Number of persons on the network",
       "fr":"Nombre de personne sur le réseau"
@@ -113,6 +121,10 @@
     "go_goroutines":{
       "en":"go goroutines en",
       "fr":"go goroutines fr"
+    },
+    "go_goroutines_raw":{
+      "en":"go goroutines raw en",
+      "fr":"go goroutines raw fr"
     }
   },
   "User":{

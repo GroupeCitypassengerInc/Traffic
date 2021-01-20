@@ -49,7 +49,7 @@ export interface user_informations {
 
 export class GraphComponent implements OnInit {
 
-  user_role: string;
+  user_informartions: user_informations;
   user_info_subscription : Subscription;
   form_group_controls_subscription: Subscription;
 
@@ -114,7 +114,7 @@ export class GraphComponent implements OnInit {
       default_date: [{value: '', disabled: true }, Validators.required]
     });
     this.user_info_subscription = this.auth.log_user_info_change.subscribe((user_info:user_informations) => {
-      this.user_role = user_info.role;
+      this.user_informartions = user_info;
     });
     this.theme_subscription = this.theme_handler.theme_changes.subscribe((theme) => {
       this._is_dark_mode_enabled = theme === 'Dark' ? true : false;
@@ -122,16 +122,17 @@ export class GraphComponent implements OnInit {
       this.regenerate_all_graph();
     });
     this._is_dark_mode_enabled = this.theme_handler.get_theme() === 'Dark' ? true : false;
-
-    if ( isDevMode() ) this.user_role = 'Support';
   }
   
   ngOnInit(): void {
     if (!isDevMode()){
-      this.user_role = this.auth.user_info.role;
+      this.user_informartions = this.auth.user_info;
     } else {
-      this.user_role = 'Support';
-      console.log(this._lang)
+      this.user_informartions = {
+        id : 0,
+        role : 'Support',
+        username : 'Dev',
+      };
     }
     this.default_date.setHours(this.default_date.getHours());
 
@@ -161,6 +162,16 @@ export class GraphComponent implements OnInit {
     if ( !isDevMode() ) {
       this.prometheus_api_url = this.prometheus_api_url.replace('XXXX', router);
     }
+
+    if( this.user_informartions.role == 'Support' || this.user_informartions.role == 'Admin' ) {
+      this.query_list.forEach( (metric_name, index) =>{
+        if ( metric_name in this.metrics_config ) {
+          if (this.metrics_config[metric_name]['promql'] != "" ) {
+            this.query_list.splice(index + 1, 0, metric_name + '_raw')
+          }
+        }
+      })
+    }
     
     this.get_records(this.query_list);
   }
@@ -183,6 +194,30 @@ export class GraphComponent implements OnInit {
     if ( this.form_group_controls_subscription != undefined ) {
       this.form_group_controls_subscription.unsubscribe();
     }
+  }
+
+  add_records(query: string): void{
+    this.graphs_records[query] = {
+      m_chart : "chart",
+      m_hidden: false,
+      t_value : this.default_value,
+      t_unit : this.default_unit,
+      t_date : this._formBuilder.control({
+        value: this.default_date, disabled: false
+      }),
+      t_now : this._now
+    }
+    this.form_group.addControl(query, this.graphs_records[query]['t_date']);
+    this.form_group_controls_subscription = this.form_group.controls[query].valueChanges.subscribe(date => {
+      if( isDevMode() ) {
+        console.log('Date changes :')
+        console.log(date)
+        console.log(query)
+        console.log(this.form_group.controls[query])
+      }
+      this.date_changes(date, query);
+    });
+    this.query_list.push('up')
   }
 
   get_records(query_list: Array<string>): void {
@@ -287,7 +322,9 @@ export class GraphComponent implements OnInit {
     let selected_box = this.box_selected
     let raw_metric_name = metric;
     metric = this.transform_metric_query(metric, selected_box);
-
+    if ( metric.includes('_raw') ) {
+      metric = metric.replace('_raw','');
+    }
     let query = ''; 
     query = '/query_range?query=' + metric + '&start=' + start_time + '&end=' + end_time + '&step=' + step;
 
@@ -355,9 +392,9 @@ export class GraphComponent implements OnInit {
       let extra_label: Array<string> = this.get_extra_labels(data_to_parse[key]['metric']);
       let label: string;
       if (this.box_selected != null){
-        label = this.metric_alternative_name[this.user_role][metric][this._lang]
+        label = this.metric_alternative_name[this.user_informartions.role][metric][this._lang]
       } else {
-        label = this.metric_alternative_name[this.user_role][metric][this._lang] + ' { instance: ' + instance + ' }';
+        label = this.metric_alternative_name[this.user_informartions.role][metric][this._lang] + ' { instance: ' + instance + ' }';
       }
       extra_label.forEach(element => {
         label = label + ' { ' + element + ': ' + data_to_parse[key]['metric'][element] + ' }';

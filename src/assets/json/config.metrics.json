@@ -40,6 +40,34 @@
     "promql": "deriv",
     "tension": 0.5
   },
+  "output_raw": {
+    "x": {
+      "unit": {
+        "fr":"o",
+        "en":"B"
+      }
+    },
+    "y": {
+      "min": 0
+    },
+    "type": "",
+    "promql": "",
+    "tension": 0.5
+  },
+  "input_raw": {
+    "x": {
+      "unit": {
+        "fr":"o",
+        "en":"B"
+      }
+    },
+    "y": {
+      "min": 0
+    },
+    "type": "",
+    "promql": "",
+    "tension": 0.5
+  },
   "go_goroutines": {
     "x": {
       "unit": {
