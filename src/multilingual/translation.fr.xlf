@@ -111,6 +111,10 @@
         <target>Supprimer ce graphique</target>
       </trans-unit>
 
+      <trans-unit id="return-button">
+        <target>Retour à la sélection</target>
+      </trans-unit>
+
       <trans-unit id="username_placeholder">
         <target>Nom d'utilisateur</target>
       </trans-unit>
