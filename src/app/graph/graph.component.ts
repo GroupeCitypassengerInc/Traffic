@@ -282,7 +282,7 @@ export class GraphComponent implements OnInit {
     let start_time = ( timestamp + this.up_start_time ) / 1000;
     let end_time = ( timestamp + this.end_time ) / 1000;
     if ( isDevMode() ) console.log(end_time + ' ' + start_time);
-    let step = this.get_prometheus_step(start_time, end_time);
+    let step = this.set_prometheus_step(start_time, end_time);
 
     let selected_box = this.box_selected
     let raw_metric_name = metric;
@@ -307,6 +307,8 @@ export class GraphComponent implements OnInit {
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json');
     this.httpClient.request('GET', url, {headers})
+      .pipe(timeout(10000))
+      
       .toPromise()
       .then(response => {
         if ( isDevMode() ) console.log(response);
@@ -409,7 +411,7 @@ export class GraphComponent implements OnInit {
   // Compute a step for range_query (interval between 2 points in second)
   // Min step: 1s
   // Default: 1 step every 15px
-  get_prometheus_step( start: number, end: number ): number {
+  set_prometheus_step( start: number, end: number ): number {
     const timestamp = new Date().getTime();
     const second_duration = ( end - start );
     let chart_width = window.innerWidth;

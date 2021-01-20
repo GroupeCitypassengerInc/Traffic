@@ -157,6 +157,7 @@ export class DevicesListComponent implements OnInit {
   get_map_devices(): void {
     let map_devices_api_url = this.base_api_url + '/ws/Map/Devices';
     this.httpClient.request('GET', map_devices_api_url, {})
+      .pipe(timeout(10000))
       .toPromise()
       .then(response => {
         if ( 'groups' in response ) {
@@ -257,7 +258,8 @@ export class DevicesListComponent implements OnInit {
 
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json');
-    this.httpClient.request('GET', prometheus_api_url, {headers}).pipe(
+    this.httpClient.request('GET', prometheus_api_url, {headers})
+    .pipe(
       timeout(10000), 
       map(res => {
         return res;
@@ -302,6 +304,7 @@ export class DevicesListComponent implements OnInit {
     let headers: HttpHeaders = new HttpHeaders();
     headers = headers.set('accept', 'application/json');
     this.httpClient.request('GET', group_info_api_url, {headers})
+      .pipe(timeout(10000))
       .toPromise()
       .then(response => {
         if ( !('group' in response) ) {
