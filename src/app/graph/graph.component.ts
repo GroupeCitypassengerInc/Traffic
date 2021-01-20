@@ -488,10 +488,14 @@ export class GraphComponent implements OnInit {
     let tension = 0;
     let min = 0;
     let unit: string = ' ';
+    let step: number;
     if (  metric in this.metrics_config ) {
       tension = this.metrics_config[metric]['tension'];
       unit += this.metrics_config[metric]['x']['unit'][this._lang];
-      min = this.metrics_config[metric]['y']['min'] === '' ? undefined : min;
+      min = this.metrics_config[metric]['y']['min'] === '' ? undefined : this.metrics_config[metric]['y']['min'];
+      step = this.metrics_config[metric]['y']['step'] === '' ? undefined : this.metrics_config[metric]['y']['step'];
+      console.log('***************************')
+      console.log(step)
       if ( unit == undefined ) {
         unit = '';
       }
@@ -555,6 +559,7 @@ export class GraphComponent implements OnInit {
             ticks: {
               fontColor: color,
               suggestedMin: min,    // minimum will be 0, unless there is a lower value.
+              stepSize: step
             }
           }]
         }

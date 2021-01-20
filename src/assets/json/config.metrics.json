@@ -6,7 +6,8 @@
     },
     "y": {
       "unit": "byte",
-      "min": 0
+      "min": 0,
+      "step": ""
     },
     "type": "range_vectors",
     "promql": "deriv",
@@ -20,7 +21,8 @@
       }
     },
     "y": {
-      "min": 0
+      "min": 0,
+      "step": ""
     },
     "type": "range_vectors",
     "promql": "deriv",
@@ -34,7 +36,8 @@
       }
     },
     "y": {
-      "min": 0
+      "min": 0,
+      "step": ""
     },
     "type": "range_vectors",
     "promql": "deriv",
@@ -90,7 +93,8 @@
       }
     },
     "y": {
-      "min": 0
+      "min": 0,
+      "step": 1
     },
     "type": "",
     "promql": "",
@@ -104,7 +108,8 @@
       }
     },
     "y": {
-      "min": 0
+      "min": 0,
+      "step": 1
     },
     "type": "",
     "promql": "",
@@ -230,7 +235,8 @@
       }
     },
     "y": {
-      "min": 0
+      "min": 0,
+      "step": 1
     },
     "type": "",
     "promql": "",
