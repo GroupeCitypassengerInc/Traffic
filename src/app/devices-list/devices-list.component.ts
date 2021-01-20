@@ -371,7 +371,7 @@ export class DevicesListComponent implements OnInit {
       if ( isDevMode() ) password = 'x';
       metric_checked = devices_informations[group_name][box_name]['form_control'].value;
       graph_informations.push([group_name, citynet_url, box_name]);
-      redirect_url = redirect_url + password + '/' + 'box_name=' + box_name + '/metric?' ;
+      redirect_url = redirect_url + password + '/' + box_name + '/metric?' ;
     }
     metric_checked.forEach((metric, index) =>{
       graph_informations.push(metric);
@@ -381,6 +381,7 @@ export class DevicesListComponent implements OnInit {
         redirect_url = redirect_url + 'metric=' + metric + '&';
       }
     });
+    console.log(redirect_url)
     this.router.navigateByUrl(redirect_url)
   }
 }
