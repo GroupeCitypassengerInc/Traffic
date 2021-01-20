@@ -8,6 +8,14 @@
       "en":"input",
       "fr":"input"
     },
+    "output_raw":{
+      "en":"output raw",
+      "fr":"output raw"
+    },
+    "input_raw":{
+      "en":"input raw",
+      "fr":"input raw"
+    },
     "Devices_on_lan_gauge":{
       "en":"Devices_on_lan_gauge",
       "fr":"Devices_on_lan_gauge"
