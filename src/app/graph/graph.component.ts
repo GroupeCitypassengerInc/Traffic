@@ -408,16 +408,13 @@ export class GraphComponent implements OnInit {
 
   // Compute a step for range_query (interval between 2 points in second)
   // Min step: 1s
-  // Default: 1 step every 10px
+  // Default: 1 step every 15px
   get_prometheus_step( start: number, end: number ): number {
     const timestamp = new Date().getTime();
     const second_duration = ( end - start );
     let chart_width = window.innerWidth;
     let step: number;
-    step = Math.floor( second_duration / chart_width ) * 10;
-
-    if( timestamp / 1000 - 3600 * 6 >= start || timestamp / 1000 - 3600 * 6  >= end) {
-    }
+    step = Math.floor( second_duration / chart_width ) * 15;
 
     if ( step == 0 ) {
       step = 50;

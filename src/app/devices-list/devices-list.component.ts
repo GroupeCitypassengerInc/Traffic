@@ -240,7 +240,6 @@ export class DevicesListComponent implements OnInit {
       }
     }
     if ( isDevMode() ) console.log(this.devices_informations);
-    console.log (row)
   }
 
   get_metric_list(row: table_devices_info): void {

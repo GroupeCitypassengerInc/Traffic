@@ -25,7 +25,7 @@
                 <mat-icon>remove</mat-icon>
               </button>
               <input matInput type='number' class='counter' [(ngModel)]='graphs_records[query]["t_value"]'
-                (ngModelChange)='time_value_changes(query)' (focus)='setColor("primary")' (blur)='setColor("default")' />
+                (ngModelChange)='time_value_changes(query)' (focus)='setColor("primary")' (blur)='setColor("default")' min="1" oninput="validity.valid||(value='1');"/>
               <button mat-button mat-icon-button matSuffix aria-label='Add' [color]='primary'
                 (click)='incrementValue(_step, query)' [disabled]='shouldDisableIncrement(_value)'>
                 <mat-icon>add</mat-icon>
