@@ -46,7 +46,8 @@
                               i18n='text for search metric|text used in search metric input@@search_metric_input_devices_table'>
                               search for metric</mat-label>
                             <input class='input' [(ngModel)]="filterNameGroup" matInput type="text"
-                              (keyup)="filterListCareUnit($event.target.value, box['group_name'])">
+                              (keyup)="filterListCareUnit($event.target.value, box['group_name'])" 
+                              [ngStyle]="{'color':_is_dark_mode_enabled  ? 'white' : 'black' }">
                           </mat-form-field>
                           <mat-option *ngFor='let graph_available of devices_informations[box["group_name"]]["group_metric"]' value='{{graph_available}}'>
                             {{metric_alternative_name[user_information.role][graph_available][_lang]}}</mat-option>
