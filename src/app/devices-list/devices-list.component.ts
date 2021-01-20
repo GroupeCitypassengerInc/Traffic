@@ -373,12 +373,14 @@ export class DevicesListComponent implements OnInit {
       graph_informations.push([group_name, citynet_url, box_name]);
       redirect_url = redirect_url + password + '/' + box_name + '/metric?' ;
     }
+    let date = new Date();
+    let date_string = date.toISOString();
     metric_checked.forEach((metric, index) =>{
       graph_informations.push(metric);
       if ( metric_checked.length - 1 == index ) {
-        redirect_url = redirect_url + 'metric=' + metric;
+        redirect_url = redirect_url + 'metric=' + metric + '&value=1&unit=hour&now=true&date='+ date_string; //
       } else {
-        redirect_url = redirect_url + 'metric=' + metric + '&';
+        redirect_url = redirect_url + 'metric=' + metric + '&value=1&unit=hour&now=true&date=' + date_string + '&'; //
       }
     });
     console.log(redirect_url)

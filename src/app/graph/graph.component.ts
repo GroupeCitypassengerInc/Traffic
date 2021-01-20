@@ -28,6 +28,7 @@ import { AuthService } from '../auth_services/auth.service';
 import { NotificationServiceService } from '../notification/notification-service.service'
 import { ThemeHandlerService } from '../theme_handler/theme-handler.service'
 import * as metrics_config from '../../assets/json/config.metrics.json';
+import { nextTick } from 'process';
 
 
 export interface unit_conversion {
@@ -39,6 +40,9 @@ export interface user_informations {
   id : number,
   role : string,
   username : string,
+}
+export interface params {
+  [key: string]: any
 }
 
 @Component({
@@ -54,6 +58,7 @@ export class GraphComponent implements OnInit {
   form_group_controls_subscription: Subscription;
 
   query_list: Array<string> = [];
+  params_list: params = {};
   _lang: string = this.lingual.get_language();
   metric_alternative_name: any = this.lingual.metric_alternative_name;
   metrics_config: any = (metrics_config as any).default;
@@ -65,9 +70,10 @@ export class GraphComponent implements OnInit {
 
   base_url : string = '';
   base_url_buffer: string = '';
-  box_selected : string = '';
-
-  group_name : string;
+  box_selected : string = null;
+  password: string = '';
+  group_name : string = '';
+  group_router: string = '';
 
   default_up_start_time : number = -1 * 60 * 60 * 1000;
   default_end_time : any = 0;
@@ -136,17 +142,24 @@ export class GraphComponent implements OnInit {
     }
     this.default_date.setHours(this.default_date.getHours());
 
-    let password: string = this.route.snapshot.paramMap.get('password');
+    let router = this.route.snapshot.paramMap.get('router');
+    this.group_router = router;
+    this.password = this.route.snapshot.paramMap.get('password');
     let box_name: string = this.route.snapshot.paramMap.get('box_name');
     this.group_name = this.route.snapshot.paramMap.get('group_name');
     this.query_list = this.route.queryParams['_value']['metric'];
-    let router = this.route.snapshot.paramMap.get('router');
+    this.params_list = this.route.queryParams['_value'];
 
     if ( typeof this.query_list == 'string' ) {
       this.query_list = [this.query_list];
+      this.params_list = {};
+      Object.keys(this.route.queryParams['_value']).forEach(key =>{
+        if ( key == 'metric') return;
+        this.params_list[key] = [this.route.queryParams['_value'][key]];
+      });
     }
 
-    if ( password == null || this.group_name == null || this.query_list == undefined ) {
+    if ( this.password == null || this.group_name == null || this.query_list == undefined ) {
       if ( this._lang == 'fr' ) {
         this.notification.show_notification('Veuillez sélectionner des données à visualiser.','Ok','error');
       } else {
@@ -155,8 +168,8 @@ export class GraphComponent implements OnInit {
       this.router.navigate(['/select']);
     }
 
-    this.base_url = '/' + password + '/prometheus/' + this.group_name + '/api/v1';
-    this.base_url_buffer = '/' +  password + '/prombuffer/' + this.group_name + '/api/v1';
+    this.base_url = '/' + this.password + '/prometheus/' + this.group_name + '/api/v1';
+    this.base_url_buffer = '/' +  this.password + '/prombuffer/' + this.group_name + '/api/v1';
     this.box_selected = box_name;
 
     if ( !isDevMode() ) {
@@ -222,16 +235,17 @@ export class GraphComponent implements OnInit {
 
   get_records(query_list: Array<string>): void {
     query_list.forEach(
-      query => {
+      (query, index) => {
+        let date = new Date(this.params_list['date'][index])
         this.graphs_records[query] = {
           m_chart : "chart",
           m_hidden: false,
-          t_value : this.default_value,
-          t_unit : this.default_unit,
+          t_value : +this.params_list['value'][index],
+          t_unit : this.params_list['unit'][index],
           t_date : this._formBuilder.control({
-            value: this.default_date, disabled: false
+            value: date, disabled: false
           }),
-          t_now : this._now
+          t_now : this.params_list['now'][index] == 'true'
         }
         this.form_group.addControl(query, this.graphs_records[query]['t_date']);
         this.form_group_controls_subscription = this.form_group.controls[query].valueChanges.subscribe(date => {
@@ -477,6 +491,7 @@ export class GraphComponent implements OnInit {
     if (  metric in this.metrics_config ) {
       tension = this.metrics_config[metric]['tension'];
       unit += this.metrics_config[metric]['x']['unit'][this._lang];
+      min = this.metrics_config[metric]['y']['min'] === '' ? undefined : min;
       if ( unit == undefined ) {
         unit = '';
       }
@@ -579,6 +594,7 @@ export class GraphComponent implements OnInit {
     let t_unit = this.graphs_records[query]['t_unit'];
     this.up_start_time = -1 * t_value * this._unit[t_unit] + this.end_time;
     this.regenerate(query);
+    this.update_url();
   }
 
   time_value_changes(query: string): void {
@@ -586,6 +602,7 @@ export class GraphComponent implements OnInit {
     let t_unit = this.graphs_records[query]['t_unit'];
     this.up_start_time = -1 * t_value * this._unit[t_unit] + this.end_time;
     this.regenerate(query);
+    this.update_url();
   }
 
   date_changes(date: Date, query: string): void {
@@ -623,6 +640,7 @@ export class GraphComponent implements OnInit {
       }
     }
     this.regenerate(query);
+    this.update_url();
   }
 
   shouldDisableDecrement(inputValue: number): boolean {
@@ -640,6 +658,7 @@ export class GraphComponent implements OnInit {
       this.up_start_time = -1 * t_value * this._unit[t_unit];
       this.end_time = 0;
       this.regenerate(query);
+      this.update_url();
     }
   }
 
@@ -650,6 +669,7 @@ export class GraphComponent implements OnInit {
     this.graphs_records[query]["t_unit"] = 'hour';
     this.graphs_records[query]["t_now"] = true;
     this.regenerate(query);
+    this.update_url();
   }
 
   hide_lines(metric:string): void {
@@ -676,24 +696,47 @@ export class GraphComponent implements OnInit {
     });
   }
 
-  delete(query: string): void{
+  delete(query: string): void {
     if ( isDevMode() ) console.log('Deleting : ' + query + ' chart');
-
     delete this.graphs_records[query];
+    this.update_url();
+  }
+
+  update_url(): void {
     if ( Object.keys(this.graphs_records).length == 0 ) {
       this.router.navigateByUrl('/select');
     } else {
-      let uri: string = this.router.url;
-      let str = 'metric=' + query + '&'
-      uri = uri.replace(str, '')
-      if ( uri.includes(query) ) {
-        uri = uri.replace('&metric=' + query, '')
+      let url: string;
+      if ( this.box_selected == null ) {
+        url = '/graph/' + this.group_name + '/' + this.group_router + '/' + this.password + '/metric?';
+      } else {
+        url = '/graph/' + this.group_name + '/' + this.group_router + '/' + this.password + '/' + this.box_selected + '/metric?';
       }
-      this.auth.redirect(uri)
+
+      Object.keys(this.graphs_records).forEach((metric, index) =>{
+        if ( Object.keys(this.graphs_records).length - 1 == index ) {
+          url = url + 'metric=' + metric 
+                    + '&value='+ this.graphs_records[metric]['t_value'] 
+                    + '&unit='+ this.graphs_records[metric]['t_unit'] 
+                    + '&now='+ this.graphs_records[metric]['t_now'] 
+                    + '&date=' + this.graphs_records[metric]['t_date']['value'].toISOString();
+        } else {
+          url = url + 'metric=' + metric 
+          + '&value='+ this.graphs_records[metric]['t_value'] 
+          + '&unit='+ this.graphs_records[metric]['t_unit'] 
+          + '&now='+ this.graphs_records[metric]['t_now'] 
+          + '&date=' + this.graphs_records[metric]['t_date']['value'].toISOString() +'&';
+        }
+      });
+
+      console.log('url')
+      console.log(url)
+      console.log(this.graphs_records)
+      this.router.navigateByUrl(url)
     }
   }
 
-  back_to_selection(): void{
+  back_to_selection(): void {
     this.router.navigate(['/select'])
   }
 }
