@@ -690,7 +690,6 @@ export class GraphComponent implements OnInit {
         uri = uri.replace('&metric=' + query, '')
       }
       this.auth.redirect(uri)
-      //this.router.navigateByUrl(uri);
     }
   }
 

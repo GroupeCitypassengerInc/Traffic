@@ -70,6 +70,10 @@ export class AppComponent implements OnInit {
       this.store_theme_selection();
     }
 
+    this._theme = window.matchMedia('(prefers-color-scheme: dark)').matches=== true ? 'Dark' : 'Light';
+    this.theme_handler.update_theme(this._theme);
+    console.log(this.theme_handler.get_theme())
+
     this.language_list = this.language.language_list;
     this.is_dev_mode = isDevMode();
     this.is_logged = this.auth.is_auth;
