@@ -28,6 +28,7 @@ import { LoaderService } from '../loader/loader.service';
 
 /* Data import */
 import * as devices_json from '../../assets/json/map_devices.json';
+import * as metrics_config from '../../assets/json/config.metrics.json';
 import { environment } from '../../environments/environment';
 import { FormControl } from '@angular/forms';
 
@@ -61,6 +62,7 @@ export interface devices_informations {
   ],
 })
 export class DevicesListComponent implements OnInit {
+  metrics_config: any = (metrics_config as any).default;
 
   user_information: user_informations;
   _lang: 'fr' | 'en' | string;
@@ -373,6 +375,17 @@ export class DevicesListComponent implements OnInit {
       graph_informations.push([group_name, citynet_url, box_name]);
       redirect_url = redirect_url + password + '/' + box_name + '/metric?' ;
     }
+
+    if( this.user_information.role == 'Support' || this.user_information.role == 'Admin' ) {
+      metric_checked.forEach( (metric_name, index) =>{
+        if ( metric_name in this.metrics_config ) {
+          if (this.metrics_config[metric_name]['promql'] != "" ) {
+            metric_checked.splice(index + 1, 0, metric_name + '_raw');
+          }
+        }
+      })
+    }
+
     let date = new Date();
     let date_string = date.toISOString();
     metric_checked.forEach((metric, index) =>{

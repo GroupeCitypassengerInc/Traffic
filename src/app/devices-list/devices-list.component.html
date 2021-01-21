@@ -1,11 +1,11 @@
 <div class='mat-app-background'>
   <div style='margin: 1%;'>
-    <h2 i18n='welcome text|welcome text device table component@@welcome_devices_table'>
-      Welcome to baggage {{user_information['username']}} !</h2>
-    <h4 style='max-width: 60%;' i18n='short description@@short_description_devices_table'>
+    <h3 i18n='welcome text|welcome text device table component@@welcome_devices_table'>
+      Welcome to baggage {{user_information['username']}} !</h3>
+    <p style='max-width: 80%;' i18n='short description@@short_description_devices_table'>
       Baggage allows you to visualize the performance data of your devices. Select a device in the table
       below, once the device is selected choose the data you wish to view and then click on the "view" button.
-    </h4>
+    </p>
 
     <h2 i18n='title your devices|@@title_your_devices_table'>Your devices </h2>
     <div class='table_container'>
@@ -22,38 +22,43 @@
           <td mat-cell *matCellDef='let box' class='row'> {{box[column.key]}} </td>
         </ng-container>
         <ng-container matColumnDef='expandedDetail'>
-          <td mat-cell *matCellDef='let box' [attr.colspan]='columnsToDisplay.length'>
-            <div class='element-detail' [@detailExpand]="box == expandedElement ? 'expanded' : 'collapsed'">
+          <td mat-cell *matCellDef='let box' [attr.colspan]='columnsToDisplay.length' [ngStyle]="{'background-color':_is_dark_mode_enabled  ? '#3a3a3a' : '#f2f2f2' }">
+            <div class='element-detail' [@detailExpand]="box == expandedElement ? 'expanded' : 'collapsed'" >
               <div class='element-description'>
-                <mat-grid-list cols='5' rowHeight='100px'>
-                  <mat-grid-tile colspan='3' [style.background]='green'
+                <mat-grid-list cols='5' rowHeight='150px'>
+                  <mat-grid-tile colspan='3'
                     i18n='tip text|tip text wich explain how the table work@@tip_text_description_devices_table'>
-                    In order to consult the collected data , select the data you wish to consult and then click on
-                    the
-                    "Visualize" button.
+                    <p>
+                      In order to consult the collected data , select the data you wish to consult and then click onthe
+                      "Visualize" button.
+                    </p>
                   </mat-grid-tile>
                   <!-- (GROUP) Graph selection -->
-                  <mat-grid-tile colspan='1' rowspan='1' [style.background]='blue'>
+                  <mat-grid-tile colspan='1' rowspan='1'>
                     <md-content style="text-align: center;">
-                      <mat-form-field appearance='legacy' style='width:100%;'>
+                      <mat-form-field appearance='legacy' class='fullwidth'>
                         <mat-label
                           i18n='title of metric selection|title of metric selection@@title_metric_selection_devices_table'>
                           Graph available</mat-label>
-                        <mat-select [formControl]='devices_informations[box["group_name"]]["form_control"]' (selectionChange)='onChangeGroupForm($event, box)'
+                        <mat-select [formControl]='devices_informations[box["group_name"]]["form_control"]'
+                          (selectionChange)='onChangeGroupForm($event, box)'
                           [disabled]='devices_informations[box["group_name"]]["form_disabled"]' multiple>
-                          <mat-form-field class="input_metric">
+                          <mat-form-field class='container'>
                             <mat-label
                               i18n='text for search metric|text used in search metric input@@search_metric_input_devices_table'>
                               search for metric</mat-label>
-                            <input class='input' [(ngModel)]="filterNameGroup" matInput type="text"
-                              (keyup)="filterListCareUnit($event.target.value, box['group_name'])" 
+                            <input [(ngModel)]="filterNameGroup" matInput type="text"
+                              (keyup)="filterListCareUnit($event.target.value, box['group_name'])"
                               [ngStyle]="{'color':_is_dark_mode_enabled  ? 'white' : 'black' }">
                           </mat-form-field>
-                          <mat-option *ngFor='let graph_available of devices_informations[box["group_name"]]["group_metric"]' value='{{graph_available}}'>
+                          <mat-option
+                            *ngFor='let graph_available of devices_informations[box["group_name"]]["group_metric"]'
+                            value='{{graph_available}}'>
                             {{metric_alternative_name[user_information.role][graph_available][_lang]}}</mat-option>
                         </mat-select>
                       </mat-form-field>
-                      <br /><button mat-flat-button [disabled]='devices_informations[box["group_name"]]["visualize_disabled"]' color='primary'
+                      <br/><button mat-flat-button
+                        [disabled]='devices_informations[box["group_name"]]["visualize_disabled"]' color='primary'
                         (click)='visualize(box["group_name"])' class='visualize_btn'
                         i18n='text visualize button|text used in visualize button in devices table@@button_visualize_devices_table'>Visualize</button>
                     </md-content>
@@ -62,12 +67,15 @@
                   <!-- (BOX) Graph selection -->
                   <mat-grid-tile colspan='1' rowspan='1' [style.background]='blue'>
                     <md-content style="text-align: center;">
-                      <mat-form-field appearance='legacy' style='width:100%;'>
+                      <mat-form-field appearance='legacy' class='fullwidth'>
                         <mat-label
                           i18n='title of metric selection|title of metric selection@@title_metric_selection_devices_table'>
                           Graph available</mat-label>
-                        <mat-select [formControl]='devices_informations[box["group_name"]][box["box_name"]]["form_control"]' (selectionChange)='onChangeBoxForm($event, box)'
-                          [disabled]='devices_informations[box["group_name"]][box["box_name"]]["form_disabled"]' multiple>
+                        <mat-select
+                          [formControl]='devices_informations[box["group_name"]][box["box_name"]]["form_control"]'
+                          (selectionChange)='onChangeBoxForm($event, box)'
+                          [disabled]='devices_informations[box["group_name"]]["form_disabled"]'
+                          multiple>
                           <mat-form-field class="input_metric">
                             <mat-label
                               i18n='text for search metric|text used in search metric input@@search_metric_input_devices_table'>
@@ -75,12 +83,15 @@
                             <input class='input' [(ngModel)]="filterNameBox" matInput type="text"
                               (keyup)="filterListCareUnit($event.target.value, box['group_name'])">
                           </mat-form-field>
-                          <mat-option *ngFor='let graph_available of devices_informations[box["group_name"]]["group_metric"]' value='{{graph_available}}'>
+                          <mat-option
+                            *ngFor='let graph_available of devices_informations[box["group_name"]]["group_metric"]'
+                            value='{{graph_available}}'>
                             {{metric_alternative_name[user_information.role][graph_available][_lang]}}</mat-option>
                         </mat-select>
                       </mat-form-field>
-                      <br /><button mat-flat-button [disabled]='devices_informations[box["group_name"]][box["box_name"]]["visualize_disabled"]' color='primary'
-                        (click)='visualize(box["group_name"], box["box_name"])' class='visualize_btn'
+                      <br /><button mat-flat-button
+                        [disabled]='devices_informations[box["group_name"]][box["box_name"]]["visualize_disabled"]'
+                        color='primary' (click)='visualize(box["group_name"], box["box_name"])' class='visualize_btn'
                         i18n='text visualize button|text used in visualize button in devices table@@button_visualize_devices_table'>Visualize</button>
                     </md-content>
                   </mat-grid-tile>

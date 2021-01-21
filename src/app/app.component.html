@@ -11,7 +11,7 @@
       <mat-toolbar color='primary'>
         <mat-toolbar-row>
           <span>
-            Baggage
+            <b>Baggage </b>
             <mat-icon style='vertical-align: middle;'>work</mat-icon>
           </span>
           <span class='spacer'></span>
@@ -21,7 +21,7 @@
           </button>
 
           <mat-menu #menu="matMenu">
-            <button mat-menu-item>
+            <button mat-menu-item >
               <mat-icon *ngIf='is_dark_mode_enabled'>bedtime</mat-icon>
               <mat-icon *ngIf='!is_dark_mode_enabled'>wb_sunny</mat-icon>
               <span *ngIf='!is_dark_mode_enabled'>Switch off the lights</span>

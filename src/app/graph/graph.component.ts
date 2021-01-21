@@ -28,8 +28,6 @@ import { AuthService } from '../auth_services/auth.service';
 import { NotificationServiceService } from '../notification/notification-service.service'
 import { ThemeHandlerService } from '../theme_handler/theme-handler.service'
 import * as metrics_config from '../../assets/json/config.metrics.json';
-import { nextTick } from 'process';
-
 
 export interface unit_conversion {
   minute : number,
@@ -53,7 +51,7 @@ export interface params {
 
 export class GraphComponent implements OnInit {
 
-  user_informartions: user_informations;
+  user_information: user_informations;
   user_info_subscription : Subscription;
   form_group_controls_subscription: Subscription;
   is_mobile: boolean;
@@ -121,7 +119,7 @@ export class GraphComponent implements OnInit {
       default_date: [{value: '', disabled: true }, Validators.required]
     });
     this.user_info_subscription = this.auth.log_user_info_change.subscribe((user_info:user_informations) => {
-      this.user_informartions = user_info;
+      this.user_information = user_info;
     });
     this.theme_subscription = this.theme_handler.theme_changes.subscribe((theme) => {
       this._is_dark_mode_enabled = theme === 'Dark' ? true : false;
@@ -139,9 +137,9 @@ export class GraphComponent implements OnInit {
       this.is_mobile = false;
     }
     if ( !isDevMode() ) {
-      this.user_informartions = this.auth.user_info;
+      this.user_information = this.auth.user_info;
     } else {
-      this.user_informartions = {
+      this.user_information = {
         id : 0,
         role : 'Support',
         username : 'Dev',
@@ -181,16 +179,6 @@ export class GraphComponent implements OnInit {
 
     if ( !isDevMode() ) {
       this.prometheus_api_url = this.prometheus_api_url.replace('XXXX', router);
-    }
-
-    if( this.user_informartions.role == 'Support' || this.user_informartions.role == 'Admin' ) {
-      this.query_list.forEach( (metric_name, index) =>{
-        if ( metric_name in this.metrics_config ) {
-          if (this.metrics_config[metric_name]['promql'] != "" ) {
-            this.query_list.splice(index + 1, 0, metric_name + '_raw')
-          }
-        }
-      })
     }
     
     this.get_records(this.query_list);
@@ -413,9 +401,9 @@ export class GraphComponent implements OnInit {
       let extra_label: Array<string> = this.get_extra_labels(data_to_parse[key]['metric']);
       let label: string;
       if (this.box_selected != null){
-        label = this.metric_alternative_name[this.user_informartions.role][metric][this._lang]
+        label = this.metric_alternative_name[this.user_information.role][metric][this._lang]
       } else {
-        label = this.metric_alternative_name[this.user_informartions.role][metric][this._lang] + ' { instance: ' + instance + ' }';
+        label = this.metric_alternative_name[this.user_information.role][metric][this._lang] + ' { instance: ' + instance + ' }';
       }
       extra_label.forEach(element => {
         label = label + ' { ' + element + ': ' + data_to_parse[key]['metric'][element] + ' }';
@@ -424,7 +412,7 @@ export class GraphComponent implements OnInit {
       dataset = {
         label: label,
         data: metric_value_list,
-        pointRadius: 1,
+        pointRadius: 2,
         borderColor : '#' + this.crc32(label),
       };
       datasets.push(dataset);
@@ -513,12 +501,34 @@ export class GraphComponent implements OnInit {
     
 
     Chart.defaults.global.maintainAspectRatio = false;
+    Chart.defaults.global.elements.line.borderWidth = 2;
+    Chart.defaults.global.elements.point.radius = 10;
+    Chart.defaults.global.defaultFontFamily = 'Ubuntu, sans-serif';
+    function onLegendClicked(e, i) {
+      let hidden = !chart.getDatasetMeta(0).data[i].hidden;
+      chart.getDatasetMeta(0).data[i].hidden = hidden;
+      const legendLabelSpan = document.getElementById("legend-label-" + i);
+      legendLabelSpan.style.textDecoration = hidden ? 'line-through' : '';
+      chart.update();
+    };
     var chart = new Chart(ctx, {
       type: 'line',
       data: data,
       options: {
         responsive : true,
-        
+        /*legendCallback: chart => {
+          var text = []; 
+ 		      text.push('<ul class="' + chart.id + '-legend">'); 
+ 		      for (var i = 0; i < chart.data.datasets.length; i++) { 
+            text.push('<li><span style="background-color:' + chart.data.datasets[i].backgroundColor + '"></span>'); 
+            if (chart.data.datasets[i].label) { 
+              text.push(chart.data.datasets[i].label); 
+            } 
+            text.push('</li>'); 
+          } 
+          text.push('</ul>'); 
+          return text.join(''); 
+        },*/
         tooltips: {
           callbacks: {
             label: function(tooltipItem, data) {
@@ -537,9 +547,12 @@ export class GraphComponent implements OnInit {
           duration: 1
         }, 
         legend: {
+          //display: false,
           position: 'bottom',
           align: 'start',
           labels: {
+            fontSize: 20,
+            fontFamily:'Ubuntu, sans-serif',
             fontColor: color,
           }
         },
@@ -572,6 +585,7 @@ export class GraphComponent implements OnInit {
         }
       }
     });
+    //document.getElementById("legend").innerHTML = chart.generateLegend();
     return chart;
   }
 

@@ -129,6 +129,10 @@
     "go_goroutines":{
       "en":"go goroutines",
       "fr":"go goroutines"
+    },
+    "go_goroutines_raw":{
+      "en":"go goroutines_raw",
+      "fr":"go goroutines_raw"
     }
   },
   "User":{

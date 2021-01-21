@@ -65,9 +65,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
 
-    if( window.matchMedia('(prefers-color-scheme: dark)').matches && this.theme_handler.get_theme() == 'Dark') {
+    if( window.matchMedia('(prefers-color-scheme: dark)').matches && this.theme_handler.get_theme() == '') {
       this.is_dark_mode_enabled = true;
       this.store_theme_selection();
+    } else if ( this.theme_handler.get_theme() == 'Dark' ) {
+      this.is_dark_mode_enabled = true;
     }
 
     this._theme = window.matchMedia('(prefers-color-scheme: dark)').matches=== true ? 'Dark' : 'Light';

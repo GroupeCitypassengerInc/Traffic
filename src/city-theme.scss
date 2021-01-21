@@ -2,6 +2,7 @@
 
 @include mat-core();
 
+/* MAT PALLETTE */
 $md-cityblue: (
   50 : #e7e9f3,
   100 : #c4c8e1,
@@ -34,7 +35,6 @@ $md-cityblue: (
     A700 : #ffffff,
   )
 );
-
 $md-citygreen: (
   50 : #f4f7e7,
   100 : #e3ecc3,
@@ -69,21 +69,36 @@ $md-citygreen: (
 );
 @import '~@angular/material/theming';
 
-// Define a custom typography config that overrides the font-family as well as the
-// `headlines` and `body-1` levels.
+
+/* TYPOGRAPHY
+headline - Section heading corresponding to the <h1> tag.
+title - Section heading corresponding to the <h2> tag.
+subheading-2 - Section heading corresponding to the <h3> tag.
+subheading-1 - Section heading corresponding to the <h4> tag.
+body-1 - Base body text.
+body-2 - Bolder body text.
+caption - Smaller body and hint text.
+button - Buttons and anchors.
+input - Form input fields. */
+
 $custom-typography: mat-typography-config(
   $font-family: 'Ubuntu, sans-serif',
-  $headline: mat-typography-level(32px, 48px, 700),
-  $body-1: mat-typography-level(16px, 24px, 500)
+  $headline: mat-typography-level(32px, 48px, 800),
+  $title: mat-typography-level(32px, 48px, 500),
+  $subheading-2: mat-typography-level(30px, 45px, 500),
+  $subheading-1: mat-typography-level(27px, 41px, 500),
+  $body-1: mat-typography-level(20px, 30px, 300),
+  $caption: mat-typography-level(20px, 30px, 300),
+  $button: mat-typography-level(20px, 30px, 200),
+  $input: mat-typography-level(20px, 1.125, 200)
 );
 @include angular-material-typography($custom-typography);
 
-// light theme
+/* LIGHT THEME */
 $city-baggage-light-theme-primary: mat-palette($md-cityblue);
 $city-baggage-light-theme-secondary: mat-palette($md-citygreen);
 $city-baggage-light-theme-warn: mat-palette($md-cityblue);
 $city-baggage-light-theme-accent: mat-palette($md-cityblue);
-
 $city-baggage-light-theme: mat-light-theme((
   color: (
     primary: $city-baggage-light-theme-primary,
@@ -94,13 +109,11 @@ $city-baggage-light-theme: mat-light-theme((
 ));
 @include angular-material-theme($city-baggage-light-theme);
 
-// dark theme
+/* DARK THEME */
 $city-baggage-dark-theme-primary: mat-palette($md-cityblue, 500);
 $city-baggage-dark-theme-secondary: mat-palette($md-citygreen, 500);
 $city-baggage-dark-theme-warn: mat-palette($md-cityblue, 400);
 $city-baggage-dark-theme-accent: mat-palette($md-cityblue, A500);
-
-
 $city-baggage-dark-theme: mat-dark-theme((
   color: (
     primary: $city-baggage-dark-theme-primary,
@@ -109,7 +122,116 @@ $city-baggage-dark-theme: mat-dark-theme((
     accent: $city-baggage-dark-theme-accent,
   )
 ));
-
 .dark-theme-mode {
   @include angular-material-color($city-baggage-dark-theme);
+}
+
+/* MAT CLASS */
+.mat-tooltip {
+  font-family: "Ubuntu Light", Ubuntu, sans-serif;
+  font-size: 15px;
+}
+.mat-menu-panel {
+  max-width: none !important;
+}
+.mat-form-field {
+  align-content: center;
+}
+.mat-form-field-infix {
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+}
+.mat-select-panel {
+  max-width: none !important;
+}
+.mat-datetimepicker-calendar-header {
+  background-color: #39499c !important;
+}
+.radio {
+  text-align: left;
+  align-content: left;
+  padding: 1%;
+}
+.additional-selection {
+  opacity: 0.75;
+  font-size: 0.75em;
+}
+.error.mat-snack-bar-container {
+  background-color: #c12e2a;
+  color: white;
+}
+.success.mat-snack-bar-container {
+  background-color: #00cc00;
+  color: white;
+}
+
+/* HTML TAG */
+:host {
+  font-family: "Ubuntu Light", Ubuntu, sans-serif;
+  font-size: 20px;
+  color: #333;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  text-align: center;
+}
+html, body { 
+  height: 100%; color: transparent;
+}
+html, app-root, body, .app-frame {
+  height: 100%;
+  box-sizing: border-box;
+}
+body { 
+  margin: 0;
+  font-family: 'Ubuntu Light', Ubuntu, sans-serif; 
+}
+h2 {
+  text-decoration: underline;
+  text-decoration-color:#b2d63b;
+}
+a, a:hover, a:focus, a:active {
+  text-decoration: none;
+  color: inherit;
+}
+table {
+  width: 100%;
+}
+
+/* CUSTOM CLASS */
+.container {
+  margin : 2%;
+}
+.spacer {
+  flex: 1 1 auto;
+}
+.fullwidth {
+  width: 100%;
+}
+.visualize_btn {
+  margin: 1% 1% 2%;
+}
+.visualize_btn {
+  margin: 1% 1% 2%;
+}
+.input_metric {
+  margin-top: 1%;
+  margin-left: 2%;
+}
+.counter {
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+}
+.form {
+  display: block;
+  width: 95px;
+  margin: 2%;
+}
+.time_opt {
+  display: inline-flex;
 }

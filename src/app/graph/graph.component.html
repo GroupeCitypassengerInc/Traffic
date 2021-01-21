@@ -1,20 +1,21 @@
 <div class='mat-app-background'>
   <div class='container'>
     <h2 i18n='title Graph@@Title_graph' style='margin-top: 1%;'>Graphs</h2>
-
     <button mat-button mat-icon-button matPrefix aria-label='Back' (click)='back_to_selection()'>
       <mat-icon>keyboard_return</mat-icon>
       <span i18n='Go back to selection@@return-button'>Go back to selection</span>
     </button>
 
-    <h4 *ngIf=' box_selected == null ' i18n='description graph group@@description_graph_group'>You are currently viewing
-      the
-      data of the <strong>{{group_name}}</strong> group boxes.</h4>
-    <h4 *ngIf=' box_selected != null ' i18n='description graph box@@description_graph_box'>You are currently viewing the
-      data of <strong>{{box_selected}}</strong> device.</h4>
-    <div class='container' *ngFor='let query of query_list'>
+    <p *ngIf=' box_selected == null ' i18n='description graph group@@description_graph_group'>
+      You are currently viewing the data of the <strong>{{group_name}}</strong> group boxes.
+    </p>
+    <p *ngIf=' box_selected != null ' i18n='description graph box@@description_graph_box'>
+      You are currently viewing the data of <strong>{{box_selected}}</strong> device.
+    </p>
+
+    <div *ngFor='let query of query_list'>
       <div *ngIf='graphs_records.hasOwnProperty(query)'>
-        <h3>{{metric_alternative_name[user_informartions.role][query][_lang]}}</h3>
+        <h4>{{metric_alternative_name[user_information.role][query][_lang]}}</h4>
         <div style='max-width: 100;'>
           <div id='increment' class='time_opt'>
             <!-- increment section -->
@@ -50,10 +51,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            
-            <div>
 
-            </div>
             <!-- Date time section -->
             <form novalidate [formGroup]='form_group' class='form' id='datetime'
               *ngIf='!graphs_records[query]["t_now"]'>
@@ -72,7 +70,8 @@
 
             <!-- Now slide toggle -->
             <!-- The value is updating correctly BUT w/o visual changes (still unchecked) -->
-            <mat-slide-toggle  *ngIf='!is_mobile' [(ngModel)]='graphs_records[query]["t_now"]' class='form_text'
+            <mat-slide-toggle *ngIf='!is_mobile' [(ngModel)]='graphs_records[query]["t_now"]'
+              style="align-self: center; margin-left: 1%; margin-right: 1%;"
               (change)='on_slide_toggle_change($event, query)' color="primary" labelPosition='before'
               i18n-matTooltip='tooltip date selection@@tooltip_date_selection_time_selection_graph'
               matTooltip='Switch between now and a selected date time'><span
@@ -89,7 +88,8 @@
             <!-- Reset settings -->
             <button mat-button
               i18n-matTooltip='tooltip restore default|tooltip of button which restore default settings@@tooltip_restore_default_time_selection_graph'
-              matTooltip='Restore default values' class='icon_button' (click)='set_default_settings(query)' *ngIf='!is_mobile'>
+              matTooltip='Restore default values' class='icon_button' (click)='set_default_settings(query)'
+              *ngIf='!is_mobile'>
               <mat-icon>restore</mat-icon>
             </button>
 
@@ -116,9 +116,10 @@
 
           </div>
         </div>
-        <div class='graph'>
-          <canvas id={{query}} width="700" height="300"></canvas>
+        <div style="min-width: 100%; min-height: 100%; margin-bottom: 2%;">
+          <canvas id={{query}} width="800" height="500"></canvas>
         </div>
+        <div id="legend"></div>
       </div>
     </div>
   </div>
