@@ -50,9 +50,14 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <p class='form_text'
+            <span *ngIf='graphs_records[query]["t_now"]' class='form_text'
               i18n='"until" text|"until" text in time range selection@@text_until_time_selection_graph'>
-              Until </p>
+              Until
+            </span>
+            <span *ngIf='!graphs_records[query]["t_now"]' class='form_text'
+              i18n='until text@@text_until_when_now_is_not_selected_time_selection_graph'>
+              Until
+            </span>
 
             <!-- Date time section -->
             <form novalidate [formGroup]='form_group' class='form' id='datetime'
@@ -60,7 +65,9 @@
               <mat-form-field>
                 <mat-placeholder
                   i18n='"until" text date selection|"until" text in time range selection@@text_until_date_selection_time_selection_graph'>
-                  Until</mat-placeholder>
+                  Until
+                </mat-placeholder>
+
                 <input matInput formControlName={{query}} [matDatetimepicker]='dts' required autocomplete='false'
                   [disabled]='graphs_records[query]["t_now"]'>
                 <mat-datetimepicker-toggle [for]='dts' matSuffix></mat-datetimepicker-toggle>
@@ -71,8 +78,12 @@
             <!-- Now slide toggle -->
             <!-- The value is updating correctly BUT w/o visual changes (still unchecked) -->
             <mat-slide-toggle [(ngModel)]='graphs_records[query]["t_now"]' class='form_text'
-              (change)='on_slide_toggle_change($event, query)' color="primary"
-              i18n='"now" text|"now" text in time range selection@@text_now_time_selection_graph'>Now</mat-slide-toggle>
+              (change)='on_slide_toggle_change($event, query)' color="primary" labelPosition='before'
+              i18n-matTooltip='tooltip date selection@@tooltip_date_selection_time_selection_graph'
+              matTooltip='Switch between now and a selected date time'><span
+                i18n='"now" text|"now" text in time range selection@@text_now_time_selection_graph'
+                *ngIf='graphs_records[query]["t_now"]'>Now</span>
+            </mat-slide-toggle>
 
             <!-- Refresh -->
             <button mat-button i18n-matTooltip='tooltip refresh chart @@tooltip_refresh_time_selection_graph'

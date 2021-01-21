@@ -66,9 +66,13 @@
         <target>jusqu'à</target>
       </trans-unit>
 
+      <trans-unit id="text_until_when_now_is_not_selected_time_selection_graph">
+        <target>jusqu'au</target>
+      </trans-unit>
+
       <trans-unit id="text_until_date_selection_time_selection_graph" datatype="html">
         <source>Until</source>
-        <target>jusqu'à</target>
+        <target>jusqu'au</target>
       </trans-unit>
 
       <trans-unit id="tip_text_description_devices_table">
@@ -110,6 +114,12 @@
       <trans-unit id="tooltip_remove_this_metric_time_selection_graph">
         <target>Supprimer ce graphique</target>
       </trans-unit>
+
+      <trans-unit id="tooltip_date_selection_time_selection_graph">
+        <target>Basculer entre maintenant et une date/heure choisie</target>
+      </trans-unit>
+
+      
 
       <trans-unit id="return-button">
         <target>Retour à la sélection</target>
