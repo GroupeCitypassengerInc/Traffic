@@ -383,7 +383,7 @@ export class DevicesListComponent implements OnInit {
         redirect_url = redirect_url + 'metric=' + metric + '&value=1&unit=hour&now=true&date=' + date_string + '&'; //
       }
     });
-    console.log(redirect_url)
+    //console.log(redirect_url)
     this.router.navigateByUrl(redirect_url)
   }
 }

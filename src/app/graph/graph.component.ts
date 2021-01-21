@@ -135,7 +135,6 @@ export class GraphComponent implements OnInit {
 
     if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
       this.is_mobile = true;
-      console.log('is mobile')
     } else {
       this.is_mobile = false;
     }
@@ -502,8 +501,6 @@ export class GraphComponent implements OnInit {
       unit += this.metrics_config[metric]['x']['unit'][this._lang];
       min = this.metrics_config[metric]['y']['min'] === '' ? undefined : this.metrics_config[metric]['y']['min'];
       step = this.metrics_config[metric]['y']['step'] === '' ? undefined : this.metrics_config[metric]['y']['step'];
-      console.log('***************************')
-      console.log(step)
       if ( unit == undefined ) {
         unit = '';
       }
@@ -537,7 +534,7 @@ export class GraphComponent implements OnInit {
         },
         tension : tension,
         animation: {
-          //duration: 1
+          duration: 1
         }, 
         legend: {
           position: 'bottom',
