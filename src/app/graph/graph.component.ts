@@ -133,12 +133,13 @@ export class GraphComponent implements OnInit {
   
   ngOnInit(): void {
 
-    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+    if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
       this.is_mobile = true;
-    }else{
+      console.log('is mobile')
+    } else {
       this.is_mobile = false;
     }
-    if (!isDevMode()){
+    if ( !isDevMode() ) {
       this.user_informartions = this.auth.user_info;
     } else {
       this.user_informartions = {
