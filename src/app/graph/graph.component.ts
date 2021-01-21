@@ -323,8 +323,20 @@ export class GraphComponent implements OnInit {
 
   get_metric_from_prometheus(metric:string): void {
     const timestamp = new Date().getTime();
+
+    let t_value = this.graphs_records[metric]['t_value'];//
+    let t_unit = this.graphs_records[metric]['t_unit'];//
+    this.up_start_time = -1 * t_value * this._unit[t_unit] + this.end_time;
     let start_time = ( timestamp + this.up_start_time ) / 1000;
+
+    if ( this.graphs_records[metric]['t_now'] === false ) {
+      let date =  this.graphs_records[metric]['t_date'].value
+      let selected_date_timestamp = date.getTime();
+      this.end_time = (timestamp - selected_date_timestamp) * -1;
+    }
+    
     let end_time = ( timestamp + this.end_time ) / 1000;
+
     if ( isDevMode() ) console.log(end_time + ' ' + start_time);
     let step = this.set_prometheus_step(start_time, end_time);
 
@@ -684,8 +696,8 @@ export class GraphComponent implements OnInit {
       this.up_start_time = -1 * t_value * this._unit[t_unit];
       this.end_time = 0;
       this.regenerate(query);
-      this.update_url();
     }
+    this.update_url();
   }
 
   set_default_settings(query:string): void {
