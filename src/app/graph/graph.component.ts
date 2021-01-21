@@ -56,6 +56,7 @@ export class GraphComponent implements OnInit {
   user_informartions: user_informations;
   user_info_subscription : Subscription;
   form_group_controls_subscription: Subscription;
+  is_mobile: boolean;
 
   query_list: Array<string> = [];
   params_list: params = {};
@@ -131,6 +132,12 @@ export class GraphComponent implements OnInit {
   }
   
   ngOnInit(): void {
+
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+      this.is_mobile = true;
+    }else{
+      this.is_mobile = false;
+    }
     if (!isDevMode()){
       this.user_informartions = this.auth.user_info;
     } else {
@@ -505,7 +512,9 @@ export class GraphComponent implements OnInit {
     if( this._is_dark_mode_enabled ) {
       color = '#e2e2e2'
     }
+    
 
+    Chart.defaults.global.maintainAspectRatio = false;
     var chart = new Chart(ctx, {
       type: 'line',
       data: data,
@@ -527,7 +536,7 @@ export class GraphComponent implements OnInit {
         },
         tension : tension,
         animation: {
-          duration: 1
+          //duration: 1
         }, 
         legend: {
           position: 'bottom',

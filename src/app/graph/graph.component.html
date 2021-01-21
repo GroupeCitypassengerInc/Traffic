@@ -14,8 +14,8 @@
       data of <strong>{{box_selected}}</strong> device.</h4>
     <div class='container' *ngFor='let query of query_list'>
       <div *ngIf='graphs_records.hasOwnProperty(query)'>
-        <div>
-          <h3>{{metric_alternative_name[user_informartions.role][query][_lang]}}</h3>
+        <h3>{{metric_alternative_name[user_informartions.role][query][_lang]}}</h3>
+        <div style='max-width: 100;'>
           <div id='increment' class='time_opt'>
             <!-- increment section -->
             <mat-form-field class='form'>
@@ -50,44 +50,47 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <span *ngIf='graphs_records[query]["t_now"]' class='form_text'
-              i18n='"until" text|"until" text in time range selection@@text_until_time_selection_graph'>
-              Until
-            </span>
-            <span *ngIf='!graphs_records[query]["t_now"]' class='form_text'
-              i18n='until text@@text_until_when_now_is_not_selected_time_selection_graph'>
-              Until
-            </span>
 
-            <!-- Date time section -->
-            <form novalidate [formGroup]='form_group' class='form' id='datetime'
-              *ngIf='!graphs_records[query]["t_now"]'>
-              <mat-form-field>
-                <mat-placeholder
-                  i18n='"until" text date selection|"until" text in time range selection@@text_until_date_selection_time_selection_graph'>
-                  Until
-                </mat-placeholder>
+            <div *ngIf='!is_mobile'>
+              <span *ngIf='graphs_records[query]["t_now"]' class='form_text'
+                i18n='"until" text|"until" text in time range selection@@text_until_time_selection_graph'>
+                Until
+              </span>
+              <span *ngIf='!graphs_records[query]["t_now"]' class='form_text'
+                i18n='until text@@text_until_when_now_is_not_selected_time_selection_graph'>
+                Until
+              </span>
+              <!-- Date time section -->
+              <form novalidate [formGroup]='form_group' class='form' id='datetime'
+                *ngIf='!graphs_records[query]["t_now"]'>
+                <mat-form-field>
+                  <mat-placeholder
+                    i18n='"until" text date selection|"until" text in time range selection@@text_until_date_selection_time_selection_graph'>
+                    Until
+                  </mat-placeholder>
 
-                <input matInput formControlName={{query}} [matDatetimepicker]='dts' required autocomplete='false'
-                  [disabled]='graphs_records[query]["t_now"]'>
-                <mat-datetimepicker-toggle [for]='dts' matSuffix></mat-datetimepicker-toggle>
-                <mat-datetimepicker #dts type='datetime' openOnFocus='true' timeInterval='5'></mat-datetimepicker>
-              </mat-form-field>
-            </form>
+                  <input matInput formControlName={{query}} [matDatetimepicker]='dts' required autocomplete='false'
+                    [disabled]='graphs_records[query]["t_now"]'>
+                  <mat-datetimepicker-toggle [for]='dts' matSuffix></mat-datetimepicker-toggle>
+                  <mat-datetimepicker #dts type='datetime' openOnFocus='true' timeInterval='5'></mat-datetimepicker>
+                </mat-form-field>
+              </form>
 
-            <!-- Now slide toggle -->
-            <!-- The value is updating correctly BUT w/o visual changes (still unchecked) -->
-            <mat-slide-toggle [(ngModel)]='graphs_records[query]["t_now"]' class='form_text'
-              (change)='on_slide_toggle_change($event, query)' color="primary" labelPosition='before'
-              i18n-matTooltip='tooltip date selection@@tooltip_date_selection_time_selection_graph'
-              matTooltip='Switch between now and a selected date time'><span
-                i18n='"now" text|"now" text in time range selection@@text_now_time_selection_graph'
-                *ngIf='graphs_records[query]["t_now"]'>Now</span>
-            </mat-slide-toggle>
+              <!-- Now slide toggle -->
+              <!-- The value is updating correctly BUT w/o visual changes (still unchecked) -->
+              <mat-slide-toggle [(ngModel)]='graphs_records[query]["t_now"]' class='form_text'
+                (change)='on_slide_toggle_change($event, query)' color="primary" labelPosition='before'
+                i18n-matTooltip='tooltip date selection@@tooltip_date_selection_time_selection_graph'
+                matTooltip='Switch between now and a selected date time'><span
+                  i18n='"now" text|"now" text in time range selection@@text_now_time_selection_graph'
+                  *ngIf='graphs_records[query]["t_now"]'>Now</span>
+              </mat-slide-toggle>
+            </div>
+
 
             <!-- Refresh -->
             <button mat-button i18n-matTooltip='tooltip refresh chart @@tooltip_refresh_time_selection_graph'
-              matTooltip='Refresh' class='icon_button' (click)='regenerate(query)'>
+              matTooltip='Refresh' class='icon_button' (click)='regenerate(query)' *ngIf='!is_mobile'>
               <mat-icon>cached</mat-icon>
             </button>
 
@@ -98,31 +101,33 @@
               <mat-icon>restore</mat-icon>
             </button>
 
-            <!-- Hide curves -->
-            <button *ngIf='!this.graphs_records[query]["m_chart"]["m_hidden"]'
-              i18n-matTooltip='tooltip Hide all curves@@tooltip_hide_all_curves_time_selection_graph' mat-button
-              matTooltip='Hide all curves' class='icon_button' (click)='hide_lines(query)'>
-              <mat-icon>visibility_off</mat-icon>
-            </button>
+            <div>
+              <!-- Hide curves -->
+              <button *ngIf='!this.graphs_records[query]["m_chart"]["m_hidden"]'
+                i18n-matTooltip='tooltip Hide all curves@@tooltip_hide_all_curves_time_selection_graph' mat-button
+                matTooltip='Hide all curves' class='icon_button' (click)='hide_lines(query)'>
+                <mat-icon>visibility_off</mat-icon>
+              </button>
 
-            <!-- Show curves -->
-            <button *ngIf='this.graphs_records[query]["m_chart"]["m_hidden"]'
-              i18n-matTooltip='tooltip Show all curves@@tooltip_show_all_curves_time_selection_graph' mat-button
-              matTooltip='Show all curves' class='icon_button' (click)='hide_lines(query)'>
-              <mat-icon>visibility</mat-icon>
-            </button>
+              <!-- Show curves -->
+              <button *ngIf='this.graphs_records[query]["m_chart"]["m_hidden"]'
+                i18n-matTooltip='tooltip Show all curves@@tooltip_show_all_curves_time_selection_graph' mat-button
+                matTooltip='Show all curves' class='icon_button' (click)='hide_lines(query)'>
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </div>
 
             <!-- remove metric -->
             <button mat-button
               i18n-matTooltip='tooltip Remove this metric@@tooltip_remove_this_metric_time_selection_graph'
-              matTooltip='Remove this chart' class='icon_button' (click)='delete(query)'>
+              matTooltip='Remove this chart' class='icon_button' (click)='delete(query)' *ngIf='!is_mobile'>
               <mat-icon>power_settings_new</mat-icon>
             </button>
 
           </div>
         </div>
         <div class='graph'>
-          <canvas class='graph' id={{query}} width="4" height="1"></canvas>
+          <canvas id={{query}} width="700" height="300"></canvas>
         </div>
       </div>
     </div>
