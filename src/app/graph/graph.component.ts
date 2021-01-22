@@ -323,23 +323,31 @@ export class GraphComponent implements OnInit {
 
   get_metric_from_prometheus(metric:string): void {
     const timestamp = new Date().getTime();
+    console.log(this.graphs_records[metric])
+    let t_value: number = this.graphs_records[metric]['t_value'];//
+    let t_unit: number = this.graphs_records[metric]['t_unit'];//
+    let start_time: number;
+    let end_time : number;
 
-    let t_value = this.graphs_records[metric]['t_value'];//
-    let t_unit = this.graphs_records[metric]['t_unit'];//
-    this.up_start_time = -1 * t_value * this._unit[t_unit] + this.end_time;
-    let start_time = ( timestamp + this.up_start_time ) / 1000;
+    if ( this.graphs_records[metric]['t_now'] == false ) {
+      let current_timestamp = this.default_date.getTime();
 
-    if ( this.graphs_records[metric]['t_now'] === false ) {
-      let date =  this.graphs_records[metric]['t_date'].value
+      let date: Date =  this.graphs_records[metric]['t_date'].value;
       let selected_date_timestamp = date.getTime();
-      this.end_time = (timestamp - selected_date_timestamp) * -1;
+    
+      end_time = (timestamp + (current_timestamp - selected_date_timestamp) * -1) / 1000;
+
+      let t_value = this.graphs_records[metric]['t_value'];
+      let t_unit = this.graphs_records[metric]['t_unit'];
+      start_time = -1 * t_value * this._unit[t_unit]/1000 + end_time;
+    } else {
+      end_time = ( timestamp ) / 1000;
+      start_time = -1 * t_value * this._unit[t_unit]/1000 + end_time;
     }
     
-    let end_time = ( timestamp + this.end_time ) / 1000;
-
     if ( isDevMode() ) console.log(end_time + ' ' + start_time);
     let step = this.set_prometheus_step(start_time, end_time);
-
+    
     let selected_box = this.box_selected
     let raw_metric_name = metric;
     metric = this.transform_metric_query(metric, selected_box);
@@ -767,9 +775,9 @@ export class GraphComponent implements OnInit {
         }
       });
 
-      console.log('url')
-      console.log(url)
-      console.log(this.graphs_records)
+      //console.log('url')
+      //console.log(url)
+      //console.log(this.graphs_records)
       this.router.navigateByUrl(url)
     }
   }
