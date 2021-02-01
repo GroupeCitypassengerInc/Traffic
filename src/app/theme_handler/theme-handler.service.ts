@@ -15,9 +15,9 @@ export class ThemeHandlerService {
 
   update_theme(theme:string): void{
     this.theme = theme;
-    localStorage.setItem('theme', theme ? 'Dark' : 'Light');
+    localStorage.setItem('theme', theme);
     this.is_dark_mode_enabled = localStorage.getItem('theme') === 'Dark' ? true : false;
-    this.theme_changes.next(this.theme);
+    this.theme_changes.next(theme);
   }
 
   get_theme(): string{

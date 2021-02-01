@@ -14,7 +14,7 @@ export class GuardService implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    if ( isDevMode() ){
+    if ( false ){
       return true;
     } else {
       if (this.auth.is_auth) {

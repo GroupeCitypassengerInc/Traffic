@@ -10,18 +10,22 @@ input[type=number] {
 #datetime {
   width: 100%;
 }
-#legend>ul {
-  display: flex;
-  justify-content: center;
-}
-
-#legend li {
+[class="0-legend"] {
+  list-style: none;
   cursor: pointer;
-  margin: 10px 10px;
-  display: flex;
+  padding-left: 0;
 }
-#legend li span {
-  padding-left: 8px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 12px;
+[class="0-legend"] li {
+  display: inline-block;
+  padding: 0 5px;
+}
+[class="0-legend"] li.hidden {
+  text-decoration: line-through;
+}
+[class="0-legend"] li span {
+  border-radius: 5px;
+  display: inline-block;
+  height: 10px;
+  margin-right: 10px;
+  width: 10px;
 }

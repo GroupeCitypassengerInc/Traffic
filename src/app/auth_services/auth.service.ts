@@ -43,7 +43,6 @@ export class AuthService {
     )).pipe(take(1))
     .subscribe(response  =>{
       console.log('Login -> ok');
-      //console.log(response);
       let user_info = {
         id : response['id'],
         role : response['role'],
@@ -92,7 +91,6 @@ export class AuthService {
   is_logged(url?:string): void | boolean {
     let logged_api_url = this.base_api_url + '/ws/User/Logged';
     let headers = new HttpHeaders();
-    //console.log(url)
     
     headers = headers.set('accept', 'application/json');
     this.httpClient.request('GET', logged_api_url, {headers}).pipe(
@@ -118,7 +116,6 @@ export class AuthService {
         role : response['role'],
         username : response['username']
       };
-      //console.log('Logged ? -> yes');
       this.update_user_info(user_info);
       this.update_log_status(true);
 

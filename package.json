@@ -6,6 +6,8 @@
     "start": "ng serve --host app.citypassenger.com --port 4200",
     "start:fr": "ng serve --configuration=fr --host app.citypassenger.com --port 4200",
     "start:en": "ng serve --configuration=en --host app.citypassenger.com --port 4200",
+    "start:fr:proxy": "ng serve --configuration=fr --public-host app.citypassenger.com --port 4200 --proxy-config src/proxy.conf.json",
+    "start:en:proxy": "ng serve --configuration=en --public-host app.citypassenger.com --port 4200 --proxy-config src/proxy.conf.json",
     "build": "ng build",
     "build:fr": "ng build --configuration=fr",
     "build:en": "ng build --configuration=en",

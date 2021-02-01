@@ -117,15 +117,8 @@ export class DevicesListComponent implements OnInit {
     private location: Location,
     private notification: NotificationServiceService)
   {
-    if ( isDevMode() ) {
-      this.user_information = {
-        id : 0,
-        role : 'Support',
-        username : 'Dev',
-      }
-    } else {
-      this.user_information = this.auth.user_info;
-    }
+    this.user_information = this.auth.user_info;
+
     this._lang = this.language.language;
     this._is_dark_mode_enabled = localStorage.getItem('theme') === 'Dark' ? true : false;
     this.theme_subscription = this.theme_handler.theme_changes.subscribe((theme) => {
@@ -135,12 +128,7 @@ export class DevicesListComponent implements OnInit {
 
   ngOnInit(): void {
     let map_devices;    
-    if ( isDevMode() ) {
-      map_devices = (devices_json as any).default;
-      this.devices_informations = this.parse_map_devices(map_devices);
-    } else {
-      this.get_map_devices();
-    }
+    this.get_map_devices();
     this.datasource = new MatTableDataSource<any>(this.table_devices_informations);
   }
   
@@ -226,20 +214,12 @@ export class DevicesListComponent implements OnInit {
     }
 
     if ( this.expandedElement != null ) {
-      if ( isDevMode() ) {
-        if ( this.devices_informations[row.group_name]['group_metric'] == 0 ) {
-          this.get_metric_list(row);
-        } else {
-          this.devices_informations[row.group_name]['form_disabled'] = false;
-        }
+      if ( this.devices_informations[row.group_name][row.box_name]['box_password'] == null) {
+        this.get_box_password(row);
+      } else if ( this.devices_informations[row.group_name]['group_metric'] == 0 ) {
+        this.get_metric_list(row);
       } else {
-        if ( this.devices_informations[row.group_name][row.box_name]['box_password'] == null && !isDevMode()) {
-          this.get_box_password(row);
-        } else if ( this.devices_informations[row.group_name]['group_metric'] == 0 ) {
-          this.get_metric_list(row);
-        } else {
-          this.devices_informations[row.group_name]['form_disabled'] = false;
-        }
+        this.devices_informations[row.group_name]['form_disabled'] = false;
       }
     }
     if ( isDevMode() ) console.log(this.devices_informations);
@@ -250,13 +230,10 @@ export class DevicesListComponent implements OnInit {
     let box_name: string = row.box_name;
    
     let prometheus_api_url: string;
-    if ( isDevMode() ) {
-      prometheus_api_url = this.prometheus_base_api_url + '/api/v1/label/__name__/values';
-    } else {
-      let box_password: string = this.devices_informations[group_name][box_name]['box_password'];
-      let citynet_url: string = this.devices_informations[group_name]['citynet_url']
-      prometheus_api_url = citynet_url + '/' + box_password + '/prometheus/'  + group_name + '/api/v1/label/__name__/values';
-    }
+
+    let box_password: string = this.devices_informations[group_name][box_name]['box_password'];
+    let citynet_url: string = this.devices_informations[group_name]['citynet_url']
+    prometheus_api_url = citynet_url + '/' + box_password + '/prometheus/'  + group_name + '/api/v1/label/__name__/values';
 
     let headers = new HttpHeaders();
     headers = headers.set('accept', 'application/json');
@@ -289,11 +266,25 @@ export class DevicesListComponent implements OnInit {
 
   parse_get_metric(prometheus_metrics: Array<any>, group_name: string): void {
     let metric_list: Array<string> = [];
+    let custom_metric = this.metrics_config["custom_metric"];
+    Object.keys(custom_metric["instant_vectors"]).forEach(metric =>{
+      if ( custom_metric["instant_vectors"][metric]["role"].includes(this.user_information.role) ) {
+        metric_list.push(metric);
+      }
+    });
+
+    Object.keys(custom_metric["range_vectors"]).forEach(metric =>{
+      if ( custom_metric["range_vectors"][metric]["role"].includes(this.user_information.role) ) {
+        metric_list.push(metric);
+      }
+    });
+
     prometheus_metrics.forEach(metric_name => {
       if ( metric_name in this.metric_alternative_name[this.user_information.role] ) {
         metric_list.push(metric_name);
       }
     })
+    
     this.devices_informations[group_name]['group_metric'] = metric_list;
     this.devices_informations[group_name]['group_metric_backup'] = metric_list;
   }
@@ -357,7 +348,6 @@ export class DevicesListComponent implements OnInit {
     let metric_checked: Array<string>;
     let group_id: number = devices_informations[group_name]['group_id'];
     let router: string = devices_informations[group_name]['router'];
-    if ( isDevMode() ) router = 'router';
     let citynet_url: string = devices_informations[group_name]['citynet_url'];
     let redirect_url: string = '/graph/' + group_name + '/' + router + '/'; 
 
@@ -365,12 +355,10 @@ export class DevicesListComponent implements OnInit {
       let key: string = Object.keys(devices_informations[group_name]).pop();
       password = devices_informations[group_name][key]['box_password'];
       metric_checked = devices_informations[group_name]['form_control'].value;
-      if ( isDevMode() ) password = 'x';
       graph_informations.push([group_name, citynet_url]);
       redirect_url = redirect_url + password + '/' +'metric?' ;
     } else {
       password = devices_informations[group_name][box_name]['box_password'];
-      if ( isDevMode() ) password = 'x';
       metric_checked = devices_informations[group_name][box_name]['form_control'].value;
       graph_informations.push([group_name, citynet_url, box_name]);
       redirect_url = redirect_url + password + '/' + box_name + '/metric?' ;
@@ -396,7 +384,6 @@ export class DevicesListComponent implements OnInit {
         redirect_url = redirect_url + 'metric=' + metric + '&value=1&unit=hour&now=true&date=' + date_string + '&'; //
       }
     });
-    //console.log(redirect_url)
     this.router.navigateByUrl(redirect_url)
   }
 }

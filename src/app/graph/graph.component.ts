@@ -28,6 +28,7 @@ import { AuthService } from '../auth_services/auth.service';
 import { NotificationServiceService } from '../notification/notification-service.service'
 import { ThemeHandlerService } from '../theme_handler/theme-handler.service'
 import * as metrics_config from '../../assets/json/config.metrics.json';
+import { element } from 'protractor';
 
 export interface unit_conversion {
   minute : number,
@@ -63,7 +64,6 @@ export class GraphComponent implements OnInit {
   metrics_config: any = (metrics_config as any).default;
   is_dev: boolean = isDevMode();
 
-  // Request : /prometheus/api/v1/query_range?query=up&start=1604584181.313&end=1604670581.313&step=9250
   prometheus_api_url : string = environment.prometheus_base_api_url;
   base_api_url: string = environment.city_url_api;
 
@@ -136,15 +136,9 @@ export class GraphComponent implements OnInit {
     } else {
       this.is_mobile = false;
     }
-    if ( !isDevMode() ) {
-      this.user_information = this.auth.user_info;
-    } else {
-      this.user_information = {
-        id : 0,
-        role : 'Support',
-        username : 'Dev',
-      };
-    }
+
+    this.user_information = this.auth.user_info;
+
     this.default_date.setHours(this.default_date.getHours());
 
     let router = this.route.snapshot.paramMap.get('router');
@@ -177,9 +171,7 @@ export class GraphComponent implements OnInit {
     this.base_url_buffer = '/' +  this.password + '/prombuffer/' + this.group_name + '/api/v1';
     this.box_selected = box_name;
 
-    if ( !isDevMode() ) {
-      this.prometheus_api_url = this.prometheus_api_url.replace('XXXX', router);
-    }
+    this.prometheus_api_url = this.prometheus_api_url.replace('XXXX', router);
     
     this.get_records(this.query_list);
   }
@@ -322,10 +314,11 @@ export class GraphComponent implements OnInit {
   }
 
   get_metric_from_prometheus(metric:string): void {
+    if ( isDevMode() ) console.log(this.graphs_records[metric]);
+
     const timestamp = new Date().getTime();
-    console.log(this.graphs_records[metric])
-    let t_value: number = this.graphs_records[metric]['t_value'];//
-    let t_unit: number = this.graphs_records[metric]['t_unit'];//
+    let t_value: number = this.graphs_records[metric]['t_value'];
+    let t_unit: number = this.graphs_records[metric]['t_unit'];
     let start_time: number;
     let end_time : number;
 
@@ -350,14 +343,32 @@ export class GraphComponent implements OnInit {
     
     let selected_box = this.box_selected
     let raw_metric_name = metric;
-    metric = this.transform_metric_query(metric, selected_box);
-    if ( metric.includes('_raw') ) {
-      metric = metric.replace('_raw','');
-    }
-    let query = ''; 
-    query = '/query_range?query=' + metric + '&start=' + start_time + '&end=' + end_time + '&step=' + step;
+    
+    let query = '';
 
-    if ( isDevMode() ) this.base_url = '/api/v1';
+    let custom_metric = this.metrics_config['custom_metric'];
+
+    Object.keys(custom_metric).forEach(vector_type =>{
+      if ( metric in custom_metric[vector_type] ) {
+        query =  '/query_range?query=' + custom_metric[vector_type][metric]['query'];
+        if ( selected_box != null ) {
+          let box_filter: string = ',job=~"'+ selected_box +'.*"';
+          query = query.replace('<box_filter>', box_filter);
+        } else {
+          query = query.replace('<box_filter>', '');
+        }
+      }
+    });
+
+    if ( query === '' ) {
+      metric = this.transform_metric_query(metric, selected_box);
+      if ( metric.includes('_raw') ) {
+        metric = metric.replace('_raw','');
+      }
+      query = '/query_range?query=' + metric + '&start=' + start_time + '&end=' + end_time + '&step=' + step;
+    } else {
+      query = query + '&start=' + start_time + '&end=' + end_time + '&step=' + step;
+    }
 
     let url: string;
     if( timestamp / 1000 - 3600 * 6 >= start_time || timestamp / 1000 - 3600 * 6  >= end_time) {
@@ -403,11 +414,14 @@ export class GraphComponent implements OnInit {
     if ( isDevMode() ) console.log(data_to_parse);
     let datasets = [];
     let metric_timestamp_list = [];
+    let custom_metric = this.metrics_config['custom_metric'];
     for ( const key in data_to_parse ) {
 
       let instance;
-      if ( isDevMode() ) {
-        instance = data_to_parse[key]['metric']['instance'];
+      if ( metric in custom_metric['instant_vectors'] ){
+        instance = custom_metric['instant_vectors'][metric]["description"]
+      } else if ( metric in custom_metric['range_vectors'] ){
+        instance = custom_metric['range_vectors'][metric]["description"]
       } else {
         instance = data_to_parse[key]['metric']['job'];
       }
@@ -518,37 +532,31 @@ export class GraphComponent implements OnInit {
     if( this._is_dark_mode_enabled ) {
       color = '#e2e2e2'
     }
-    
 
     Chart.defaults.global.maintainAspectRatio = false;
     Chart.defaults.global.elements.line.borderWidth = 2;
     Chart.defaults.global.elements.point.radius = 10;
     Chart.defaults.global.defaultFontFamily = 'Ubuntu, sans-serif';
-    function onLegendClicked(e, i) {
-      let hidden = !chart.getDatasetMeta(0).data[i].hidden;
-      chart.getDatasetMeta(0).data[i].hidden = hidden;
-      const legendLabelSpan = document.getElementById("legend-label-" + i);
-      legendLabelSpan.style.textDecoration = hidden ? 'line-through' : '';
-      chart.update();
-    };
     var chart = new Chart(ctx, {
       type: 'line',
       data: data,
       options: {
         responsive : true,
-        /*legendCallback: chart => {
-          var text = []; 
- 		      text.push('<ul class="' + chart.id + '-legend">'); 
- 		      for (var i = 0; i < chart.data.datasets.length; i++) { 
-            text.push('<li><span style="background-color:' + chart.data.datasets[i].backgroundColor + '"></span>'); 
+        legendCallback: chart => {
+          var text = [];
+          text.push('<ul class="' + chart.id + '-legend">'); 
+          for (var i = 0; i < chart.data.datasets.length; i++) { 
+            text.push('<li><div style=" float:left; margin-top: 5px; margin-right: 10px; width:30px; height:5px; padding: 5px; border: medium solid; border-color:'
+                    + chart.data.datasets[i].borderColor 
+                    +';"></div>'); 
             if (chart.data.datasets[i].label) { 
-              text.push(chart.data.datasets[i].label); 
+              text.push('<div style="float: left;">' + chart.data.datasets[i].label + '</div>'); 
             } 
             text.push('</li>'); 
-          } 
+          }
           text.push('</ul>'); 
           return text.join(''); 
-        },*/
+        },
         tooltips: {
           callbacks: {
             label: function(tooltipItem, data) {
@@ -567,7 +575,7 @@ export class GraphComponent implements OnInit {
           duration: 1
         }, 
         legend: {
-          //display: false,
+          display: false,
           position: 'bottom',
           align: 'start',
           labels: {
@@ -605,7 +613,44 @@ export class GraphComponent implements OnInit {
         }
       }
     });
-    //document.getElementById("legend").innerHTML = chart.generateLegend();
+
+    function legendClickCallback(event) {
+      event = event || window.event;
+    
+      var target = event.target || event.srcElement;
+      if ( target.style[0] == 'text-decoration-line') {
+        target.style = "list-style-type:none;"
+      } else if ( target.style[1] == 'margin-top' ) {
+        return;
+      } else if  (target.style[0] == 'float' || target.style[0] == 'list-style-type' ) {
+        target.style = "text-decoration:line-through; list-style-type:none"
+      }
+      
+      while (target.nodeName !== 'LI') {
+          target = target.parentElement;
+      }
+      var parent = target.parentElement;
+      var chartId = parseInt(parent.classList[0].split("-")[0], 10);
+      var chart = Chart.instances[chartId];
+      var index = Array.prototype.slice.call(parent.children).indexOf(target);
+    
+      chart.legend.options.onClick.call(chart, event, chart.legend.legendItems[index]);
+      if (chart.isDatasetVisible(index)) {
+        target.classList.remove('hidden');
+      } else {
+        target.classList.add('hidden');
+      }
+    }
+
+    let myLegendContainer = document.getElementById("legend_" + metric);
+    myLegendContainer.innerHTML = chart.generateLegend();
+
+    var legendItems = myLegendContainer.getElementsByTagName('li');
+
+    for (var i = 0; i < legendItems.length; i += 1) {
+      legendItems[i].addEventListener("click", legendClickCallback, false);
+    }
+
     return chart;
   }
 
@@ -723,7 +768,7 @@ export class GraphComponent implements OnInit {
     this.graphs_records[metric]['m_chart'].data.datasets.forEach((dataSet, i) => {
       var meta = this.graphs_records[metric]['m_chart'].getDatasetMeta(i);
       if (meta.hidden == null){
-        meta.hidden = _is_disabled
+        meta.hidden = _is_disabled;
       }
       meta.hidden = !_is_disabled;
     });
@@ -775,9 +820,6 @@ export class GraphComponent implements OnInit {
         }
       });
 
-      //console.log('url')
-      //console.log(url)
-      //console.log(this.graphs_records)
       this.router.navigateByUrl(url)
     }
   }

@@ -64,16 +64,15 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    if( window.matchMedia('(prefers-color-scheme: dark)').matches && this.theme_handler.get_theme() == '') {
+    if( window.matchMedia('(prefers-color-scheme: dark)').matches && this.theme_handler.get_theme() === null) {
       this.is_dark_mode_enabled = true;
-      this.store_theme_selection();
-    } else if ( this.theme_handler.get_theme() == 'Dark' ) {
+    } else if ( this.theme_handler.get_theme() === 'Dark' ) {
       this.is_dark_mode_enabled = true;
+    } else {
+      this.is_dark_mode_enabled = false;
     }
+    this.store_theme_selection();
 
-    this._theme = window.matchMedia('(prefers-color-scheme: dark)').matches=== true ? 'Dark' : 'Light';
-    this.theme_handler.update_theme(this._theme);
 
     this.language_list = this.language.language_list;
     this.is_dev_mode = isDevMode();
@@ -105,8 +104,8 @@ export class AppComponent implements OnInit {
   }
 
   store_theme_selection(): void  {
-    localStorage.setItem('theme', this.is_dark_mode_enabled ? 'Dark' : 'Light');
-    this._theme = this.is_dark_mode_enabled === true ? 'Dark' : 'Light';
+    let theme = this.is_dark_mode_enabled ? 'Dark' : 'Light';
+    this._theme = theme
     if ( !this.is_dark_mode_enabled ) {
       this.overlayContainer.getContainerElement().classList.remove('dark-theme-mode');
     } else {
