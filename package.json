@@ -1,6 +1,6 @@
 {
   "name": "baggage",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host app.citypassenger.com --port 4200",
