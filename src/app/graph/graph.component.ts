@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChanges, ChangeDetectorRef, ApplicationRef, isDevMode } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, ChangeDetectorRef, ApplicationRef, isDevMode, ɵConsole } from '@angular/core';
 import { HttpClientModule, HttpClient, HttpHeaders }    from '@angular/common/http';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -25,6 +25,7 @@ import { environment } from '../../environments/environment';
 import { setPriority } from 'os';
 import { LanguageService } from '../lingual_service/language.service';
 import { AuthService } from '../auth_services/auth.service';
+//import { LoaderService } from '../loader/loader.service';
 import { NotificationServiceService } from '../notification/notification-service.service'
 import { ThemeHandlerService } from '../theme_handler/theme-handler.service'
 import * as metrics_config from '../../assets/json/config.metrics.json';
@@ -505,9 +506,30 @@ export class GraphComponent implements OnInit {
     return step;
   }
   
-  chart_builder(metric:string, data): Chart {
+  chart_builder(metric:string, data:Object): Chart {
     if ( isDevMode() ) {
       console.log('building : ' + metric + ' chart');
+    }
+
+    let data_labels: Array<number> = data['labels'];
+    let data_size = data_labels.length;
+    let start: number = data_labels[0];
+    let end: number = data_labels[data_size - 1];
+    let delta: number = ( end - start ) / 1000;
+    let x_axis_format: string;
+    let day_format: string;
+    if ( delta < 3 * 60 * 60 ) { // < 3h
+      x_axis_format = 'minute';
+    } else if ( delta < 24 * 60 * 60 ) { // < 24h
+      x_axis_format = 'hour';
+    } else if ( delta < 3 * 24 * 60 * 60 ) { // < 3j
+      day_format = 'DD hA';
+      x_axis_format = 'day';
+    } else if ( delta < 15 * 24 * 60 * 60 ) { // < 15j
+      day_format = 'DD';
+      x_axis_format = 'day';
+    } else { // > 15j
+      x_axis_format = 'month';
     }
     let ctx = document.getElementById(metric);
     if ( ctx === null ) {
@@ -588,16 +610,17 @@ export class GraphComponent implements OnInit {
           xAxes: [{
             ticks:{
               fontColor: color
+
             },
             gridLines : {
               //color : color
             },
             type: 'time',
             time: {
-              // displayFormats: {
-              //   second: 'YYYY MM D hh:mm:ss a'
-              // },
-              stepSize : 4,
+              unit: x_axis_format,
+              displayFormats: {
+                day: day_format,
+              },
             }
           }],
           yAxes: [{
@@ -641,12 +664,9 @@ export class GraphComponent implements OnInit {
         target.classList.add('hidden');
       }
     }
-
     let myLegendContainer = document.getElementById("legend_" + metric);
     myLegendContainer.innerHTML = chart.generateLegend();
-
     var legendItems = myLegendContainer.getElementsByTagName('li');
-
     for (var i = 0; i < legendItems.length; i += 1) {
       legendItems[i].addEventListener("click", legendClickCallback, false);
     }
