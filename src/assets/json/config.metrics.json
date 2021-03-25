@@ -1,13 +1,16 @@
 {
   "custom_metric":{
     "instant_vectors":{
-
+        "DIALOGYS_ccnx":{
+                "role": ["Support", "Admin"],
+                "query":"DIALOGYS{exported_instance=\"ccnx_count\"}",
+                "description":"DIALOGYS ccnx"
+            }
     },
     "range_vectors":{
-      
     }
   },
-  "LAN_1_+_2":{
+  "DIALOGYS": {
     "x": {
       "unit": {
         "fr":"",
