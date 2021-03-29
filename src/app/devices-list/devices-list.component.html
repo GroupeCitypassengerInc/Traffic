@@ -54,7 +54,7 @@
                           <mat-option
                             *ngFor='let graph_available of devices_informations[box["group_name"]]["group_metric"]'
                             value='{{graph_available}}'>
-                            {{metric_alternative_name[user_information.role][graph_available][_lang]}}</mat-option>
+                            {{metric_alternative_name[user_information.role][graph_available] == undefined ? graph_available + " [NOT TRANSLATED]" : metric_alternative_name[user_information.role][graph_available][_lang]}}</mat-option>
                         </mat-select>
                       </mat-form-field>
                       <br/><button mat-flat-button
@@ -86,7 +86,7 @@
                           <mat-option
                             *ngFor='let graph_available of devices_informations[box["group_name"]]["group_metric"]'
                             value='{{graph_available}}'>
-                            {{metric_alternative_name[user_information.role][graph_available][_lang]}}</mat-option>
+                            {{metric_alternative_name[user_information.role][graph_available] == undefined ? graph_available + " [NOT TRANSLATED]" : metric_alternative_name[user_information.role][graph_available][_lang]}}</mat-option>
                         </mat-select>
                       </mat-form-field>
                       <br /><button mat-flat-button
