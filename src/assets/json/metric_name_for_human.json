@@ -1,5 +1,13 @@
 {
   "Admin":{
+    "DIALOGYS_ccnx": {
+      "en": "number of connections to dialogys",
+      "fr": "nombre de conneixons à dialogys"
+    },
+    "DCS": {
+      "en": "DCS usage stats",
+      "fr": "stats d'usage de DCS"
+    },
     "output":{
       "en":"output",
       "fr":"output"
@@ -66,6 +74,14 @@
     }
   },
   "Support":{
+    "DIALOGYS_ccnx": {
+      "en": "number of connections to dialogys",
+      "fr": "nombre de conneixons à dialogys"
+    },
+    "DCS": {
+      "en": "DCS Usage Stats",
+      "fr": "Stats d'usage de DCS"
+    },
     "output":{
       "en":"output",
       "fr":"output"
