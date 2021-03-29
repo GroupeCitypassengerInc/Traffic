@@ -66,7 +66,6 @@ export class GraphComponent implements OnInit {
   is_dev: boolean = isDevMode();
 
   prometheus_api_url : string = environment.prometheus_base_api_url;
-  base_api_url: string = environment.city_url_api;
 
   base_url : string = '';
   base_url_buffer: string = '';

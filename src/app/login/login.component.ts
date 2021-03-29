@@ -34,7 +34,6 @@ export class LoginComponent implements OnInit {
     password: ['', Validators.required]
   });
   is_logged : boolean = this.auth.is_auth;
-  base_api_url : string = environment.city_url_api;
   user_info : user_informations;
   isChecked : boolean = true;
   return_url: string;
@@ -73,7 +72,7 @@ export class LoginComponent implements OnInit {
     }
     let username = encodeURIComponent(form.controls['username'].value);
     let password = encodeURIComponent(form.controls['password'].value);
-    let url_login = this.base_api_url + '/ws/User/Login?login=' + username + '&password=' + password;
+    let url_login = '/ws/User/Login?login=' + username + '&password=' + password;
     this.auth.login(url_login, this.return_url);
   }
 }

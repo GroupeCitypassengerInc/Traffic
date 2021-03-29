@@ -16,7 +16,6 @@ export interface user_informations {
 })
 export class AuthService {
   is_auth : boolean = false;
-  base_api_url : string = environment.city_url_api;
   public user_info : user_informations;
   log_status_change: Subject<boolean> = new Subject<boolean>();
   log_user_info_change: Subject<Object> = new Subject<Object>();
@@ -65,7 +64,7 @@ export class AuthService {
       return false;
     }
     
-    let logged_api_url = this.base_api_url + '/ws/User/Logout';
+    let logged_api_url = '/ws/User/Logout';
     let headers = new HttpHeaders();
     
     headers = headers.set('accept', 'application/json');
@@ -89,7 +88,7 @@ export class AuthService {
   }
 
   is_logged(url?:string): void | boolean {
-    let logged_api_url = this.base_api_url + '/ws/User/Logged';
+    let logged_api_url = '/ws/User/Logged';
     let headers = new HttpHeaders();
     
     headers = headers.set('accept', 'application/json');
