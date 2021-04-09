@@ -71,6 +71,14 @@
     "go_goroutines":{
       "en":"go_goroutines",
       "fr":"go_goroutines"
+    },
+    "CONTROLLER": {
+      "en":"Information about the connection to controller",
+      "fr":"Informations sur les connexion à controller"
+    },
+    "CONTROLLER_latence": {
+      "en":"Average latency of connections to controller",
+      "fr":"Latence moyenne des connexions à controller"
     }
   },
   "Support":{
@@ -149,6 +157,14 @@
     "go_goroutines_raw":{
       "en":"go goroutines_raw",
       "fr":"go goroutines_raw"
+    },
+    "CONTROLLER": {
+      "en":"Information about the connection to controller",
+      "fr":"Informations sur les connexion à controller"
+    },
+    "CONTROLLER_latence": {
+      "en":"Average latency of connections to controller",
+      "fr":"Latence moyenne des connexions à controller"
     }
   },
   "User":{
@@ -175,6 +191,10 @@
     "input":{
       "en":"input",
       "fr":"input"
+    },
+    "CONTROLLER_latence": {
+      "en":"Average latency of connections to controller",
+      "fr":"Latence moyenne des connexions à controller"
     }
   },
   "Marketing":{

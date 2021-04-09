@@ -1,16 +1,36 @@
 {
   "custom_metric":{
     "instant_vectors":{
-        "DIALOGYS_ccnx":{
-                "role": ["Support", "Admin"],
-                "query":"DIALOGYS{exported_instance=\"ccnx_count\"}",
-                "description":"DIALOGYS ccnx"
-            }
+      "DIALOGYS_ccnx":{
+        "role": ["Support", "Admin"],
+        "query":"DIALOGYS{exported_instance=\"ccnx_count\"}",
+        "description":"DIALOGYS ccnx"
+      },
+      "CONTROLLER_latence":{
+        "role": ["Support", "Admin", "User"],
+        "query":"CONTROLLER {exported_instance=\"avg_latency\"}",
+        "description":"CONTROLLER average latency"
+      }
     },
     "range_vectors":{
     }
   },
   "DIALOGYS": {
+    "x": {
+      "unit": {
+        "fr":"",
+        "en":""
+      }
+    },
+    "y": {
+      "min": 0,
+      "step": 1
+    },
+    "type": "",
+    "promql": "",
+    "tension": 0.5
+  },
+  "CONTROLLER": {
     "x": {
       "unit": {
         "fr":"",
