@@ -88,7 +88,7 @@
       </trans-unit>
 
       <trans-unit id="title_metric_selection_devices_table">
-        <target>Graphique disponible</target>
+        <target>Choisir des metrics</target>
       </trans-unit>
 
       <trans-unit id="title_unit_options_time_selection_graph">

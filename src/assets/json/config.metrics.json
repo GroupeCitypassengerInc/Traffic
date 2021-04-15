@@ -10,6 +10,16 @@
         "role": ["Support", "Admin", "User"],
         "query":"CONTROLLER {exported_instance=\"avg_latency\"}",
         "description":"CONTROLLER average latency"
+      },
+      "pf_stats_latence":{
+        "role": ["Support", "Admin", "User"],
+        "query":"pf_stats{data_type=\"avg_latency\"}",
+        "description":"pf stats average latency in ms"
+      },
+      "pf_stats_connection":{
+        "role": ["Support", "Admin", "User"],
+        "query":"pf_stats{data_type=\"count\",service=\"CONTROLLER\"} / ignoring(data_type); pf_stats{data_type=\"ccnx_count\",service=\"CONTROLLER\"}",
+        "description":"pf stats ccnx count"
       }
     },
     "range_vectors":{
@@ -31,6 +41,21 @@
     "tension": 0.5
   },
   "CONTROLLER": {
+    "x": {
+      "unit": {
+        "fr":"",
+        "en":""
+      }
+    },
+    "y": {
+      "min": 0,
+      "step": 1
+    },
+    "type": "",
+    "promql": "",
+    "tension": 0.5
+  },
+  "pf_stats": {
     "x": {
       "unit": {
         "fr":"",

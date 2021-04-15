@@ -79,6 +79,18 @@
     "CONTROLLER_latence": {
       "en":"Average latency of connections to controller",
       "fr":"Latence moyenne des connexions à controller"
+    },
+    "pf_stats": {
+      "en":"all PF stats collected",
+      "fr":"ensemble des stats PF recoltées"
+    },
+    "pf_stats_latence": {
+      "en":"average latency of supervised services",
+      "fr":"latence moyenne des services supervisés"
+    },
+    "pf_stats_connection": {
+      "en":"average packets number per connection to controller",
+      "fr":"nombre moyen de paquet par connexion a controller"
     }
   },
   "Support":{
@@ -165,6 +177,18 @@
     "CONTROLLER_latence": {
       "en":"Average latency of connections to controller",
       "fr":"Latence moyenne des connexions à controller"
+    },
+    "pf_stats": {
+      "en":"all PF stats collected",
+      "fr":"ensemble des stats PF recoltées"
+    },
+    "pf_stats_latence": {
+      "en":"average latency of supervised services",
+      "fr":"latence moyenne des services supervisés"
+    },
+    "pf_stats_connection": {
+      "en":"average packets number per connection to controller",
+      "fr":"nombre moyen de paquet par connexion a controller"
     }
   },
   "User":{
@@ -195,6 +219,14 @@
     "CONTROLLER_latence": {
       "en":"Average latency of connections to controller",
       "fr":"Latence moyenne des connexions à controller"
+    },
+    "pf_stats_latence": {
+      "en":"average latency of supervised services",
+      "fr":"latence moyenne des services supervisés"
+    },
+    "pf_stats_connection": {
+      "en":"average packets number per connection to controller",
+      "fr":"nombre moyen de paquet par connexion a controller"
     }
   },
   "Marketing":{
