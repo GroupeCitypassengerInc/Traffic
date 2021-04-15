@@ -18,7 +18,7 @@
       },
       "pf_stats_connection":{
         "role": ["Support", "Admin", "User"],
-        "query":"pf_stats{data_type=\"count\",service=\"CONTROLLER\"} / ignoring(data_type); pf_stats{data_type=\"ccnx_count\",service=\"CONTROLLER\"}",
+        "query":"pf_stats{data_type=\"count\",service=\"CONTROLLER\"}%2Fignoring(data_type)pf_stats{data_type=\"ccnx_count\",service=\"CONTROLLER\"}",
         "description":"pf stats ccnx count"
       }
     },
