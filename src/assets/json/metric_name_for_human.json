@@ -1,9 +1,5 @@
 {
   "Admin":{
-    "DIALOGYS_ccnx": {
-      "en": "number of connections to dialogys",
-      "fr": "nombre de conneixons à dialogys"
-    },
     "DCS": {
       "en": "DCS usage stats",
       "fr": "stats d'usage de DCS"
@@ -76,10 +72,6 @@
       "en":"Information about the connection to controller",
       "fr":"Informations sur les connexion à controller"
     },
-    "CONTROLLER_latence": {
-      "en":"Average latency of connections to controller",
-      "fr":"Latence moyenne des connexions à controller"
-    },
     "pf_stats": {
       "en":"all PF stats collected",
       "fr":"ensemble des stats PF recoltées"
@@ -94,10 +86,6 @@
     }
   },
   "Support":{
-    "DIALOGYS_ccnx": {
-      "en": "number of connections to dialogys",
-      "fr": "nombre de conneixons à dialogys"
-    },
     "DCS": {
       "en": "DCS Usage Stats",
       "fr": "Stats d'usage de DCS"
@@ -174,10 +162,6 @@
       "en":"Information about the connection to controller",
       "fr":"Informations sur les connexion à controller"
     },
-    "CONTROLLER_latence": {
-      "en":"Average latency of connections to controller",
-      "fr":"Latence moyenne des connexions à controller"
-    },
     "pf_stats": {
       "en":"all PF stats collected",
       "fr":"ensemble des stats PF recoltées"
@@ -215,10 +199,6 @@
     "input":{
       "en":"input",
       "fr":"input"
-    },
-    "CONTROLLER_latence": {
-      "en":"Average latency of connections to controller",
-      "fr":"Latence moyenne des connexions à controller"
     },
     "pf_stats_latence": {
       "en":"average latency of supervised services",

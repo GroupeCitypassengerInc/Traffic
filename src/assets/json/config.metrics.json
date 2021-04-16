@@ -1,16 +1,6 @@
 {
   "custom_metric":{
     "instant_vectors":{
-      "DIALOGYS_ccnx":{
-        "role": ["Support", "Admin"],
-        "query":"DIALOGYS{exported_instance=\"ccnx_count\"}",
-        "description":"DIALOGYS ccnx"
-      },
-      "CONTROLLER_latence":{
-        "role": ["Support", "Admin", "User"],
-        "query":"CONTROLLER {exported_instance=\"avg_latency\"}",
-        "description":"CONTROLLER average latency"
-      },
       "pf_stats_latence":{
         "role": ["Support", "Admin", "User"],
         "query":"pf_stats{data_type=\"avg_latency\"}",
