@@ -126,11 +126,12 @@ export class DevicesListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let map_devices;    
+    let map_devices;
+    this.get_user_metrics();
     this.get_map_devices();
     this.datasource = new MatTableDataSource<any>(this.table_devices_informations);
   }
-  
+
   ngOnDestroy(): void {
     this.theme_subscription.unsubscribe();
   }
@@ -223,6 +224,14 @@ export class DevicesListComponent implements OnInit {
       }
     }
     if ( isDevMode() ) console.log(this.devices_informations);
+  }
+
+  get_user_metrics() {
+    let user_config_url = '/baggage/' + this._lang + '/assets/json/';
+    this.httpClient.get<any>(user_config_url + this.user_information.username +  ".json")
+    .subscribe(custom_config => { // replace the file if the user has a custom configuration
+      this.metrics_config = custom_config;
+    });
   }
 
   get_metric_list(row: table_devices_info): void {
