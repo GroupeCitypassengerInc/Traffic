@@ -230,10 +230,15 @@ export class DevicesListComponent implements OnInit {
     const headers = new HttpHeaders().set("Content-Type", "application/json");
     let user_config_base_url = '/baggage/' + this._lang + '/assets/json/';
     let user_config_url = user_config_base_url + this.user_information.username +  ".json"
+
     this.httpClient.get<any>(user_config_url, {headers})
-    .subscribe(custom_config => { // replace the file if the user has a custom configuration
-      this.metrics_config = custom_config;
-    });
+    .subscribe(custom_config => // replace the file if the user has a custom configuration
+      { 
+        this.metrics_config = custom_config;
+      }, err => // No custom conf
+      { 
+        this.metrics_config = (metrics_config as any).default;
+      });
   }
 
   get_metric_list(row: table_devices_info): void {
