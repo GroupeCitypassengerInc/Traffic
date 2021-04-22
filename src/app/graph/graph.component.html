@@ -15,7 +15,7 @@
 
     <div *ngFor='let query of query_list'>
       <div *ngIf='graphs_records.hasOwnProperty(query)'>
-        <h4>{{metric_alternative_name[user_information.role][query][_lang]}}</h4>
+        <h4>{{metric_alternative_name[user_information.role][query] === undefined ? query + "[NOT TRANSLATED]" : metric_alternative_name[user_information.role][query][_lang]}}</h4>
         <div style='max-width: 100;'>
           <div id='increment' class='time_opt'>
             <!-- increment section -->
@@ -94,14 +94,14 @@
             </button>
 
             <!-- Hide curves -->
-            <button *ngIf='!this.graphs_records[query]["m_chart"]["m_hidden"]'
+            <button *ngIf='!this.graphs_records[query]["m_hidden"]'
               i18n-matTooltip='tooltip Hide all curves@@tooltip_hide_all_curves_time_selection_graph' mat-button
               matTooltip='Hide all curves' class='icon_button' (click)='hide_lines(query)'>
               <mat-icon>visibility_off</mat-icon>
             </button>
 
             <!-- Show curves -->
-            <button *ngIf='this.graphs_records[query]["m_chart"]["m_hidden"]'
+            <button *ngIf='this.graphs_records[query]["m_hidden"]'
               i18n-matTooltip='tooltip Show all curves@@tooltip_show_all_curves_time_selection_graph' mat-button
               matTooltip='Show all curves' class='icon_button' (click)='hide_lines(query)'>
               <mat-icon>visibility</mat-icon>

@@ -434,10 +434,14 @@ export class GraphComponent implements OnInit {
       
       let extra_label: Array<string> = this.get_extra_labels(data_to_parse[key]['metric']);
       let label: string;
-      if (this.box_selected != null){
-        label = this.metric_alternative_name[this.user_information.role][metric][this._lang]
+      if(this.metric_alternative_name[this.user_information.role][metric] !== undefined){
+        if (this.box_selected != null){
+          label = this.metric_alternative_name[this.user_information.role][metric][this._lang]
+        } else {
+          label = this.metric_alternative_name[this.user_information.role][metric][this._lang] + ' { instance: ' + instance + ' }';
+        }
       } else {
-        label = this.metric_alternative_name[this.user_information.role][metric][this._lang] + ' { instance: ' + instance + ' }';
+        label = metric + " [NO TRANSLATION]";
       }
       extra_label.forEach(element => {
         label = label + ' { ' + element + ': ' + data_to_parse[key]['metric'][element] + ' }';
