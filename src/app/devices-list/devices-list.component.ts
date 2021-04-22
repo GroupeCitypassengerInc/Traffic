@@ -227,11 +227,15 @@ export class DevicesListComponent implements OnInit {
   }
 
   get_user_metrics() {
-    const headers = new HttpHeaders().set("Content-Type", "application/json");
+    const headers = new HttpHeaders().set("Content-Type", "application/json").set('Cache-Control', 'no-cache');
     let user_config_base_url = '/baggage/' + this._lang + '/assets/json/';
     let user_config_url = user_config_base_url + this.user_information.username +  ".json"
 
-    this.httpClient.get<any>(user_config_url, {headers})
+    this.httpClient.get<any>(user_config_url, {headers}).pipe(
+      catchError((err => {
+        console.log('Handling error locally and rethrowing it...', err);
+        return throwError(err);
+    })))
     .subscribe(custom_config => // replace the file if the user has a custom configuration
       { 
         this.metrics_config = custom_config;
