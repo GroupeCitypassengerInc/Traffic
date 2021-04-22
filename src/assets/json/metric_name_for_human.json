@@ -134,6 +134,10 @@
     "sum_pfstats_restransmit_1h_DCS": {
       "en":"Number of retransmissions on DCS net (smoothing 1h)",
       "fr": "Nombre de retransmissions sur DCS net (lissage 1h)"
+    },
+    "CPU_temperature":{
+      "en" : "CPU temperature",
+      "fr": "Temperature du CPU"
     }
   },
   "Support":{
@@ -275,6 +279,10 @@
     "sum_pfstats_restransmit_1h_DCS": {
       "en":"Number of retransmissions on DCS net (smoothing 1h)",
       "fr": "Nombre de retransmissions sur DCS net (lissage 1h)"
+    },
+    "CPU_temperature":{
+      "en" : "CPU temperature",
+      "fr": "Temperature du CPU"
     }
   },
   "User":{
@@ -360,6 +368,10 @@
     "sum_pfstats_restransmit_1h_DCS": {
       "en":"Number of retransmissions on DCS net (smoothing 1h)",
       "fr": "Nombre de retransmissions sur DCS net (lissage 1h)"
+    },
+    "CPU_temperature":{
+      "en" : "CPU temperature",
+      "fr": "Temperature du CPU"
     }
   },
   "Marketing":{
