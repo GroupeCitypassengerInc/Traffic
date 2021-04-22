@@ -296,7 +296,7 @@ export class DevicesListComponent implements OnInit {
     });
 
     prometheus_metrics.forEach(metric_name => {
-      if ( metric_name in this.metric_alternative_name[this.user_information.role] ) {
+      if (metric_name in this.metrics_config) {
         metric_list.push(metric_name);
       }
     })
