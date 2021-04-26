@@ -138,6 +138,7 @@ export class GraphComponent implements OnInit {
     }
 
     this.user_information = this.auth.user_info;
+    this.get_user_metrics();
 
     this.default_date.setHours(this.default_date.getHours());
 
@@ -246,6 +247,25 @@ export class GraphComponent implements OnInit {
         });
       }
     );
+  }
+
+  get_user_metrics() {
+    const headers = new HttpHeaders().set("Content-Type", "application/json").set("Accept", "application/json");
+    let user_config_base_url = '/baggage/' + this._lang + '/assets/json/';
+    let user_config_url = user_config_base_url + this.user_information.username +  ".json";
+    
+    this.httpClient.get<any>(user_config_url, {headers}).pipe(
+      catchError((err => {
+        console.log('Handling error locally and rethrowing it...', err);
+        return throwError(err);
+    })))
+    .subscribe(custom_config => // replace the file if the user has a custom configuration
+      { 
+        this.metrics_config = custom_config;
+      }, err => // No custom conf
+      { 
+        this.metrics_config = (metrics_config as any).default;
+      });
   }
 
   set_charts(): void {
