@@ -12,67 +12,78 @@
         "description":"pf stats ccnx count"
       },
 
-      "average_pfstats_latence":{
+      "average_pfstats_latence": {
         "role": ["Support", "Admin", "User"],
-        "query":"avg_over_time(pf_stats{data_type='avg_latency'}[1h])",
-        "description":"Latence moyenne des applications supervisées"
+        "query": "avg_over_time(pf_stats{data_type='avg_latency',src_ip='0.0.0.0'}[1h])",
+        "description": "Latence moyenne des applications supervisées"
       },
-      "average_pfstats_latence_ARGUS":{
+      "average_pfstats_latence_ARGUS": {
         "role": ["Support", "Admin", "User"],
-        "query":"avg_over_time(pf_stats{data_type='avg_latency',service='LARGUS'}[1h])",
-        "description":"Latence moyenne du service l'ARGUS"
+        "query": "avg_over_time(pf_stats{data_type='avg_latency',service='LARGUS',src_ip='0.0.0.0'}[1h])",
+        "description": "Latence moyenne du service l'ARGUS"
       },
-      "average_pfstats_latence_DCS":{
+      "average_pfstats_latence_DCS": {
         "role": ["Support", "Admin", "User"],
-        "query":"avg_over_time(pf_stats{data_type='avg_latency',service='DCS'}[1h])",
-        "description":"Latence moyenne du service DCS net"
+        "query": "avg_over_time(pf_stats{data_type='avg_latency',service='DCS',src_ip='0.0.0.0'}[1h])",
+        "description": "Latence moyenne du service DCS net"
       },
-      "average_pfstats_latence_DIALOGYS":{
+      "average_pfstats_latence_DIALOGYS": {
         "role": ["Support", "Admin", "User"],
-        "query":"avg_over_time(pf_stats{data_type='avg_latency',service='DIALOGYS'}[1h])",
-        "description":"Latence moyenne du service Dialogys"
-      },
-      
-      "summ_pfstats_ccnxcount_1h":{
-        "role": ["Support", "Admin", "User"],
-        "query":"sum_over_time(pf_stats{data_type='ccnx_count'}[1h])",
-        "description":"Nombre de connexions sur les applications supervisées (lissage 1h)"
-      },
-      "summ_pfstats_ccnxcount_1h_DIALOGYS":{
-        "role": ["Support", "Admin", "User"],
-        "query":"sum_over_time(pf_stats{data_type='ccnx_count',service='DIALOGYS'}[1h])",
-        "description":"Nombre de connexions sur Dialogys (lissage 1h)"
-      },      
-      "summ_pfstats_ccnxcount_1h_ARGUS":{
-        "role": ["Support", "Admin", "User"],
-        "query":"sum_over_time(pf_stats{data_type='ccnx_count',service='LARGUS'}[1h])",
-        "description":"Nombre de connexions sur l'Argus (lissage 1h)"
-      },      
-      "summ_pfstats_ccnxcount_1h_DCS":{
-        "role": ["Support", "Admin", "User"],
-        "query":"sum_over_time(pf_stats{data_type='ccnx_count',service='DCS'}[1h])",
-        "description":"Nombre de connexions sur DCS net (lissage 1h)"
+        "query": "avg_over_time(pf_stats{data_type='avg_latency',service='DIALOGYS',src_ip='0.0.0.0'}[1h])",
+        "description": "Latence moyenne du service Dialogys"
       },
 
-      "sum_pfstats_restransmit_1h":{
+      "sum_pfstats_ccnxcount_1h": {
         "role": ["Support", "Admin", "User"],
-        "query":"sum_over_time(pf_stats{data_type='retransmit'}[1h])",
-        "description":"Nombre de retransmissions sur les applications supervisées (lissage 1h)"
+        "query": "sum_over_time(pf_stats{data_type='ccnx_count',src_ip='0.0.0.0'}[1h])",
+        "description": "Nombre de connexions sur les applications supervisées (lissage 1h)"
       },
-      "sum_pfstats_restransmit_1h_DIALOGYS":{
+      "sum_pfstats_ccnxcount_1h_DIALOGYS": {
         "role": ["Support", "Admin", "User"],
-        "query":"sum_over_time(pf_stats{data_type='retransmit',service='DIALOGYS'}[1h])",
-        "description":"Nombre de retransmissions sur Dialogys (lissage 1h)"
+        "query": "sum_over_time(pf_stats{data_type='ccnx_count',service='DIALOGYS',src_ip='0.0.0.0'}[1h])",
+        "description": "Nombre de connexions sur Dialogys (lissage 1h)"
       },
-      "sum_pfstats_restransmit_1h_ARGUS":{
+      "sum_pfstats_ccnxcount_1h_ARGUS": {
         "role": ["Support", "Admin", "User"],
-        "query":"sum_over_time(pf_stats{data_type='retransmit',service='LARGUS'}[1h])",
-        "description":"Nombre de retransmissions sur l'Argus (lissage 1h)"
+        "query": "sum_over_time(pf_stats{data_type='ccnx_count',service='LARGUS',src_ip='0.0.0.0'}[1h])",
+        "description": "Nombre de connexions sur l'Argus (lissage 1h)"
       },
-      "sum_pfstats_restransmit_1h_DCS":{
+      "sum_pfstats_ccnxcount_1h_DCS": {
         "role": ["Support", "Admin", "User"],
-        "query":"sum_over_time(pf_stats{data_type='retransmit',service='DCS'}[1h])",
-        "description":"Nombre de retransmissions sur DCS net (lissage 1h)"
+        "query": "sum_over_time(pf_stats{data_type='ccnx_count',service='DCS',src_ip='0.0.0.0'}[1h])",
+        "description": "Nombre de connexions sur DCS net (lissage 1h)"
+      },
+
+      "sum_pfstats_restransmit_1h": {
+        "role": ["Support", "Admin", "User"],
+        "query": "sum_over_time(pf_stats{data_type='retransmit',src_ip='0.0.0.0'}[1h])",
+        "description": "Nombre de retransmissions sur les applications supervisées (lissage 1h)"
+      },
+      "sum_pfstats_restransmit_1h_DIALOGYS": {
+        "role": ["Support", "Admin", "User"],
+        "query": "sum_over_time(pf_stats{data_type='retransmit',service='DIALOGYS',src_ip='0.0.0.0'}[1h])",
+        "description": "Nombre de retransmissions sur Dialogys (lissage 1h)"
+      },
+      "sum_pfstats_restransmit_1h_ARGUS": {
+        "role": ["Support", "Admin", "User"],
+        "query": "sum_over_time(pf_stats{data_type='retransmit',service='LARGUS',src_ip='0.0.0.0'}[1h])",
+        "description": "Nombre de retransmissions sur l'Argus (lissage 1h)"
+      },
+      "sum_pfstats_restransmit_1h_DCS": {
+        "role": ["Support", "Admin", "User"],
+        "query": "sum_over_time(pf_stats{data_type='retransmit',service='DCS',src_ip='0.0.0.0'}[1h])",
+        "description": "Nombre de retransmissions sur DCS net (lissage 1h)"
+      },
+
+      "sum_pfstats_ccnxcount_1h_DCS_all": {
+        "role": ["Support", "Admin", "User"],
+        "query": "sum_over_time(pf_stats{data_type='ccnx_count',service='DCS',src_ip%3D%7E'[%5E0].%2B'}[1h])",
+        "description": "Nombre de connexions sur DCS net (lissage 1h)"
+      },
+      "sum_pfstats_ccnxcount_1h_DCS_user": {
+        "role": ["Support", "Admin", "User"],
+        "query": "sum_over_time(pf_stats{data_type='ccnx_count',service='DCS',src_ip='200.8.155.52'}[1h])",
+        "description": "Nombre de connexions sur DCS net (lissage 1h)"
       }
     },
     "range_vectors":{

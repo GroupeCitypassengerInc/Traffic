@@ -86,57 +86,66 @@
     },
 
     "average_pfstats_latence": {
-      "en":"Average latency of supervised applications",
+      "en": "Average latency of supervised applications",
       "fr": "Latence moyenne des applications supervisées"
     },
     "average_pfstats_latence_ARGUS": {
-      "en":"Average latency of the ARGUS service",
+      "en": "Average latency of the ARGUS service",
       "fr": "Latence moyenne du service l'ARGUS"
     },
     "average_pfstats_latence_DCS": {
-      "en":"Average latency of the DCS net service",
+      "en": "Average latency of the DCS net service",
       "fr": "Latence moyenne du service DCS net"
     },
     "average_pfstats_latence_DIALOGYS": {
-      "en":"Average latency of the Dialogys service",
+      "en": "Average latency of the Dialogys service",
       "fr": "Latence moyenne du service Dialogys"
     },
 
-    "summ_pfstats_ccnxcount_1h": {
-      "en":"Number of connections on supervised applications (1h smoothing)",
+    "sum_pfstats_ccnxcount_1h": {
+      "en": "Number of connections on supervised applications (1h smoothing)",
       "fr": "Nombre de connexions sur les applications supervisées (lissage 1h)"
     },
-    "summ_pfstats_ccnxcount_1h_DIALOGYS": {
-      "en":"Number of connections on Dialogys (smoothing 1h)",
+    "sum_pfstats_ccnxcount_1h_DIALOGYS": {
+      "en": "Number of connections on Dialogys (smoothing 1h)",
       "fr": "Nombre de connexions sur Dialogys (lissage 1h)"
     },
-    "summ_pfstats_ccnxcount_1h_ARGUS": {
-      "en":"Number of connections on the Argus (smoothing 1h)",
+    "sum_pfstats_ccnxcount_1h_ARGUS": {
+      "en": "Number of connections on the Argus (smoothing 1h)",
       "fr": "Nombre de connexions sur l'Argus (lissage 1h)"
     },
-    "summ_pfstats_ccnxcount_1h_DCS": {
-      "en":"Number of connections on DCS net (smoothing 1h)",
+    "sum_pfstats_ccnxcount_1h_DCS": {
+      "en": "Number of connections on DCS net (smoothing 1h)",
       "fr": "Nombre de connexions sur DCS net (lissage 1h)"
     },
 
+    "sum_pfstats_ccnxcount_1h_DCS_all": {
+      "en": "ALL",
+      "fr": "ALL"
+    },
+    "sum_pfstats_ccnxcount_1h_DCS_user": {
+      "en":"User",
+      "fr": "User"
+    },
+
     "sum_pfstats_restransmit_1h": {
-      "en":"Number of retransmissions on the supervised applications (smoothing 1h)",
+      "en":" Number of retransmissions on the supervised applications (smoothing 1h)",
       "fr": "Nombre de retransmissions sur les applications supervisées (lissage 1h)"
     },
     "sum_pfstats_restransmit_1h_DIALOGYS": {
-      "en":"Number of retransmissions on Dialogys (smoothing 1h)",
+      "en":" Number of retransmissions on Dialogys (smoothing 1h)",
       "fr": "Nombre de retransmissions sur Dialogys (lissage 1h)"
     },
     "sum_pfstats_restransmit_1h_ARGUS": {
-      "en":"Number of retransmissions on the Argus (smoothing 1h)",
+      "en":" Number of retransmissions on the Argus (smoothing 1h)",
       "fr": "Nombre de retransmissions sur l'Argus (lissage 1h)"
     },
     "sum_pfstats_restransmit_1h_DCS": {
-      "en":"Number of retransmissions on DCS net (smoothing 1h)",
+      "en":" Number of retransmissions on DCS net (smoothing 1h)",
       "fr": "Nombre de retransmissions sur DCS net (lissage 1h)"
     },
     "CPU_temperature":{
-      "en" : "CPU temperature",
+      "en": "CPU temperature",
       "fr": "Temperature du CPU"
     }
   },
@@ -231,57 +240,66 @@
     },
 
     "average_pfstats_latence": {
-      "en":"Average latency of supervised applications",
+      "en": "Average latency of supervised applications",
       "fr": "Latence moyenne des applications supervisées"
     },
     "average_pfstats_latence_ARGUS": {
-      "en":"Average latency of the ARGUS service",
+      "en": "Average latency of the ARGUS service",
       "fr": "Latence moyenne du service l'ARGUS"
     },
     "average_pfstats_latence_DCS": {
-      "en":"Average latency of the DCS net service",
+      "en": "Average latency of the DCS net service",
       "fr": "Latence moyenne du service DCS net"
     },
     "average_pfstats_latence_DIALOGYS": {
-      "en":"Average latency of the Dialogys service",
+      "en": "Average latency of the Dialogys service",
       "fr": "Latence moyenne du service Dialogys"
     },
 
-    "summ_pfstats_ccnxcount_1h": {
-      "en":"Number of connections on supervised applications (1h smoothing)",
+    "sum_pfstats_ccnxcount_1h": {
+      "en": "Number of connections on supervised applications (1h smoothing)",
       "fr": "Nombre de connexions sur les applications supervisées (lissage 1h)"
     },
-    "summ_pfstats_ccnxcount_1h_DIALOGYS": {
-      "en":"Number of connections on Dialogys (smoothing 1h)",
+    "sum_pfstats_ccnxcount_1h_DIALOGYS": {
+      "en": "Number of connections on Dialogys (smoothing 1h)",
       "fr": "Nombre de connexions sur Dialogys (lissage 1h)"
     },
-    "summ_pfstats_ccnxcount_1h_ARGUS": {
-      "en":"Number of connections on the Argus (smoothing 1h)",
+    "sum_pfstats_ccnxcount_1h_ARGUS": {
+      "en": "Number of connections on the Argus (smoothing 1h)",
       "fr": "Nombre de connexions sur l'Argus (lissage 1h)"
     },
-    "summ_pfstats_ccnxcount_1h_DCS": {
-      "en":"Number of connections on DCS net (smoothing 1h)",
+    "sum_pfstats_ccnxcount_1h_DCS": {
+      "en": "Number of connections on DCS net (smoothing 1h)",
       "fr": "Nombre de connexions sur DCS net (lissage 1h)"
     },
 
+    "sum_pfstats_ccnxcount_1h_DCS_all": {
+      "en": "ALL",
+      "fr": "ALL"
+    },
+    "sum_pfstats_ccnxcount_1h_DCS_user": {
+      "en":"User",
+      "fr": "User"
+    },
+
     "sum_pfstats_restransmit_1h": {
-      "en":"Number of retransmissions on the supervised applications (smoothing 1h)",
+      "en":" Number of retransmissions on the supervised applications (smoothing 1h)",
       "fr": "Nombre de retransmissions sur les applications supervisées (lissage 1h)"
     },
     "sum_pfstats_restransmit_1h_DIALOGYS": {
-      "en":"Number of retransmissions on Dialogys (smoothing 1h)",
+      "en":" Number of retransmissions on Dialogys (smoothing 1h)",
       "fr": "Nombre de retransmissions sur Dialogys (lissage 1h)"
     },
     "sum_pfstats_restransmit_1h_ARGUS": {
-      "en":"Number of retransmissions on the Argus (smoothing 1h)",
+      "en":" Number of retransmissions on the Argus (smoothing 1h)",
       "fr": "Nombre de retransmissions sur l'Argus (lissage 1h)"
     },
     "sum_pfstats_restransmit_1h_DCS": {
-      "en":"Number of retransmissions on DCS net (smoothing 1h)",
+      "en":" Number of retransmissions on DCS net (smoothing 1h)",
       "fr": "Nombre de retransmissions sur DCS net (lissage 1h)"
     },
     "CPU_temperature":{
-      "en" : "CPU temperature",
+      "en": "CPU temperature",
       "fr": "Temperature du CPU"
     }
   },
@@ -318,59 +336,67 @@
       "en":"average packets number per connection to controller",
       "fr":"nombre moyen de paquet par connexion a controller"
     },
-
     "average_pfstats_latence": {
-      "en":"Average latency of supervised applications",
+      "en": "Average latency of supervised applications",
       "fr": "Latence moyenne des applications supervisées"
     },
     "average_pfstats_latence_ARGUS": {
-      "en":"Average latency of the ARGUS service",
+      "en": "Average latency of the ARGUS service",
       "fr": "Latence moyenne du service l'ARGUS"
     },
     "average_pfstats_latence_DCS": {
-      "en":"Average latency of the DCS net service",
+      "en": "Average latency of the DCS net service",
       "fr": "Latence moyenne du service DCS net"
     },
     "average_pfstats_latence_DIALOGYS": {
-      "en":"Average latency of the Dialogys service",
+      "en": "Average latency of the Dialogys service",
       "fr": "Latence moyenne du service Dialogys"
     },
 
-    "summ_pfstats_ccnxcount_1h": {
-      "en":"Number of connections on supervised applications (1h smoothing)",
+    "sum_pfstats_ccnxcount_1h": {
+      "en": "Number of connections on supervised applications (1h smoothing)",
       "fr": "Nombre de connexions sur les applications supervisées (lissage 1h)"
     },
-    "summ_pfstats_ccnxcount_1h_DIALOGYS": {
-      "en":"Number of connections on Dialogys (smoothing 1h)",
+    "sum_pfstats_ccnxcount_1h_DIALOGYS": {
+      "en": "Number of connections on Dialogys (smoothing 1h)",
       "fr": "Nombre de connexions sur Dialogys (lissage 1h)"
     },
-    "summ_pfstats_ccnxcount_1h_ARGUS": {
-      "en":"Number of connections on the Argus (smoothing 1h)",
+    "sum_pfstats_ccnxcount_1h_ARGUS": {
+      "en": "Number of connections on the Argus (smoothing 1h)",
       "fr": "Nombre de connexions sur l'Argus (lissage 1h)"
     },
-    "summ_pfstats_ccnxcount_1h_DCS": {
-      "en":"Number of connections on DCS net (smoothing 1h)",
+    "sum_pfstats_ccnxcount_1h_DCS": {
+      "en": "Number of connections on DCS net (smoothing 1h)",
       "fr": "Nombre de connexions sur DCS net (lissage 1h)"
     },
 
+    "sum_pfstats_ccnxcount_1h_DCS_all": {
+      "en": "ALL",
+      "fr": "ALL"
+    },
+    "sum_pfstats_ccnxcount_1h_DCS_user": {
+      "en":"User",
+      "fr": "User"
+    },
+
     "sum_pfstats_restransmit_1h": {
-      "en":"Number of retransmissions on the supervised applications (smoothing 1h)",
+      "en":" Number of retransmissions on the supervised applications (smoothing 1h)",
       "fr": "Nombre de retransmissions sur les applications supervisées (lissage 1h)"
     },
     "sum_pfstats_restransmit_1h_DIALOGYS": {
-      "en":"Number of retransmissions on Dialogys (smoothing 1h)",
+      "en":" Number of retransmissions on Dialogys (smoothing 1h)",
       "fr": "Nombre de retransmissions sur Dialogys (lissage 1h)"
     },
     "sum_pfstats_restransmit_1h_ARGUS": {
-      "en":"Number of retransmissions on the Argus (smoothing 1h)",
+      "en":" Number of retransmissions on the Argus (smoothing 1h)",
       "fr": "Nombre de retransmissions sur l'Argus (lissage 1h)"
     },
     "sum_pfstats_restransmit_1h_DCS": {
-      "en":"Number of retransmissions on DCS net (smoothing 1h)",
+      "en":" Number of retransmissions on DCS net (smoothing 1h)",
       "fr": "Nombre de retransmissions sur DCS net (lissage 1h)"
     },
     "CPU_temperature":{
-      "en" : "CPU temperature",
+      "en": "CPU temperature",
       "fr": "Temperature du CPU"
     }
   },
