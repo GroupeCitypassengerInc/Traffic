@@ -1,11 +1,6 @@
 {
   "custom_metric":{
     "instant_vectors":{
-      "pf_stats_latence":{
-        "role": ["Support", "Admin", "User"],
-        "query":"pf_stats{data_type='avg_latency'}",
-        "description":"pf stats average latency in ms"
-      },
       "pf_stats_connection":{
         "role": ["Support", "Admin", "User"],
         "query":"pf_stats{data_type='count',service='CONTROLLER'}%2Fignoring(data_type)pf_stats{data_type='ccnx_count',service='CONTROLLER'}",
@@ -75,14 +70,24 @@
         "description": "Nombre de retransmissions sur DCS net (lissage 1h)"
       },
 
-      "sum_pfstats_ccnxcount_1h_DCS_all": {
+      "sum_pfstats_ccnxcount_1h_DCS_all_ip": {
         "role": ["Support", "Admin", "User"],
         "query": "sum_over_time(pf_stats{data_type='ccnx_count',service='DCS',src_ip%3D%7E'[%5E0].%2B'}[1h])",
         "description": "Nombre de connexions sur DCS net (lissage 1h)"
       },
-      "sum_pfstats_ccnxcount_1h_DCS_user": {
+      "sum_pfstats_ccnxcount_1h_DCS_one_ip": {
         "role": ["Support", "Admin", "User"],
         "query": "sum_over_time(pf_stats{data_type='ccnx_count',service='DCS',src_ip='200.8.155.52'}[1h])",
+        "description": "Nombre de connexions sur DCS net (lissage 1h)"
+      },
+      "pfstats_up_down": {
+        "role": ["Support", "Admin", "User"],
+        "query": "pf_stats{data_type=~'bytes_(?:UP|DOWN)',service='DCS',src_ip='0.0.0.0'}",
+        "description": "Nombre de connexions sur DCS net (lissage 1h)"
+      },
+      "pfstats_up_down_one_ip": {
+        "role": ["Support", "Admin", "User"],
+        "query": "pf_stats{data_type=~'bytes_(?:UP|DOWN)',service='DCS',src_ip='200.8.155.52'}",
         "description": "Nombre de connexions sur DCS net (lissage 1h)"
       }
     },

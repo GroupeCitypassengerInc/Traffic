@@ -119,13 +119,22 @@
       "fr": "Nombre de connexions sur DCS net (lissage 1h)"
     },
 
-    "sum_pfstats_ccnxcount_1h_DCS_all": {
-      "en": "ALL",
-      "fr": "ALL"
+    "sum_pfstats_ccnxcount_1h_DCS_all_ip": {
+      "en": "Nombre total de connexions à DCS ",
+      "fr": "Nombre total de connexions à DCS "
     },
-    "sum_pfstats_ccnxcount_1h_DCS_user": {
-      "en":"User",
-      "fr": "User"
+    "sum_pfstats_ccnxcount_1h_DCS_one_ip": {
+      "en": "Nombre de connexions à DCS par le poste à l'IP 200.8.155.52",
+      "fr": "Nombre de connexions à DCS par le poste à l'IP 200.8.155.52"
+    },
+
+    "pfstats_up_down": {
+      "en": "Consommation de données par le service DCS (download/upload)",
+      "fr": "Consommation de données par le service DCS (download/upload)"
+    },
+    "pfstats_up_down_one_ip": {
+      "en":"Consommation de données par le service DCS (download/upload) par le poste à l'IP 200.8.155.52",
+      "fr": "Consommation de données par le service DCS (download/upload) par le poste à l'IP 200.8.155.52"
     },
 
     "sum_pfstats_restransmit_1h": {
@@ -273,13 +282,22 @@
       "fr": "Nombre de connexions sur DCS net (lissage 1h)"
     },
 
-    "sum_pfstats_ccnxcount_1h_DCS_all": {
-      "en": "ALL",
-      "fr": "ALL"
+    "sum_pfstats_ccnxcount_1h_DCS_all_ip": {
+      "en": "Nombre total de connexions à DCS ",
+      "fr": "Nombre total de connexions à DCS "
     },
-    "sum_pfstats_ccnxcount_1h_DCS_user": {
-      "en":"User",
-      "fr": "User"
+    "sum_pfstats_ccnxcount_1h_DCS_one_ip": {
+      "en": "Nombre de connexions à DCS par le poste à l'IP 200.8.155.52",
+      "fr": "Nombre de connexions à DCS par le poste à l'IP 200.8.155.52"
+    },
+
+    "pfstats_up_down": {
+      "en": "Consommation de données par le service DCS (download/upload)",
+      "fr": "Consommation de données par le service DCS (download/upload)"
+    },
+    "pfstats_up_down_one_ip": {
+      "en":"Consommation de données par le service DCS (download/upload) par le poste à l'IP 200.8.155.52",
+      "fr": "Consommation de données par le service DCS (download/upload) par le poste à l'IP 200.8.155.52"
     },
 
     "sum_pfstats_restransmit_1h": {
@@ -370,13 +388,22 @@
       "fr": "Nombre de connexions sur DCS net (lissage 1h)"
     },
 
-    "sum_pfstats_ccnxcount_1h_DCS_all": {
-      "en": "ALL",
-      "fr": "ALL"
+    "sum_pfstats_ccnxcount_1h_DCS_all_ip": {
+      "en": "Nombre total de connexions à DCS ",
+      "fr": "Nombre total de connexions à DCS "
     },
-    "sum_pfstats_ccnxcount_1h_DCS_user": {
-      "en":"User",
-      "fr": "User"
+    "sum_pfstats_ccnxcount_1h_DCS_one_ip": {
+      "en": "Nombre de connexions à DCS par le poste à l'IP 200.8.155.52",
+      "fr": "Nombre de connexions à DCS par le poste à l'IP 200.8.155.52"
+    },
+
+    "pfstats_up_down": {
+      "en": "Consommation de données par le service DCS (download/upload)",
+      "fr": "Consommation de données par le service DCS (download/upload)"
+    },
+    "pfstats_up_down_one_ip": {
+      "en":"Consommation de données par le service DCS (download/upload) par le poste à l'IP 200.8.155.52",
+      "fr": "Consommation de données par le service DCS (download/upload) par le poste à l'IP 200.8.155.52"
     },
 
     "sum_pfstats_restransmit_1h": {
