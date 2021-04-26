@@ -207,7 +207,7 @@ export class DevicesListComponent implements OnInit {
   }
 
   on_row_click(row: table_devices_info): void {
-    console.log(this.metric_alternative_name[this.user_information.role]["Dia"]);
+    console.log(this.metric_alternative_name[this.user_information.role]);
     if ( this.devices_informations[row.group_name]['group_metric'] == 0 ) {
       this.devices_informations[row.group_name]['form_disabled'] = true;
     } else {
@@ -229,7 +229,7 @@ export class DevicesListComponent implements OnInit {
   get_user_metrics() {
     const headers = new HttpHeaders().set("Content-Type", "application/json").set("Accept", "application/json");
     let user_config_base_url = '/baggage/' + this._lang + '/assets/json/';
-    let user_config_url = user_config_base_url + this.user_information.username +  ".json"
+    let user_config_url = user_config_base_url + this.user_information.username +  ".json.nousNeVoulousPlusDeConfigPerso";
 
     this.httpClient.get<any>(user_config_url, {headers}).pipe(
       catchError((err => {
